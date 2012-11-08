@@ -1,3 +1,6 @@
+# Android tools
+android-sdk-linux/
+
 # built application files
 *.apk
 *.ap_
