@@ -1,0 +1,8 @@
+1. Rooms detection:
+    a. Bluetooth: range is ideal, but asking users to always turn on the
+    bluetooth is not a good thing.
+    b. Wifi: can't determine location at all.
+    c. Radio signal: always need to plug in earphones as antenna.
+    d. Using latitude, longitude, and magnetic field pattern.
+
+
