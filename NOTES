@@ -4,5 +4,6 @@
     b. Wifi: can't determine location at all.
     c. Radio signal: always need to plug in earphones as antenna.
     d. Using latitude, longitude, and magnetic field pattern.
-
+    e. Android 4.1 or higher allows for wirelessly connecting devices that
+    are physically nearby.
 
