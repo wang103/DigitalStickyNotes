@@ -19,6 +19,10 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
+        
+        EditText editText = (EditText) findViewById(R.id.edit_message);
+        editText.setText("Tianyi Wang");
+        
         return true;
     }
     

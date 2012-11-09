@@ -5,5 +5,7 @@
     c. Radio signal: always need to plug in earphones as antenna.
     d. Using latitude, longitude, and magnetic field pattern.
     e. Android 4.1 or higher allows for wirelessly connecting devices that
-    are physically nearby.
+    are physically nearby, using WIFI Direct technology. However this
+    solution could be expensive, because we need a WIFI Direct access point
+    in each room.
 
