@@ -1,0 +1,10 @@
+Predictive Indoor Navigation using Commercial Smart-phones
+
+Uses dead reckoning and Wifi signal strength fingerprinting.
+(can try using dead reckoning, whenever passing by a WIFI Direct station,
+update the location. Dead reckoning needs accelerometer, magnetometer, and
+gyroscope sensors)
+
+GSM signal strengths can be used to accurately determine which floor of a
+building the user is in.
+(May not need this if WIFI Direct signal range is just right)
