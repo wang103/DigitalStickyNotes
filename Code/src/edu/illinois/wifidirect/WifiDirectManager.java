@@ -1,9 +1,14 @@
 package edu.illinois.wifidirect;
 
+import edu.illinois.digitalstickynotes.MainActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 
 /**
@@ -13,6 +18,44 @@ public class WifiDirectManager {
 	private final IntentFilter intentFilter = new IntentFilter();
 	private WifiP2pManager mManager;
 	private Channel mChannel;
+	private WifiBroadcastReceiver broadcastReceiver;
+	private final PeerList peerDevicesListener = new PeerList();
+	
+	public void connectToPeer(WifiP2pDevice peer) {
+		WifiP2pConfig config = new WifiP2pConfig();
+		config.deviceAddress = peer.deviceAddress;
+		config.wps.setup = WpsInfo.PBC;
+		
+		mManager.connect(mChannel, config, new ActionListener() {
+			@Override
+			public void onSuccess() {
+				// Let WifiBroadcastReceiver notify us. Ignore it here.
+			}
+			
+			@Override
+			public void onFailure(int reason) {
+				// TODO: notify someone.
+			}
+		});
+	}
+	
+	/**
+	 * Initiate peer discovery to start the discovery process. Discovery will
+	 * remain active until a connection is initiated or a P2P group is formed.
+	 */
+	public void startOneDiscovery() {
+		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+			@Override
+			public void onSuccess() {
+				// Initiation successful. Do nothing.
+			}
+			
+			@Override
+			public void onFailure(int reason) {
+				// TODO: notify the user.
+			}
+		});
+	}
 	
 	private void initIntentFilter() {
 		// Indicates a change in the WiFi Peer-to-Peer status.
@@ -33,9 +76,16 @@ public class WifiDirectManager {
 		mChannel = mManager.initialize(activity, activity.getMainLooper(), null);
 	}
 	
-	public WifiDirectManager(Activity activity) {
+	private void initBroadcastReceiver(MainActivity activity) {
+		broadcastReceiver = new WifiBroadcastReceiver(mManager, mChannel,
+													  activity, peerDevicesListener);
+		activity.registerReceiver(broadcastReceiver, intentFilter);
+	}
+	
+	public WifiDirectManager(MainActivity activity) {
 		super();
 		initIntentFilter();
 		initChannel(activity);
+		initBroadcastReceiver(activity);
 	}
 }
