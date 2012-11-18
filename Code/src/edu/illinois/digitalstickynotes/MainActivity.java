@@ -71,6 +71,7 @@ public class MainActivity extends Activity {
 			return true;
 		case R.id.menu_settings:
 			//TODO: implementation.
+			startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
