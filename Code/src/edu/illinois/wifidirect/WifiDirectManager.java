@@ -21,6 +21,12 @@ public class WifiDirectManager {
 	private WifiBroadcastReceiver broadcastReceiver;
 	private final PeerList peerDevicesListener = new PeerList();
 	
+	/**
+	 * Call this method to start connecting to a peer. A callback function will
+	 * be invoked when the connection is established.
+	 * 
+	 * @param peer the peer device to connect to.
+	 */
 	public void connectToPeer(WifiP2pDevice peer) {
 		WifiP2pConfig config = new WifiP2pConfig();
 		config.deviceAddress = peer.deviceAddress;
@@ -55,6 +61,14 @@ public class WifiDirectManager {
 				// TODO: notify the user.
 			}
 		});
+	}
+	
+	/**
+	 * Remove all peers and clear all fields. This is called when WifiBroadcastReceiver
+	 * receives a state change event.
+	 */
+	public void resetData() {
+		peerDevicesListener.clearAll();
 	}
 	
 	private void initIntentFilter() {

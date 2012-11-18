@@ -20,4 +20,8 @@ public class PeerList implements PeerListListener {
 		
 		//TODO: nofify the WifiDirectManager to auto-connect.
 	}
+	
+	public void clearAll() {
+		peers.clear();
+	}
 }
