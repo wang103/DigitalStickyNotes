@@ -1,6 +1,9 @@
 Setups:
-Two testing devices are both on Android 4.0 (ICS). Therefore API level 14, 15
-can be used, but not 16 and 17.
+Currently in need of two Android 4.1 (JB) devices for testing. Android 4.0 (ICS)
+does not support WIFI and WIFI Direct concurrency.
+
+ICS can use API levels 14, 15.
+JB can use API levels 16, 17.
 
 Developers need to download Android SDK and put 'android-sdk-linux' directory
 under 'DigitalStickyNotes' directory, and install Eclipse ADT.
