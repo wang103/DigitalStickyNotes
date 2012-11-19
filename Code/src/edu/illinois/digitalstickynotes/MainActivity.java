@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	public static String serverTag = "default tag";
+	public static String identificationTag = "default tag";
 	
 	@SuppressWarnings("unused")		//TODO: delete
 	private boolean isWifiP2pEnabled = false;
