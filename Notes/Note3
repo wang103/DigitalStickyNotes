@@ -10,7 +10,7 @@ changes his/her currently location dramatically.
 Notes themselves are stored in mobile servers and central server.
 
 These need to be controlled by a central server:
-Each user would have a trused servers list (User trusts the server to represent
+Each user would have a trusted servers list (User trusts the server to represent
 the correct location).
 Each user would have a known clients list (User allows those clients to leave
 notes for them).
