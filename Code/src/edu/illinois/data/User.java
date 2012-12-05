@@ -15,13 +15,6 @@ public class User {
 		this.userName = userName;
 		this.publicKey = pk;
 	}
-	
-	public void sendMessage(String msg) {
-		// Encrypt with this user's public key.
-		
-		// Send the encrypted message.
-		
-	}
 
 	public String getUserName() {
 		return userName;
