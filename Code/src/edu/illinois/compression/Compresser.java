@@ -15,6 +15,10 @@ public class Compresser {
 	public Compresser() {
 	}
 	
+	private String CompressWithHuffmanTree(TreeNode rootNode, String originalMsg) {
+		return null;
+	}
+	
 	public String Compress(String originalMsg) {
 		HashMap<Character, Integer> characterToCount = new HashMap<Character, Integer>();
 		for (int i = 0; i < originalMsg.length(); i++) {
@@ -40,9 +44,21 @@ public class Compresser {
 		}
 		
 		// Now build the Huffman Tree using the priority queue.
+		while (pQueue.size() > 1) {
+			TreeNode treeNode1 = pQueue.remove();
+			TreeNode treeNode2 = pQueue.remove();
+			
+			TreeNode pNode = new TreeNode(treeNode1.getCount() + treeNode2.getCount(),
+					treeNode1, treeNode2);
+			treeNode1.setParentNode(pNode);
+			treeNode2.setParentNode(pNode);
+			
+			pQueue.add(pNode);
+		}
 		
+		TreeNode rootNode = pQueue.remove();
 		
-		return null;
+		return CompressWithHuffmanTree(rootNode, originalMsg);
 	}
 	
 	public String Decompress(String encryptedMsg) {
