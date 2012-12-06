@@ -29,6 +29,21 @@ public class Compresser {
 		}
 	}
 	
+	private TreeNode convertBinaryToTree(TreeBuilderHelperObj helperObj) {
+		boolean bit = helperObj.getBit();
+		
+		if (!bit) {
+			char character = helperObj.getChar();
+			TreeNode node = new TreeNode(character, 0);
+			return node;
+		}
+		
+		TreeNode leftNode = convertBinaryToTree(helperObj);
+		TreeNode rightNode = convertBinaryToTree(helperObj);
+		
+		return new TreeNode(0, leftNode, rightNode);
+	}
+	
 	/**
 	 * Build the Huffman Coding table with the Huffman Tree.
 	 * 
@@ -64,12 +79,8 @@ public class Compresser {
 		convertTreeToBinary(rootNode, treeBinaryStringBuilder);
 		String treeBinaryString = treeBinaryStringBuilder.toString();
 		
-		// Now convert the tree bit size to its binary form.
-		short treeBits = (short) treeBinaryString.length();
-		String treeBitsString = Utils.shortToBinaryString(treeBits);
-		
 		// Convert the "binary" string into real binary.
-		String resultBinaryString = treeBitsString + treeBinaryString + compressedMsg;
+		String resultBinaryString = treeBinaryString + compressedMsg;
 		BitStream bs = new BitStream(resultBinaryString);
 		return bs.toString();
 	}
@@ -117,6 +128,39 @@ public class Compresser {
 	}
 	
 	public String Decompress(String encryptedMsg) {
-		return null;
+		byte[] bytes = encryptedMsg.getBytes();
+		
+		byte garbageBitsAtEnd = bytes[0];
+		
+		TreeBuilderHelperObj helperObj = new TreeBuilderHelperObj(bytes, 1, 7);
+		TreeNode rootNode = convertBinaryToTree(helperObj);
+		
+		int bitsLeft = (bytes.length - helperObj.getByteCount()) * 8 - 7 + helperObj.getBitPos() - garbageBitsAtEnd;
+		
+		StringBuilder sb = new StringBuilder();
+		TreeNode node = null;
+		for (int i = 0; i < bitsLeft; i++) {
+			if (node == null) {
+				node = rootNode;
+			}
+			
+			boolean bit = helperObj.getBit();
+			helperObj.advanceOneBit();
+			
+			if (!bit) {
+				// Go to left node.
+				node = node.getLeftNode();
+			} else {
+				// Go to right node.
+				node = node.getRightNode();
+			}
+			
+			if (node.isLeafNode()) {
+				sb.append(node.getCharacter());
+				node = null;
+			}
+		}
+		
+		return sb.toString();
 	}
 }

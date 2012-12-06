@@ -5,11 +5,9 @@ package edu.illinois.compression;
  */
 public class BitStream {
 	private byte[] bytes;
-	private byte garbageBitsAtEnd;
 	
 	public BitStream(String bits, byte garbageBitsAtEnd) {
 		this.bytes = bits.getBytes();
-		this.garbageBitsAtEnd = garbageBitsAtEnd;
 	}
 	
 	/**
@@ -20,13 +18,13 @@ public class BitStream {
 	public BitStream(String bits) {
 		
 		int numBytes = bits.length();
-		numBytes = (numBytes + 7) & (~7);
+		numBytes = ((numBytes + 7) & (~7)) >> 3;
 		
-		bytes = new byte[numBytes];
+		bytes = new byte[numBytes + 1];
 		
 		byte curByte = 0;
 		int bitPos = 7;
-		int byteCount = 0;
+		int byteCount = 1;
 		for (int i = 0; i < bits.length(); i++) {
 			char c = bits.charAt(i);
 			
@@ -45,9 +43,9 @@ public class BitStream {
 		
 		if (bitPos != 7) {
 			bytes[byteCount] = curByte;
-			garbageBitsAtEnd = (byte) (bitPos + 1);
+			bytes[0] = (byte) (bitPos + 1);
 		} else {
-			garbageBitsAtEnd = 0;
+			bytes[0] = 0;
 		}
 	}
 	
@@ -59,9 +57,8 @@ public class BitStream {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(garbageBitsAtEnd);
-		sb.append(bytes);
-		
+		sb.append(new String(bytes));
+
 		return sb.toString();
 	}
 }

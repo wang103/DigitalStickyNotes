@@ -24,12 +24,12 @@ public class Utils {
 		StringBuilder sb = new StringBuilder();
 		
 		for (int i = 0; i < 16; i++) {
-			if ((sh & 0x8000) == 1) {
-				sb.append("1");
+			if ((sh & 1) == 1) {
+				sb.insert(0, '1');
 			} else {
-				sb.append("0");
+				sb.insert(0, '0');
 			}
-			sh <<= 1;
+			sh >>= 1;
 		}
 		
 		return sb.toString();
