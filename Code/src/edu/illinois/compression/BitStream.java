@@ -1,6 +1,9 @@
 package edu.illinois.compression;
 
 /**
+ * A helper class helps to convert a {@link String} of character 0's and 1's
+ * into the binary form: an array of byte.
+ * 
  * @author Tianyi Wang
  */
 public class BitStream {
@@ -13,9 +16,11 @@ public class BitStream {
 	 */
 	public BitStream(String bits) {
 		
-		int numBytes = bits.length();
-		numBytes = ((numBytes + 7) & (~7)) >> 3;
+		int numBits = bits.length();
+		int numBytes = ((numBits + 7) & (~7)) >> 3;
 		
+		// Leave room for an extra byte at the beginning, it's for storing how
+		// many garbage bits are at the end.
 		bytes = new byte[numBytes + 1];
 		
 		byte curByte = 0;

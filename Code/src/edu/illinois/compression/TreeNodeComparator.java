@@ -1,8 +1,12 @@
 package edu.illinois.compression;
 
 import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
+ * A helper class used for comparing {@link TreeNode} for the {@link PriorityQueue}.
+ * {@link TreeNode} with smaller count has higher priority.
+ * 
  * @author Tianyi Wang
  */
 public class TreeNodeComparator implements Comparator<TreeNode> {

@@ -1,13 +1,15 @@
 package edu.illinois.compression;
 
 /**
+ * A class representing a tree node in the Huffman Tree.
+ * 
  * @author Tianyi Wang
  */
 public class TreeNode {
-	private char character;
-	private int count;
-	private TreeNode leftNode;		// 0
-	private TreeNode rightNode;		// 1
+	private char character;			// only used for leaf node.
+	private int count;				// count of the node.
+	private TreeNode leftNode;		// path of 0.
+	private TreeNode rightNode;		// path of 1.
 	private TreeNode parentNode;
 
 	public TreeNode(char character, int count) {
@@ -49,6 +51,11 @@ public class TreeNode {
 		return rightNode;
 	}
 	
+	/**
+	 * Determine if this node is a leaf node.
+	 * 
+	 * @return true for leaf node, false for internal node.
+	 */
 	public boolean isLeafNode() {
 		return leftNode == null && rightNode == null;
 	}

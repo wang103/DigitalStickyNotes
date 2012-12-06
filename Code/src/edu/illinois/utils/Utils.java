@@ -5,6 +5,12 @@ package edu.illinois.utils;
  */
 public class Utils {
 	
+	/**
+	 * Convert a character to its binary form represented using {@link String}.
+	 * 
+	 * @param ch the character.
+	 * @return {@link String} of character 0's and 1's.
+	 */
 	public static String charToBinaryString(char ch) {
 		StringBuilder sb = new StringBuilder();
 		
@@ -20,6 +26,12 @@ public class Utils {
 		return sb.toString();
 	}
 	
+	/**
+	 * Convert a short int to its binary form represented using {@link String}.
+	 * 
+	 * @param sh the short int.
+	 * @return {@link String} of short int in 0's and 1's.
+	 */
 	public static String shortToBinaryString(short sh) {
 		StringBuilder sb = new StringBuilder();
 		

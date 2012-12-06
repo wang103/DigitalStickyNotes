@@ -16,7 +16,7 @@ public class CompresserTest extends TestCase {
 		super.tearDown();
 	}
 
-	public void testCompresser() {
+	public void testCompresser0() {
 		String str = "She handed him a handsome chocolate egg decorated with " +
 				"small, iced Snitches and, according to the packaging, " +
 				"containing a bag of Fizzing Whizzbees. Harry looked at it for " +
@@ -29,7 +29,42 @@ public class CompresserTest extends TestCase {
 		
 		String oriStr = compresser.Decompress(compressedStr);
 		
-		assertNotNull(oriStr);
+		assertEquals(str, oriStr);
+	}
+	
+	public void testCompresser1() {
+		String str = "A";
+		byte[] compressedStr = compresser.Compress(str);
+		
+		assertNotNull(compressedStr);
+		assertTrue(str.equals(compressedStr) == false);
+
+		String oriStr = compresser.Decompress(compressedStr);
+		
+		assertEquals(str, oriStr);
+	}
+	
+	public void testCompresser2() {
+		String str = "A1";
+		byte[] compressedStr = compresser.Compress(str);
+		
+		assertNotNull(compressedStr);
+		assertTrue(str.equals(compressedStr) == false);
+
+		String oriStr = compresser.Decompress(compressedStr);
+		
+		assertEquals(str, oriStr);
+	}
+	
+	public void testCompresser3() {
+		String str = "CCC";
+		byte[] compressedStr = compresser.Compress(str);
+		
+		assertNotNull(compressedStr);
+		assertTrue(str.equals(compressedStr) == false);
+
+		String oriStr = compresser.Decompress(compressedStr);
+		
 		assertEquals(str, oriStr);
 	}
 }
