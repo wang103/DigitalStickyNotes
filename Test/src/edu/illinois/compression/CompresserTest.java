@@ -21,11 +21,11 @@ public class CompresserTest extends TestCase {
 				"small, iced Snitches and, according to the packaging, " +
 				"containing a bag of Fizzing Whizzbees. Harry looked at it for " +
 				"a moment, then, to his horror, felt a lump rise in his throat.";
-		String compressedStr = compresser.Compress(str);
+		byte[] compressedStr = compresser.Compress(str);
 		
 		assertNotNull(compressedStr);
 		assertTrue(str.equals(compressedStr) == false);
-		assertTrue(compressedStr.length() <= str.length());
+		assertTrue(compressedStr.length <= str.length());
 		
 		String oriStr = compresser.Decompress(compressedStr);
 		

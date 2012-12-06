@@ -5,11 +5,7 @@ package edu.illinois.compression;
  */
 public class BitStream {
 	private byte[] bytes;
-	
-	public BitStream(String bits, byte garbageBitsAtEnd) {
-		this.bytes = bits.getBytes();
-	}
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -49,16 +45,7 @@ public class BitStream {
 		}
 	}
 	
-	/**
-	 * First byte is the number of bits to skip at the end, following the first
-	 * byte are the actual bits.
-	 */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(new String(bytes));
-
-		return sb.toString();
+	public byte[] getBytes() {
+		return bytes;
 	}
 }

@@ -31,6 +31,7 @@ public class Compresser {
 	
 	private TreeNode convertBinaryToTree(TreeBuilderHelperObj helperObj) {
 		boolean bit = helperObj.getBit();
+		helperObj.advanceOneBit();
 		
 		if (!bit) {
 			char character = helperObj.getChar();
@@ -61,7 +62,7 @@ public class Compresser {
 		table.put(node.getCharacter(), s);
 	}
 	
-	private String CompressWithHuffmanTree(TreeNode rootNode, String originalMsg) {
+	private byte[] CompressWithHuffmanTree(TreeNode rootNode, String originalMsg) {
 		HashMap<Character, String> codingTable = new HashMap<Character, String>();
 		buildCodeTable(codingTable, rootNode, "");
 		
@@ -82,10 +83,10 @@ public class Compresser {
 		// Convert the "binary" string into real binary.
 		String resultBinaryString = treeBinaryString + compressedMsg;
 		BitStream bs = new BitStream(resultBinaryString);
-		return bs.toString();
+		return bs.getBytes();
 	}
 	
-	public String Compress(String originalMsg) {
+	public byte[] Compress(String originalMsg) {
 		HashMap<Character, Integer> characterToCount = new HashMap<Character, Integer>();
 		for (int i = 0; i < originalMsg.length(); i++) {
 			char curChar = originalMsg.charAt(i);
@@ -127,9 +128,7 @@ public class Compresser {
 		return CompressWithHuffmanTree(rootNode, originalMsg);
 	}
 	
-	public String Decompress(String encryptedMsg) {
-		byte[] bytes = encryptedMsg.getBytes();
-		
+	public String Decompress(byte[] bytes) {		
 		byte garbageBitsAtEnd = bytes[0];
 		
 		TreeBuilderHelperObj helperObj = new TreeBuilderHelperObj(bytes, 1, 7);

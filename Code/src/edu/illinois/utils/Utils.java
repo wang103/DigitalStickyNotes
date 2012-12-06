@@ -9,12 +9,12 @@ public class Utils {
 		StringBuilder sb = new StringBuilder();
 		
 		for (int i = 0; i < 8; i++) {
-			if ((ch & 0x80) == 1) {
-				sb.append("1");
+			if ((ch & 1) == 1) {
+				sb.insert(0, '1');
 			} else {
-				sb.append("0");
+				sb.insert(0, '0');
 			}
-			ch <<= 1;
+			ch >>= 1;
 		}
 		
 		return sb.toString();
