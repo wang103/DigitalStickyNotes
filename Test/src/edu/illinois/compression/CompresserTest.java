@@ -17,13 +17,17 @@ public class CompresserTest extends TestCase {
 	}
 
 	public void testCompresser() {
-		String str = "Hello, world!";
-		String encryptedStr = compresser.Compress(str);
+		String str = "She handed him a handsome chocolate egg decorated with " +
+				"small, iced Snitches and, according to the packaging, " +
+				"containing a bag of Fizzing Whizzbees. Harry looked at it for " +
+				"a moment, then, to his horror, felt a lump rise in his throat.";
+		String compressedStr = compresser.Compress(str);
 		
-		assertNotNull(encryptedStr);
-		assertTrue(str.equals(encryptedStr) == false);
+		assertNotNull(compressedStr);
+		assertTrue(str.equals(compressedStr) == false);
+		assertTrue(compressedStr.length() <= str.length());
 		
-		String oriStr = compresser.Decompress(encryptedStr);
+		String oriStr = compresser.Decompress(compressedStr);
 		
 		assertNotNull(oriStr);
 		assertEquals(str, oriStr);

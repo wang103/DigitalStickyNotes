@@ -25,6 +25,10 @@ public class TreeNode {
 		this.parentNode = null;
 	}
 
+	public char getCharacter() {
+		return character;
+	}
+	
 	public int getCount() {
 		return count;
 	}
@@ -35,5 +39,17 @@ public class TreeNode {
 
 	public void setParentNode(TreeNode parentNode) {
 		this.parentNode = parentNode;
+	}
+	
+	public TreeNode getLeftNode() {
+		return leftNode;
+	}
+	
+	public TreeNode getRightNode() {
+		return rightNode;
+	}
+	
+	public boolean isLeafNode() {
+		return leftNode == null && rightNode == null;
 	}
 }
