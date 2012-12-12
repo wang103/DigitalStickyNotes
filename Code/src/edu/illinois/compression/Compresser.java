@@ -210,10 +210,6 @@ public class Compresser {
 			}
 		}
 		
-		if (node == rootNode) {
-			sb.append(rootNode.getCharacter());
-		}
-		
 		return sb.toString();
 	}
 }
