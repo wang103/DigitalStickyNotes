@@ -19,3 +19,5 @@ under 'DigitalStickyNotes' directory, and install Eclipse ADT.
     solution could be expensive, because we need a WIFI Direct access point
     in each room.
 
+BlueCove-2.1.0 is used as BlueTooth library for the server side.
+bluez-libs must be installed for Linux systems.
