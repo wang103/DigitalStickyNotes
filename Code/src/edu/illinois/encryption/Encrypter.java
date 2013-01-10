@@ -10,7 +10,7 @@ import java.security.Signature;
  */
 public class Encrypter {
 	
-	private KeyPair keyPair;	
+	private KeyPair keyPair;
 	private Signature signature;
 	
 	public Encrypter() {
