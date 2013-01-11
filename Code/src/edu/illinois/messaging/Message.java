@@ -9,23 +9,22 @@ import edu.illinois.data.User;
  * @author Tianyi Wang
  */
 public class Message {
-	@SuppressWarnings("unused")
-	private String title;			//TODO: remove this.
+	private String title;
 	private String message;
 
 	private Date availableDate;
 	private Date expireDate;
+	private Date receivedDate;
 	
-	@SuppressWarnings("unused")
-	private User sender;			//TODO: remove this.
-	@SuppressWarnings("unused")
-	private Group receivers;		//TODO: remove this.
+	private User sender;
+	private Group receivers;
 	
-	public Message(String title, String msg, Date availableDate, Date expireDate) {
+	public Message(String title, String msg, Date availableDate, Date expireDate, Date receivedDate) {
 		this.title = title;
 		this.message = msg;
 		this.availableDate = availableDate;
 		this.expireDate = expireDate;
+		this.receivedDate = receivedDate;
 	}
 	
 	public boolean isAvailable() {
@@ -40,5 +39,13 @@ public class Message {
 	
 	public String getMessage() {
 		return message;
+	}
+
+	@Override
+	public String toString() {
+		return "Message [title=" + title + ", message=" + message
+				+ ", availableDate=" + availableDate + ", expireDate="
+				+ expireDate + ", receivedDate=" + receivedDate + ", sender="
+				+ sender + ", receivers=" + receivers + "]";
 	}
 }

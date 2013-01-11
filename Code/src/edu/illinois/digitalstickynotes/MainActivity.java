@@ -35,6 +35,10 @@ public class MainActivity extends Activity {
 		
 		@SuppressWarnings("unused")		//TODO: delete
 		WifiDirectManager connectionManager = new WifiDirectManager(this);
+		
+		// Now switch activity to show all messages.
+		Intent intent = new Intent(this, ShowMessagesActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
@@ -63,11 +67,11 @@ public class MainActivity extends Activity {
 			return true;
 		case R.id.client_settings:
 			intent = new Intent(this, ClientSetupActivity.class);
-	    	startActivity(intent);
+			startActivity(intent);
 			return true;
 		case R.id.server_settings:
 			intent = new Intent(this, ServerSetupActivity.class);
-	    	startActivity(intent);
+			startActivity(intent);
 			return true;
 		case R.id.menu_settings:
 			//TODO: implementation.
