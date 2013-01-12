@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 		
 		// Now switch activity to show all messages.
 		Intent intent = new Intent(this, ShowMessagesActivity.class);
-		startActivity(intent);
+		//TODO: startActivity(intent);
 	}
 
 	@Override
