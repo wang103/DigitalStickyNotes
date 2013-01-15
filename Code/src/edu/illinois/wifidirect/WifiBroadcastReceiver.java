@@ -14,7 +14,7 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 public class WifiBroadcastReceiver extends BroadcastReceiver {
 
 	private WifiP2pManager mManager;
-	private Channel mChannel; 
+	private Channel mChannel;
 	private MainActivity activity;
 	private PeerList peerDevicesListener;
 	

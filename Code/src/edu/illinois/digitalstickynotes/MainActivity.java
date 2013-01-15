@@ -14,6 +14,9 @@ public class MainActivity extends Activity {
 
 	public static String identificationTag = "default tag";
 	
+	private WifiDirectManager wifiDirectManager;
+	private BluetoothManager btManager;
+	
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
 	
@@ -28,6 +31,10 @@ public class MainActivity extends Activity {
 			textView.setText("WIFI Direct is enabled!");
 		} else {
 			textView.setText("WIFI Direct is not enabled!");
+			wifiDirectManager = null;
+			
+			// Try to enable Bluetooth.
+			btManager = new BluetoothManager(this);
 		}
 	}
 	
@@ -39,45 +46,45 @@ public class MainActivity extends Activity {
 		if (isBTEnabled) {
 			textView.setText("Bluetooth is enabled!");
 		} else {
-			textView.setText("Bluetooth is not enabled!");
+			textView.setText("WifiDirect and Bluetooth are both not enabled!");
 		}
 	}
-	
+
 	/**
 	 * First try WIFI DIRECT. If it's not supported/enabled, ask for user's
 	 * permission to use Bluetooth.
 	 */
 	private void setupConnection() {
-		@SuppressWarnings("unused")		//TODO: delete
-		WifiDirectManager connectionManager = new WifiDirectManager(this);
-		
-		if (this.isWifiP2pEnabled) {
-			//TODO: do more work with WIFI Direct???
-		} else {
-			// Try to enable Bluetooth.
-			@SuppressWarnings("unused")	//TODO: delete
-			BluetoothManager btManager = new BluetoothManager(this);
-		}
-		
-		//TODO: notify user if both WIFI Direct and Bluetooth are disabled.
-		// User must enable one of them.
-		if (this.isWifiP2pEnabled == false && this.isBTEnabled == false) {
-			//...
-		}
+		wifiDirectManager = new WifiDirectManager(this);
+		//TODO: for now, WIFI Direct is not supported on my device.
+		// Fall back to BT right away.
+		setIsWifiP2pEnabled(false);
 	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		setupConnection();
-		
+
 		// Now switch activity to show all messages.
 		@SuppressWarnings("unused")
 		Intent intent = new Intent(this, ShowMessagesActivity.class);
 		//TODO: startActivity(intent);
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		if (isWifiP2pEnabled) {
+			wifiDirectManager.unregisterBroadcastReceiver(this);
+		}
+		if (isBTEnabled) {
+			btManager.unregisterBroadcastReceiver(this);
+		}
+	};
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -96,6 +96,10 @@ public class WifiDirectManager {
 		activity.registerReceiver(broadcastReceiver, intentFilter);
 	}
 	
+	public void unregisterBroadcastReceiver(MainActivity activity) {
+		activity.unregisterReceiver(broadcastReceiver);
+	}
+	
 	public WifiDirectManager(MainActivity activity) {
 		super();
 		initIntentFilter();
