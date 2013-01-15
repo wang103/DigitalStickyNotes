@@ -15,6 +15,7 @@ import android.widget.SimpleCursorAdapter;
 
 public class ShowMessagesActivity extends ListActivity implements LoaderCallbacks<Cursor> {
 
+	@SuppressWarnings("unused")		//TODO: delete
 	private SimpleCursorAdapter mCursorAdapter;
 	
 	// Message rows.

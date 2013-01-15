@@ -1,5 +1,6 @@
 package edu.illinois.digitalstickynotes;
 
+import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.wifidirect.WifiDirectManager;
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,8 +14,10 @@ public class MainActivity extends Activity {
 
 	public static String identificationTag = "default tag";
 	
-	@SuppressWarnings("unused")		//TODO: delete
 	private boolean isWifiP2pEnabled = false;
+	private boolean isBTEnabled = false;
+	
+	public static int CODE_REQUEST_ENABLE_BT = 1;
 	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
@@ -22,9 +25,44 @@ public class MainActivity extends Activity {
 		// Notify the user.
 		TextView textView = (TextView) findViewById(R.id.show_message);
 		if (isWifiP2pEnabled) {
-	        textView.setText("WIFI Direct is enabled!");
+			textView.setText("WIFI Direct is enabled!");
 		} else {
-	        textView.setText("WIFI Direct is not enabled!");
+			textView.setText("WIFI Direct is not enabled!");
+		}
+	}
+	
+	public void setIsBTEnabled(boolean isBTEnabled) {
+		this.isBTEnabled = isBTEnabled;
+		
+		// Notify the user.
+		TextView textView = (TextView) findViewById(R.id.show_message);
+		if (isBTEnabled) {
+			textView.setText("Bluetooth is enabled!");
+		} else {
+			textView.setText("Bluetooth is not enabled!");
+		}
+	}
+	
+	/**
+	 * First try WIFI DIRECT. If it's not supported/enabled, ask for user's
+	 * permission to use Bluetooth.
+	 */
+	private void setupConnection() {
+		@SuppressWarnings("unused")		//TODO: delete
+		WifiDirectManager connectionManager = new WifiDirectManager(this);
+		
+		if (this.isWifiP2pEnabled) {
+			//TODO: do more work with WIFI Direct???
+		} else {
+			// Try to enable Bluetooth.
+			@SuppressWarnings("unused")	//TODO: delete
+			BluetoothManager btManager = new BluetoothManager(this);
+		}
+		
+		//TODO: notify user if both WIFI Direct and Bluetooth are disabled.
+		// User must enable one of them.
+		if (this.isWifiP2pEnabled == false && this.isBTEnabled == false) {
+			//...
 		}
 	}
 	
@@ -33,14 +71,25 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		@SuppressWarnings("unused")		//TODO: delete
-		WifiDirectManager connectionManager = new WifiDirectManager(this);
+		setupConnection();
 		
 		// Now switch activity to show all messages.
+		@SuppressWarnings("unused")
 		Intent intent = new Intent(this, ShowMessagesActivity.class);
 		//TODO: startActivity(intent);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == CODE_REQUEST_ENABLE_BT) {
+			if (resultCode == RESULT_OK) {
+				setIsBTEnabled(true);
+			} else {
+				setIsBTEnabled(false);
+			}
+		}
+	};
+	
 	@Override
 	public void onResume() {
 		super.onResume();
