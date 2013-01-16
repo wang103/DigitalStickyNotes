@@ -39,6 +39,14 @@ public class BluetoothManager {
 		initBroadcastReceiver(activity);
 	}
 	
+	public void startDiscovery() {
+		
+	}
+	
+	public void stopDiscovery() {
+		
+	}
+	
 	/**
 	 * Constructor.
 	 * Enable the Bluetooth.

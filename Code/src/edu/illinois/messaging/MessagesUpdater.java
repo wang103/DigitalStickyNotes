@@ -7,10 +7,12 @@ import android.os.Handler;
  */
 public class MessagesUpdater implements Runnable {
 
-	private int updateInterval = 5000;		// 5 seconds by default.
+	private int updateInterval = 60000;		// 60 seconds by default.
 	private Handler updateHandler;
 	
 	private void updateMessages() {
+		
+		
 		//TODO: implementation.
 		
 	}
