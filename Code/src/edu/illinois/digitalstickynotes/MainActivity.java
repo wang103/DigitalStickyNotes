@@ -1,6 +1,7 @@
 package edu.illinois.digitalstickynotes;
 
 import edu.illinois.bluetooth.BluetoothManager;
+import edu.illinois.messaging.MessagesUpdater;
 import edu.illinois.wifidirect.WifiDirectManager;
 import android.os.Bundle;
 import android.app.Activity;
@@ -22,6 +23,8 @@ public class MainActivity extends Activity {
 	
 	public static int CODE_REQUEST_ENABLE_BT = 1;
 	
+	private MessagesUpdater messagesUpdater;
+	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
 		
@@ -29,7 +32,10 @@ public class MainActivity extends Activity {
 		TextView textView = (TextView) findViewById(R.id.show_message);
 		if (isWifiP2pEnabled) {
 			textView.setText("WIFI Direct is enabled!");
-		} else {
+
+			switchViewToShowMessages();
+		}
+		else {
 			textView.setText("WIFI Direct is not enabled!");
 			wifiDirectManager = null;
 			
@@ -45,11 +51,34 @@ public class MainActivity extends Activity {
 		TextView textView = (TextView) findViewById(R.id.show_message);
 		if (isBTEnabled) {
 			textView.setText("Bluetooth is enabled!");
-		} else {
+
+			switchViewToShowMessages();
+		}
+		else {
 			textView.setText("WifiDirect and Bluetooth are both not enabled!");
 		}
 	}
+	
+	private void startMessagesUpdater() {
+		messagesUpdater = new MessagesUpdater();
+		messagesUpdater.run();
+	}
+	
+	@SuppressWarnings("unused")
+	private void stopMessagesUpdater() {
+		messagesUpdater.terminate();
+	}
 
+	/**
+	 * Call this message once connection is established.
+	 */
+	private void switchViewToShowMessages() {
+		// Start the periodic updater.
+		startMessagesUpdater();
+		
+		//TODO: implementation.
+	}
+	
 	/**
 	 * First try WIFI DIRECT. If it's not supported/enabled, ask for user's
 	 * permission to use Bluetooth.
@@ -60,18 +89,13 @@ public class MainActivity extends Activity {
 		// Fall back to BT right away.
 		setIsWifiP2pEnabled(false);
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		setupConnection();
-
-		// Now switch activity to show all messages.
-		@SuppressWarnings("unused")
-		Intent intent = new Intent(this, ShowMessagesActivity.class);
-		//TODO: startActivity(intent);
 	}
 
 	@Override
