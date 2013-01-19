@@ -1,6 +1,7 @@
 package edu.illinois.digitalstickynotes;
 
 import edu.illinois.bluetooth.BluetoothManager;
+import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.messaging.MessagesUpdater;
 import edu.illinois.wifidirect.WifiDirectManager;
 import android.os.Bundle;
@@ -15,8 +16,7 @@ public class MainActivity extends Activity {
 
 	public static String identificationTag = "default tag";
 	
-	private WifiDirectManager wifiDirectManager;
-	private BluetoothManager btManager;
+	private ConnectionManager connectionManager;
 	
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
@@ -37,14 +37,19 @@ public class MainActivity extends Activity {
 		}
 		else {
 			textView.setText("WIFI Direct is not enabled!");
-			wifiDirectManager = null;
+			
+			// Unregister WIFI Direct's broadcast receiver.
+			connectionManager.unregisterBroadcastReceiver(this);
 			
 			// Try to enable Bluetooth.
-			btManager = new BluetoothManager(this);
+			connectionManager = new BluetoothManager(this);
+			if (connectionManager.connectionEnabled()) {
+				this.setIsBTEnabled(true, true);
+			}
 		}
 	}
 	
-	public void setIsBTEnabled(boolean isBTEnabled) {
+	public void setIsBTEnabled(boolean isBTEnabled, boolean switchView) {
 		this.isBTEnabled = isBTEnabled;
 		
 		// Notify the user.
@@ -52,19 +57,22 @@ public class MainActivity extends Activity {
 		if (isBTEnabled) {
 			textView.setText("Bluetooth is enabled!");
 
-			switchViewToShowMessages();
+			if (switchView) {
+				switchViewToShowMessages();
+			}
 		}
 		else {
 			textView.setText("WifiDirect and Bluetooth are both not enabled!");
+			
+			connectionManager = null;
 		}
 	}
 	
 	private void startMessagesUpdater() {
-		messagesUpdater = new MessagesUpdater();
+		messagesUpdater = new MessagesUpdater(connectionManager);
 		messagesUpdater.run();
 	}
 	
-	@SuppressWarnings("unused")
 	private void stopMessagesUpdater() {
 		messagesUpdater.terminate();
 	}
@@ -84,7 +92,7 @@ public class MainActivity extends Activity {
 	 * permission to use Bluetooth.
 	 */
 	private void setupConnection() {
-		wifiDirectManager = new WifiDirectManager(this);
+		connectionManager = new WifiDirectManager(this);
 		//TODO: for now, WIFI Direct is not supported on my device.
 		// Fall back to BT right away.
 		setIsWifiP2pEnabled(false);
@@ -102,24 +110,16 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		
-		if (isWifiP2pEnabled) {
-			wifiDirectManager.unregisterBroadcastReceiver(this);
+		if (isWifiP2pEnabled || isBTEnabled) {
+			this.stopMessagesUpdater();
+			
+			connectionManager.unregisterBroadcastReceiver(this);
 		}
-		if (isBTEnabled) {
-			btManager.unregisterBroadcastReceiver(this);
-		}
-	};
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CODE_REQUEST_ENABLE_BT) {
-			if (resultCode == RESULT_OK) {
-				setIsBTEnabled(true);
-			} else {
-				setIsBTEnabled(false);
-			}
-		}
-	};
+	}
 	
 	@Override
 	public void onResume() {

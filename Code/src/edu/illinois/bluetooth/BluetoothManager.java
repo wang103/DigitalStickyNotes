@@ -1,16 +1,19 @@
 package edu.illinois.bluetooth;
 
+import java.util.ArrayList;
+
+import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.content.IntentFilter;
 
 /**
  * @author tianyiw
  */
-public class BluetoothManager {
-	private final IntentFilter intentFilter = new IntentFilter();
+public class BluetoothManager extends ConnectionManager {
+
+	private ArrayList<BluetoothDevice> devices;
 
 	private BluetoothAdapter mBluetoothAdapter;
 	private BTBroadcastReceiver broadcastReceiver;
@@ -24,12 +27,11 @@ public class BluetoothManager {
 	}
 	
 	private void initBroadcastReceiver(MainActivity activity) {
-		broadcastReceiver = new BTBroadcastReceiver(activity);
+		broadcastReceiver = new BTBroadcastReceiver(activity, devices);
 		activity.registerReceiver(broadcastReceiver, intentFilter);
-		
-		//TODO: need to cancelDiscovery before connection.
 	}
 	
+	@Override
 	public void unregisterBroadcastReceiver(MainActivity activity) {
 		activity.unregisterReceiver(broadcastReceiver);
 	}
@@ -39,12 +41,19 @@ public class BluetoothManager {
 		initBroadcastReceiver(activity);
 	}
 	
-	public void startDiscovery() {
-		
+	@Override
+	public boolean startDiscovery() {
+		this.devices.clear();
+		return mBluetoothAdapter.startDiscovery();
 	}
 	
-	public void stopDiscovery() {
-		
+	@Override
+	public boolean stopDiscovery() {
+		return mBluetoothAdapter.cancelDiscovery();
+	}
+	
+	public boolean connectionEnabled() {
+		return mBluetoothAdapter != null & mBluetoothAdapter.isEnabled();
 	}
 	
 	/**
@@ -56,17 +65,19 @@ public class BluetoothManager {
 	public BluetoothManager(MainActivity activity) {
 		super();
 		
+		devices = new ArrayList<BluetoothDevice>();
+		
 		this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
 			// Device does not support Bluetooth.
-			activity.setIsBTEnabled(false);
+			activity.setIsBTEnabled(false, false);
 		} else {
 			// Device supports Bluetooth. Ask user to enable it if not enabled.
 			if (!mBluetoothAdapter.isEnabled()) {
 				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				activity.startActivityForResult(enableBtIntent, MainActivity.CODE_REQUEST_ENABLE_BT);
 			} else {
-				activity.setIsBTEnabled(true);
+				activity.setIsBTEnabled(true, false);
 			}
 		}
 		

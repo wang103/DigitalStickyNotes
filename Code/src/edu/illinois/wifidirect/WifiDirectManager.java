@@ -1,9 +1,9 @@
 package edu.illinois.wifidirect;
 
+import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.app.Activity;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -14,8 +14,8 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 /**
  * @author tianyiw
  */
-public class WifiDirectManager {
-	private final IntentFilter intentFilter = new IntentFilter();
+public class WifiDirectManager extends ConnectionManager {
+	
 	private WifiP2pManager mManager;
 	private Channel mChannel;
 	private WifiBroadcastReceiver broadcastReceiver;
@@ -96,14 +96,34 @@ public class WifiDirectManager {
 		activity.registerReceiver(broadcastReceiver, intentFilter);
 	}
 	
+	@Override
 	public void unregisterBroadcastReceiver(MainActivity activity) {
 		activity.unregisterReceiver(broadcastReceiver);
 	}
 	
 	public WifiDirectManager(MainActivity activity) {
 		super();
+		
 		initIntentFilter();
 		initChannel(activity);
 		initBroadcastReceiver(activity);
+	}
+
+	@Override
+	public boolean startDiscovery() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean stopDiscovery() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean connectionEnabled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
