@@ -3,6 +3,8 @@ package edu.illinois.digitalstickynotes;
 import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.messaging.MessagesUpdater;
+import edu.illinois.userinterfaces.ClientSetupActivity;
+import edu.illinois.userinterfaces.ServerSetupActivity;
 import edu.illinois.wifidirect.WifiDirectManager;
 import android.os.Bundle;
 import android.app.Activity;
