@@ -7,14 +7,14 @@ import android.util.Log;
 
 public class SQLiteHelperMessage extends SQLiteOpenHelper {
 	
-	private static final String TABLE_NAME = "messages";
-	private static final String COLUMN_ID = "message_id";
-	private static final String COLUMN_RECEIVED_TIME = "received_time";
-	private static final String COLUMN_AVAILABLE_TIME = "available_time";
-	private static final String COLUMN_EXPIRE_TIME = "expire_time";
-	private static final String COLUMN_TITLE = "title";
-	private static final String COLUMN_MESSAGE = "message";
-	private static final String COLUMN_SENDER = "sender_id";
+	public static final String TABLE_NAME = "messages";
+	public static final String COLUMN_ID = "message_id";
+	public static final String COLUMN_RECEIVED_TIME = "received_time";
+	public static final String COLUMN_AVAILABLE_TIME = "available_time";
+	public static final String COLUMN_EXPIRE_TIME = "expire_time";
+	public static final String COLUMN_TITLE = "title";
+	public static final String COLUMN_MESSAGE = "message";
+	public static final String COLUMN_SENDER = "sender_id";
 	
 	private static final String DATABASE_NAME = "messages.db";
 	private static final int DATABASE_VERSION = 1;
