@@ -18,11 +18,13 @@ public class MessagesUpdater implements Runnable {
 	
 	private void updateMessages() {
 		
-		// For every 'upadteInterval' milliseconds, we start to discover
+		// For every 'updateInterval' milliseconds, we start to discover
 		// devices for 'DISCOVERY_LENGTH' seconds. Then communicate with each
 		// devices discovered.
 		
 		boolean status;
+		
+		connectionManager.talkToServers();
 		
 		status = connectionManager.startDiscovery();
 		
@@ -37,8 +39,6 @@ public class MessagesUpdater implements Runnable {
 		status = connectionManager.stopDiscovery();
 		
 		Log.d("TIANYI", "Discovery finished. Status: " + status);
-		
-		
 	}
 	
 	@Override

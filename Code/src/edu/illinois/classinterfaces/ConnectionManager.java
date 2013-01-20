@@ -17,6 +17,8 @@ public abstract class ConnectionManager {
 	
 	abstract public boolean connectionEnabled();
 
+	abstract public void talkToServers();
+	
 	public ConnectionManager() {
 		this.intentFilter = new IntentFilter();
 	}

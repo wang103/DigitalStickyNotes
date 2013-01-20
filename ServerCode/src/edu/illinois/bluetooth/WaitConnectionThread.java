@@ -11,6 +11,10 @@ import javax.microedition.io.StreamConnectionNotifier;
 
 public class WaitConnectionThread implements Runnable {
 
+	final private UUID uuid = new UUID("1101", true);
+	final private String name = "DigitalStickyNotes Server";
+	final private String url = "btspp://localhost:" + uuid + ";name=" + name;
+	
 	@Override
 	public void run() {
 		// Start waiting for connections from devices.
@@ -24,8 +28,7 @@ public class WaitConnectionThread implements Runnable {
 			localBluetoothDevice = LocalDevice.getLocalDevice();
 			localBluetoothDevice.setDiscoverable(DiscoveryAgent.GIAC);
 			
-			UUID uuid = new UUID(19890328);
-			String url = "btspp://localhost:" + uuid.toString() + ";name=DigitalStickyNotesServer";
+			System.out.println("Start advertising service.");
 			connectionNotifier = (StreamConnectionNotifier) Connector.open(url);
 		} catch (IOException e) {
 			e.printStackTrace();

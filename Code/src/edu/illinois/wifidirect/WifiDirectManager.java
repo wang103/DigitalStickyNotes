@@ -126,4 +126,9 @@ public class WifiDirectManager extends ConnectionManager {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public void talkToServers() {
+		// TODO Auto-generated method stub
+	}
 }
