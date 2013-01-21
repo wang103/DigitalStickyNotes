@@ -48,6 +48,10 @@ public class MessagesUpdater implements Runnable {
 		updateHandler.postDelayed(this, updateInterval);
 	}
 	
+	public void start() {
+		updateHandler.postDelayed(this, 0);
+	}
+	
 	public void terminate() {
 		updateHandler.removeCallbacks(this);
 	}

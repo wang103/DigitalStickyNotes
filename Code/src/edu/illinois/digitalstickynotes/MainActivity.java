@@ -5,11 +5,13 @@ import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.messaging.MessagesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
 import edu.illinois.userinterfaces.ServerSetupActivity;
+import edu.illinois.userinterfaces.ShowMessagesActivity;
 import edu.illinois.wifidirect.WifiDirectManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -26,7 +28,7 @@ public class MainActivity extends Activity {
 	public static int CODE_REQUEST_ENABLE_BT = 1;
 	
 	private MessagesUpdater messagesUpdater;
-	
+		
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
 		
@@ -35,7 +37,7 @@ public class MainActivity extends Activity {
 		if (isWifiP2pEnabled) {
 			textView.setText("WIFI Direct is enabled!");
 
-			switchViewToShowMessages();
+			startMessagesUpdater();
 		}
 		else {
 			textView.setText("WIFI Direct is not enabled!");
@@ -60,7 +62,7 @@ public class MainActivity extends Activity {
 			textView.setText("Bluetooth is enabled!");
 
 			if (switchView) {
-				switchViewToShowMessages();
+				startMessagesUpdater();
 			}
 		}
 		else {
@@ -70,23 +72,24 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * Start the periodic updater.
+	 */
 	private void startMessagesUpdater() {
 		messagesUpdater = new MessagesUpdater(connectionManager);
-		messagesUpdater.run();
+		messagesUpdater.start();
 	}
 	
+	/**
+	 * Stop the periodic updater.
+	 */
 	private void stopMessagesUpdater() {
 		messagesUpdater.terminate();
 	}
 
-	/**
-	 * Call this message once connection is established.
-	 */
 	private void switchViewToShowMessages() {
-		// Start the periodic updater.
-		startMessagesUpdater();
-		
-		//TODO: implementation.
+		Intent intent = new Intent(this, ShowMessagesActivity.class);
+		startActivity(intent);
 	}
 	
 	/**
@@ -106,6 +109,10 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		setupConnection();
+		
+		Log.d("TIANYI", "Connection setup done");
+
+		switchViewToShowMessages();
 	}
 
 	@Override
@@ -121,6 +128,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	@Override

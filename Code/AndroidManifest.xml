@@ -35,23 +35,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.illinois.digitalstickynotes.ServerSetupActivity"
+            android:name="edu.illinois.userinterfaces.ServerSetupActivity"
             android:label="@string/title_activity_server_setup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.illinois.digitalstickynotes.MainActivity" />
         </activity>
         <activity
-            android:name="edu.illinois.digitalstickynotes.ClientSetupActivity"
+            android:name="edu.illinois.userinterfaces.ClientSetupActivity"
             android:label="@string/title_activity_client_setup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.illinois.digitalstickynotes.MainActivity" />
         </activity>
         <activity
-            android:name="edu.illinois.digitalstickynotes.LoginActivity"
+            android:name="edu.illinois.userinterfaces.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="edu.illinois.userinterfaces.ShowMessagesActivity"
+            android:label="@string/title_activity_show_messages" >
         </activity>
     </application>
 
