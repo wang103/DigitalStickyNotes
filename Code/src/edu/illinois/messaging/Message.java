@@ -22,13 +22,14 @@ public class Message {
 	private Group receivers;
 	
 	public Message(long messageID, String title, String msg, Date receivedDate,
-			Date availableDate, Date expireDate) {
+			Date availableDate, Date expireDate, User sender) {
 		this.messageID = messageID;
 		this.title = title;
 		this.message = msg;
 		this.receivedDate = receivedDate;
 		this.availableDate = availableDate;
 		this.expireDate = expireDate;
+		this.sender = sender;
 	}
 	
 	public boolean isAvailable() {

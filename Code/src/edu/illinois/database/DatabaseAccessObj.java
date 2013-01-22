@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import edu.illinois.data.User;
 import edu.illinois.messaging.Message;
 import android.content.ContentValues;
 import android.content.Context;
@@ -67,11 +68,13 @@ public class DatabaseAccessObj {
 		while (!cursor.isAfterLast()) {
 			Message message = cursorToMessage(cursor);
 			
+			//TODO: remove the commented out here.
+			/*
 			if (message.hasExpired()) {
 				deleteMessage(message);
-			} else if (message.isAvailable()) {
+			} else if (message.isAvailable()) {*/
 				messages.add(message);
-			}
+			//}
 			
 			cursor.moveToNext();
 		}
@@ -84,7 +87,8 @@ public class DatabaseAccessObj {
 		//TODO: fix the string to date conversion.
 		Message message = new Message(cursor.getLong(0), cursor.getString(4),
 				cursor.getString(5), new Date() /*cursor.getString(1))*/,
-				new Date() /*cursor.getString(2))*/, new Date() /*cursor.getString(2)*/);
+				new Date() /*cursor.getString(2))*/, new Date() /*cursor.getString(2)*/,
+				new User(cursor.getString(6), null));
 		return message;
 	}
 }

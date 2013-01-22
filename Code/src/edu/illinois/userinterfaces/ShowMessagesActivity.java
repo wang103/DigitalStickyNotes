@@ -1,7 +1,9 @@
 package edu.illinois.userinterfaces;
 
+import java.util.Date;
 import java.util.List;
 
+import edu.illinois.data.User;
 import edu.illinois.database.DatabaseAccessObj;
 import edu.illinois.digitalstickynotes.R;
 import edu.illinois.messaging.Message;
@@ -22,6 +24,13 @@ public class ShowMessagesActivity extends ListActivity {
 		
 		databaseAccessObj = new DatabaseAccessObj(this);
 		databaseAccessObj.open();
+		
+		//TODO: delete this.
+		Message message = new Message(0, "Hello", "Hello, world", new Date(), new Date(), new Date(), new User("Tianyi", null));
+		databaseAccessObj.insertMessage(message);
+		
+		Message message2 = new Message(1, "Announciment", "Ticket is $50", new Date(), new Date(), new Date(), new User("Tianyi", null));
+		databaseAccessObj.insertMessage(message2);
 		
 		List<Message> messages = databaseAccessObj.getAllAvailableMessages();
 		
