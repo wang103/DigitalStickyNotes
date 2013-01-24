@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
 	public static int CODE_REQUEST_ENABLE_BT = 1;
 	
 	private MessagesUpdater messagesUpdater;
-		
+	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
 		
@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		setupConnection();
 		
 		Log.d("TIANYI", "Connection setup done");

@@ -44,10 +44,7 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return "Message [title=" + title + ", message=" + message
-				+ ", availableDate=" + availableDate + ", expireDate="
-				+ expireDate + ", receivedDate=" + receivedDate + ", sender="
-				+ sender + ", receivers=" + receivers + "]";
+		return sender.getUserName() + ": " + title;
 	}
 
 	public long getMessageID() {
