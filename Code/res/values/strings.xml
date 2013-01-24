@@ -9,5 +9,6 @@
     <string name="title_activity_server_setup">ServerSetup</string>
     <string name="title_activity_client_setup">ClientSetup</string>
     <string name="title_activity_show_messages">Messages</string>
+    <string name="title_activity_show_detailed_message">MessageTitle</string>
 
 </resources>

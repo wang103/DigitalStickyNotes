@@ -7,6 +7,7 @@ import edu.illinois.digitalstickynotes.R;
 import edu.illinois.messaging.Message;
 import android.os.Bundle;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -44,7 +45,20 @@ public class ShowMessagesActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, android.view.View v, int position, long id) {
+		Log.d("TIANYI", "List item " + position + " clicked.");
 		
+		Message message = (Message) getListView().getItemAtPosition(position);
+		
+		Intent intent = new Intent(this, ShowDetailedMessageActivity.class);
+		
+		intent.putExtra("Title", message.getTitle());
+		intent.putExtra("Message", message.getMessage());
+		intent.putExtra("Sender", message.getSender().getUserName());
+		intent.putExtra("AvailableTime", message.getAvailableDate().toString());
+		intent.putExtra("ReceivedTime", message.getReceivedDate().toString());
+		intent.putExtra("ExpireTime", message.getExpireDate().toString());
+
+		startActivity(intent);
 	};
 	
 	@Override
