@@ -202,10 +202,10 @@ public class LoginActivity extends Activity {
 		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			//TODO: Attempt authentication against a network service.
+			// Attempt authentication.
+			//mMail
+			//mPassword
 			
-			
-			//TODO: if mEmail and mPassword are in the database, then log in.
 			return false;
 		}
 
