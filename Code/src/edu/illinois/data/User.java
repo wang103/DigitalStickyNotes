@@ -7,8 +7,6 @@ import java.security.PublicKey;
  */
 public class User {
 	private String userName;
-	//TODO: remove this.
-	@SuppressWarnings("unused")
 	private PublicKey publicKey;
 	
 	public User(String userName, PublicKey pk) {

@@ -4,6 +4,7 @@ import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.messaging.MessagesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
+import edu.illinois.userinterfaces.LoginActivity;
 import edu.illinois.userinterfaces.ServerSetupActivity;
 import edu.illinois.userinterfaces.ShowMessagesActivity;
 import edu.illinois.wifidirect.WifiDirectManager;
@@ -108,11 +109,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		Intent loginIntent = new Intent(this, LoginActivity.class);
+		startActivity(loginIntent);
+		
+		//TODO: uncomment below.
+		/*
 		setupConnection();
 		
 		Log.d("TIANYI", "Connection setup done");
 
 		switchViewToShowMessages();
+		*/
 	}
 
 	@Override
