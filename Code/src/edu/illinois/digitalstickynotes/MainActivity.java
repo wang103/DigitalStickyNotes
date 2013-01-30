@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
 			connectionManager = null;
 		}
 	}
-	
+
 	private void postSetupConnection() {
 		communicator = new Communicator();
 		
@@ -86,6 +86,9 @@ public class MainActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				startMessagesUpdater();
 				switchViewToShowMessages();
+			} else {
+				TextView textView = (TextView) findViewById(R.id.show_message);
+				textView.setText("Please sign in first (Client Settings).");
 			}
 		}
 	};
