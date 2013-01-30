@@ -1,5 +1,6 @@
 package edu.illinois.userinterfaces;
 
+import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.digitalstickynotes.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -203,10 +204,7 @@ public class LoginActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// Attempt authentication.
-			//mMail
-			//mPassword
-			
-			return false;
+			return MainActivity.communicator.tryAuthenticate(mEmail, mPassword);
 		}
 
 		@Override
@@ -215,6 +213,7 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
+				setResult(RESULT_OK);
 				finish();
 			} else {
 				mPasswordView

@@ -2,6 +2,7 @@ package edu.illinois.digitalstickynotes;
 
 import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.classinterfaces.ConnectionManager;
+import edu.illinois.communication.Communicator;
 import edu.illinois.messaging.MessagesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
 import edu.illinois.userinterfaces.LoginActivity;
@@ -19,16 +20,14 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	public static String identificationTag = "default tag";
-	
-	private ConnectionManager connectionManager;
-	
+	public static ConnectionManager connectionManager;
+	public static Communicator communicator;
+	public static MessagesUpdater messagesUpdater;
+
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
 	
-	public static int CODE_REQUEST_ENABLE_BT = 1;
-	
-	private MessagesUpdater messagesUpdater;
+	static final int ACTIVITY_CODE_SIGN_IN = 0;
 	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
@@ -37,8 +36,8 @@ public class MainActivity extends Activity {
 		TextView textView = (TextView) findViewById(R.id.show_message);
 		if (isWifiP2pEnabled) {
 			textView.setText("WIFI Direct is enabled!");
-
-			startMessagesUpdater();
+			
+			postSetupConnection();
 		}
 		else {
 			textView.setText("WIFI Direct is not enabled!");
@@ -54,16 +53,16 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void setIsBTEnabled(boolean isBTEnabled, boolean switchView) {
+	public void setIsBTEnabled(boolean isBTEnabled, boolean doPost) {
 		this.isBTEnabled = isBTEnabled;
 		
 		// Notify the user.
 		TextView textView = (TextView) findViewById(R.id.show_message);
 		if (isBTEnabled) {
 			textView.setText("Bluetooth is enabled!");
-
-			if (switchView) {
-				startMessagesUpdater();
+			
+			if (doPost) {
+				postSetupConnection();
 			}
 		}
 		else {
@@ -73,11 +72,30 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	private void postSetupConnection() {
+		communicator = new Communicator();
+		
+		//TODO: Only do this if not log in already
+		Intent loginIntent = new Intent(this, LoginActivity.class);
+		startActivityForResult(loginIntent, ACTIVITY_CODE_SIGN_IN);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == ACTIVITY_CODE_SIGN_IN) {
+			if (resultCode == RESULT_OK) {
+				startMessagesUpdater();
+				switchViewToShowMessages();
+			}
+		}
+	};
+	
 	/**
 	 * Start the periodic updater.
 	 */
 	private void startMessagesUpdater() {
-		messagesUpdater = new MessagesUpdater(connectionManager);
+		Log.d("TIANYI", "MessagesUpdater started.");
+		messagesUpdater = new MessagesUpdater();
 		messagesUpdater.start();
 	}
 	
@@ -85,10 +103,14 @@ public class MainActivity extends Activity {
 	 * Stop the periodic updater.
 	 */
 	private void stopMessagesUpdater() {
-		messagesUpdater.terminate();
+		if (messagesUpdater != null) {
+			messagesUpdater.terminate();
+			messagesUpdater = null;
+		}
 	}
 
 	private void switchViewToShowMessages() {
+		//TODO: fix.
 		Intent intent = new Intent(this, ShowMessagesActivity.class);
 		startActivity(intent);
 	}
@@ -109,17 +131,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Intent loginIntent = new Intent(this, LoginActivity.class);
-		startActivity(loginIntent);
-		
-		//TODO: uncomment below.
-		/*
 		setupConnection();
-		
 		Log.d("TIANYI", "Connection setup done");
-
-		switchViewToShowMessages();
-		*/
 	}
 
 	@Override
@@ -131,11 +144,6 @@ public class MainActivity extends Activity {
 			
 			connectionManager.unregisterBroadcastReceiver(this);
 		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	@Override

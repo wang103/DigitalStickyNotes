@@ -34,7 +34,7 @@ public class BTBroadcastReceiver extends BroadcastReceiver {
 			int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
 			switch (state) {
 			case BluetoothAdapter.STATE_OFF:
-				activity.setIsBTEnabled(false, true);
+				activity.setIsBTEnabled(false, false);
 				break;
 			case BluetoothAdapter.STATE_ON:
 				activity.setIsBTEnabled(true, true);

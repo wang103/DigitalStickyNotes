@@ -122,7 +122,7 @@ public class BluetoothManager extends ConnectionManager {
 			// Device supports Bluetooth. Ask user to enable it if not enabled.
 			if (!mBluetoothAdapter.isEnabled()) {
 				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				activity.startActivityForResult(enableBtIntent, MainActivity.CODE_REQUEST_ENABLE_BT);
+				activity.startActivity(enableBtIntent);
 			} else {
 				activity.setIsBTEnabled(true, false);
 			}

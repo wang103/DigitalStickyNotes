@@ -1,6 +1,7 @@
 package edu.illinois.messaging;
 
 import edu.illinois.classinterfaces.ConnectionManager;
+import edu.illinois.digitalstickynotes.MainActivity;
 import android.os.Handler;
 import android.util.Log;
 
@@ -56,9 +57,9 @@ public class MessagesUpdater implements Runnable {
 		updateHandler.removeCallbacks(this);
 	}
 	
-	public MessagesUpdater(ConnectionManager connectionManager) {
+	public MessagesUpdater() {
 		this.updateHandler = new Handler();
 		
-		this.connectionManager = connectionManager;
+		this.connectionManager = MainActivity.connectionManager;
 	}
 }
