@@ -21,3 +21,6 @@ under 'DigitalStickyNotes' directory, and install Eclipse ADT.
 
 BlueCove-2.1.0 is used as BlueTooth library for the server side.
 bluez-libs must be installed for Linux systems.
+
+urlAddress in class Communicator should points to the actual address of the
+server hosting PHP/handle_requests.php.
