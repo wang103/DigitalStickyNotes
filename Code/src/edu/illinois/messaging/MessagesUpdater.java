@@ -25,7 +25,8 @@ public class MessagesUpdater implements Runnable {
 		
 		boolean status;
 		
-		connectionManager.talkToServers();
+		String response = connectionManager.talkToServers("Hello");
+		Log.d("TIANYI", "Server response: " + response);
 		
 		status = connectionManager.startDiscovery();
 		

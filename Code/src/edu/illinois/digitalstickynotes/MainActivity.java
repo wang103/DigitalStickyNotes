@@ -27,7 +27,8 @@ public class MainActivity extends Activity {
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
 	
-	static final int ACTIVITY_CODE_SIGN_IN = 0;
+	public static final int ACTIVITY_CODE_SIGN_IN = 0;
+	public static final int ACTIVITY_CODE_BLUETOOTH = 1;
 	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
@@ -66,14 +67,15 @@ public class MainActivity extends Activity {
 			}
 		}
 		else {
-			textView.setText("WifiDirect and Bluetooth are both not enabled!");
+			textView.setText("WifiDirect and Bluetooth are both not enabled! " +
+					"Please enable at least one of them in the client settings.");
 			
 			connectionManager = null;
 		}
 	}
 
 	private void postSetupConnection() {
-		communicator = new Communicator();
+		communicator = new Communicator(this);
 		
 		//TODO: Only do this if not log in already
 		Intent loginIntent = new Intent(this, LoginActivity.class);
@@ -89,6 +91,10 @@ public class MainActivity extends Activity {
 			} else {
 				TextView textView = (TextView) findViewById(R.id.show_message);
 				textView.setText("Please sign in first (Client Settings).");
+			}
+		} else if (requestCode == ACTIVITY_CODE_BLUETOOTH) {
+			if (resultCode != RESULT_OK) {
+				setIsBTEnabled(false, false);
 			}
 		}
 	};
@@ -144,7 +150,6 @@ public class MainActivity extends Activity {
 		
 		if (isWifiP2pEnabled || isBTEnabled) {
 			this.stopMessagesUpdater();
-			
 			connectionManager.unregisterBroadcastReceiver(this);
 		}
 	}

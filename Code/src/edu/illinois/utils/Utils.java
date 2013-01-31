@@ -5,10 +5,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 /**
  * @author Tianyi Wang
  */
 public class Utils {
+	
+	public static boolean isNetworkConnected(Activity activity) {
+		ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		
+		if (ni == null) {
+			return false;
+		}
+		return true;
+	}
 	
 	public static String inputStreamToString(InputStream is) {
 		String line;

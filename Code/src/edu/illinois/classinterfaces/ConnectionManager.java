@@ -21,7 +21,7 @@ public abstract class ConnectionManager {
 	
 	abstract public boolean connectionEnabled();
 
-	abstract public void talkToServers();
+	abstract public String talkToServers(String s);
 	
 	protected void insertMessage(Message message) {
 		// Insert to the database.

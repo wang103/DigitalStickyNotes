@@ -29,7 +29,7 @@ public class BluetoothManager extends ConnectionManager {
 	private BTBroadcastReceiver broadcastReceiver;
 	
 	@Override
-	public void talkToServers() {
+	public String talkToServers(String s) {
 		for (BluetoothDevice device : devices) {
 			BluetoothSocket bluetoothSocket;
 			try {
@@ -63,6 +63,8 @@ public class BluetoothManager extends ConnectionManager {
 				e.printStackTrace();
 			}
 		}
+		
+		return null;
 	}
 	
 	private void initIntentFilter() {
@@ -122,7 +124,7 @@ public class BluetoothManager extends ConnectionManager {
 			// Device supports Bluetooth. Ask user to enable it if not enabled.
 			if (!mBluetoothAdapter.isEnabled()) {
 				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				activity.startActivity(enableBtIntent);
+				activity.startActivityForResult(enableBtIntent, MainActivity.ACTIVITY_CODE_BLUETOOTH);
 			} else {
 				activity.setIsBTEnabled(true, false);
 			}

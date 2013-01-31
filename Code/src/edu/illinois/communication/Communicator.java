@@ -16,6 +16,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.util.Log;
+
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.utils.Utils;
@@ -27,17 +30,15 @@ public class Communicator {
 	private HttpClient httpClient;
 	private HttpPost httpPost;
 	
-	@SuppressWarnings("unused")			//TODO: remove this.
+	private Activity activity;
 	private ConnectionManager connectionManager;
 	
-	public boolean tryAuthenticate(String email, String password) {
-		//TODO: now only try to authenticate against the main database, need to add
-		// support for authentication against local server.
+	private boolean tryAuthenticateWithLocalServer(List<NameValuePair> nameValuePairs) {
 		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-		nameValuePairs.add(new BasicNameValuePair("request_name", "authenticate"));
-		nameValuePairs.add(new BasicNameValuePair("email", email));
-		nameValuePairs.add(new BasicNameValuePair("pwd", password));
+		return false;
+	}
+	
+	private boolean tryAuthenticateWithGlobalServer(List<NameValuePair> nameValuePairs) {
 		
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -75,10 +76,30 @@ public class Communicator {
 		return success;
 	}
 	
-	public Communicator() {
+	public boolean tryAuthenticate(String email, String password) {
+		// First try to authenticate with the local server. If local server is
+		// not available, try to authenticate with the global server.
+		
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+		nameValuePairs.add(new BasicNameValuePair("request_name", "authenticate"));
+		nameValuePairs.add(new BasicNameValuePair("email", email));
+		nameValuePairs.add(new BasicNameValuePair("pwd", password));
+		
+		if (this.connectionManager != null) {
+			return tryAuthenticateWithLocalServer(nameValuePairs);
+		} else if (Utils.isNetworkConnected(activity)) {
+			return tryAuthenticateWithGlobalServer(nameValuePairs);
+		}
+		
+		Log.d("TIANYI", "Can't authenticate. No Network available.");
+		return false;
+	}
+	
+	public Communicator(Activity activity) {
 		httpClient = new DefaultHttpClient();
 		httpPost = new HttpPost(urlAddress);
 		
+		this.activity = activity;
 		this.connectionManager = MainActivity.connectionManager;
 	}
 }
