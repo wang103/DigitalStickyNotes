@@ -12,7 +12,7 @@ $request_name = $_POST['request_name'];
 # Handle request.
 if ($request_name === 'authenticate') {
     # Escape special characters.
-    if (!get_magic_quotess_gpc()) {
+    if (!get_magic_quotes_gpc()) {
         $email = mysql_real_escape_string($_POST['email']);
     } else {
         $email = $_POST['email'];
@@ -23,13 +23,15 @@ if ($request_name === 'authenticate') {
     $qry_result = mysql_query($qry);
 
     if (mysql_num_rows($qry_result) > 0) {
-        echo 'Sign in success';       
+        $result = array('success' => true);
     } else {
-        echo 'Sign in failed';
+        $result = array('success' => false);
     }
 } else {
-    echo 'Invalid Request';
+    $result = array('success' => false, 'info' => 'Request Not Supported!');
 }
 
 mysql_close($con);
+
+echo json_encode($result);
 ?>
