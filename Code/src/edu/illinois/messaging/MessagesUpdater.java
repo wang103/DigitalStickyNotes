@@ -21,6 +21,10 @@ public class MessagesUpdater implements Runnable {
 	
 	private void updateMessages() {
 		
+		if (connectionManager == null) {
+			return;
+		}
+		
 		// For every 'updateInterval' milliseconds, we start to discover
 		// devices for 'DISCOVERY_LENGTH' seconds. Then communicate with each
 		// devices discovered.

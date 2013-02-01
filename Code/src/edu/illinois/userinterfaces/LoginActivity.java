@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -214,6 +215,7 @@ public class LoginActivity extends Activity {
 
 			if (success) {
 				setResult(RESULT_OK);
+				Log.d("TIANYI", "Signed in successfully.");
 				finish();
 			} else {
 				mPasswordView

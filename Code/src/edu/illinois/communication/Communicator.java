@@ -46,14 +46,16 @@ public class Communicator {
 		}
 		
 		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true);
-		
-		JSONObject jOutputObject = null;
 		boolean success = false;
-		try {
-			jOutputObject = new JSONObject(result.get(0));
-			success = jOutputObject.getBoolean("success");
-		} catch (JSONException e) {
-			e.printStackTrace();
+
+		if (result.size() > 0) {
+			JSONObject jOutputObject = null;
+			try {
+				jOutputObject = new JSONObject(result.get(0));
+				success = jOutputObject.getBoolean("success");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return success;
@@ -102,14 +104,24 @@ public class Communicator {
 		return success;
 	}
 	
+	/**
+	 * First try to authenticate the user credential with the global server, if
+	 * Internet connection is not available, try to authenticate with the local
+	 * server.
+	 * 
+	 * @param email user's email address.
+	 * @param password user's password.
+	 * @return whether or not user's credential is authenticated.
+	 */
 	public boolean tryAuthenticate(String email, String password) {
-		// First try to authenticate with the local server. If local server is
-		// not available, try to authenticate with the global server.
 		
-		if (this.connectionManager != null) {
-			return tryAuthenticateWithLocalServer(email, password);
-		} else if (Utils.isNetworkConnected(activity)) {
+		if (Utils.isNetworkConnected(activity)) {
+			Log.d("TIANYI", "Using global server to authenticate.");
 			return tryAuthenticateWithGlobalServer(email, password);
+		}
+		else if (this.connectionManager != null) {
+			Log.d("TIANYI", "Using local server to authenticate.");
+			return tryAuthenticateWithLocalServer(email, password);
 		}
 		
 		Log.d("TIANYI", "Can't authenticate. No Network available.");
