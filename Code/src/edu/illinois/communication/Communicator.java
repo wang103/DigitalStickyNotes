@@ -33,12 +33,38 @@ public class Communicator {
 	private Activity activity;
 	private ConnectionManager connectionManager;
 	
-	private boolean tryAuthenticateWithLocalServer(List<NameValuePair> nameValuePairs) {
+	private boolean tryAuthenticateWithLocalServer(String email, String password) {
 		
-		return false;
+		JSONObject jInputObject = new JSONObject();
+		
+		try {
+			jInputObject.put("request_name", "authenticate");
+			jInputObject.put("email", email);
+			jInputObject.put("pwd", password);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		String result = connectionManager.talkToServers(jInputObject.toString(), true);
+		
+		JSONObject jOutputObject = null;
+		boolean success = false;
+		try {
+			jOutputObject = new JSONObject(result);
+			success = jOutputObject.getBoolean("success");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return success;
 	}
 	
-	private boolean tryAuthenticateWithGlobalServer(List<NameValuePair> nameValuePairs) {
+	private boolean tryAuthenticateWithGlobalServer(String email, String password) {
+		
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+		nameValuePairs.add(new BasicNameValuePair("request_name", "authenticate"));
+		nameValuePairs.add(new BasicNameValuePair("email", email));
+		nameValuePairs.add(new BasicNameValuePair("pwd", password));
 		
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -80,15 +106,10 @@ public class Communicator {
 		// First try to authenticate with the local server. If local server is
 		// not available, try to authenticate with the global server.
 		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-		nameValuePairs.add(new BasicNameValuePair("request_name", "authenticate"));
-		nameValuePairs.add(new BasicNameValuePair("email", email));
-		nameValuePairs.add(new BasicNameValuePair("pwd", password));
-		
 		if (this.connectionManager != null) {
-			return tryAuthenticateWithLocalServer(nameValuePairs);
+			return tryAuthenticateWithLocalServer(email, password);
 		} else if (Utils.isNetworkConnected(activity)) {
-			return tryAuthenticateWithGlobalServer(nameValuePairs);
+			return tryAuthenticateWithGlobalServer(email, password);
 		}
 		
 		Log.d("TIANYI", "Can't authenticate. No Network available.");

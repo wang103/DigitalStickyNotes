@@ -128,7 +128,7 @@ public class WifiDirectManager extends ConnectionManager {
 	}
 
 	@Override
-	public String talkToServers(String s) {
+	public String talkToServers(String s, boolean talkToOneServer) {
 		// TODO Auto-generated method stub
 		return null;
 	}

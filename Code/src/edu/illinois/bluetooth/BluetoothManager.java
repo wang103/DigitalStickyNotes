@@ -29,7 +29,7 @@ public class BluetoothManager extends ConnectionManager {
 	private BTBroadcastReceiver broadcastReceiver;
 	
 	@Override
-	public String talkToServers(String s) {
+	public String talkToServers(String s, boolean talkToOneServer) {
 		for (BluetoothDevice device : devices) {
 			BluetoothSocket bluetoothSocket;
 			try {
@@ -61,6 +61,10 @@ public class BluetoothManager extends ConnectionManager {
 				bluetoothSocket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			
+			if (talkToOneServer) {
+				break;
 			}
 		}
 		
