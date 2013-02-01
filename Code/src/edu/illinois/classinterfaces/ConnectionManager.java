@@ -17,13 +17,15 @@ public abstract class ConnectionManager {
 	
 	abstract public boolean startDiscovery();
 	
+	abstract public boolean startDiscoveryAndWait();
+	
 	abstract public boolean stopDiscovery();
 	
 	abstract public void unregisterBroadcastReceiver(MainActivity activity);
 	
 	abstract public boolean connectionEnabled();
 
-	abstract public List<String> talkToServers(String s, boolean talkToOneServer);
+	abstract public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery);
 	
 	protected void insertMessage(Message message) {
 		// Insert to the database.

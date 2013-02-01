@@ -11,8 +11,6 @@ import android.util.Log;
  * @author tianyiw
  */
 public class MessagesUpdater implements Runnable {
-
-	final private int DISCOVERY_LENGTH = 12;	// 12 seconds.
 	
 	private ConnectionManager connectionManager;
 	
@@ -31,18 +29,12 @@ public class MessagesUpdater implements Runnable {
 		
 		boolean status;
 		
-		List<String> response = connectionManager.talkToServers("Hello", false);
+		List<String> response = connectionManager.talkToServers("Hello", false, false);
 		Log.d("TIANYI", response.size() + " local server(s) responsed.");
 		
-		status = connectionManager.startDiscovery();
+		status = connectionManager.startDiscoveryAndWait();
 		
 		Log.d("TIANYI", "Discovery started. Status: " + status);
-
-		try {
-			Thread.sleep(DISCOVERY_LENGTH * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 
 		status = connectionManager.stopDiscovery();
 		

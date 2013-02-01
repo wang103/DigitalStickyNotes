@@ -23,9 +23,9 @@ if ($request_name === 'authenticate') {
     $qry_result = mysql_query($qry);
 
     if (mysql_num_rows($qry_result) > 0) {
-        $result = array('success' => true);
+        $result = array('success' => true, 'info' => 'User exists.');
     } else {
-        $result = array('success' => false);
+        $result = array('success' => false, 'info' => 'User does not exist.');
     }
 } else {
     $result = array('success' => false, 'info' => 'Request Not Supported!');

@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 			}
 		}
 	}
-	
+
 	public void setIsBTEnabled(boolean isBTEnabled, boolean doPost) {
 		this.isBTEnabled = isBTEnabled;
 		
@@ -86,8 +86,9 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ACTIVITY_CODE_SIGN_IN) {
 			if (resultCode == RESULT_OK) {
-				startMessagesUpdater();
-				switchViewToShowMessages();
+				//TODO: uncomment below.
+				//startMessagesUpdater();
+				//switchViewToShowMessages();
 			} else {
 				TextView textView = (TextView) findViewById(R.id.show_message);
 				textView.setText("Please sign in first (Client Settings).");

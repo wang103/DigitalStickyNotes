@@ -118,6 +118,11 @@ public class WifiDirectManager extends ConnectionManager {
 	}
 
 	@Override
+	public boolean startDiscoveryAndWait() {
+		return false;
+	};
+	
+	@Override
 	public boolean stopDiscovery() {
 		// TODO Auto-generated method stub
 		return false;
@@ -130,7 +135,7 @@ public class WifiDirectManager extends ConnectionManager {
 	}
 
 	@Override
-	public List<String> talkToServers(String s, boolean talkToOneServer) {
+	public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery) {
 		// TODO Auto-generated method stub
 		return null;
 	}

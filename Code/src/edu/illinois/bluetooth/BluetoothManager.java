@@ -20,6 +20,7 @@ import android.util.Log;
  */
 public class BluetoothManager extends ConnectionManager {
 
+	final private int DISCOVERY_LENGTH = 12;	// 12 seconds.
 	final private UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 	final static private int MAX_MSG_LENGTH = 1024;
@@ -30,7 +31,15 @@ public class BluetoothManager extends ConnectionManager {
 	private BTBroadcastReceiver broadcastReceiver;
 	
 	@Override
-	public List<String> talkToServers(String s, boolean talkToOneServer) {
+	public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery) {
+		
+		Log.d("TIANYI", "Sending " + s + "to the local server.");
+		
+		if (startDiscovery) {
+			startDiscoveryAndWait();
+			stopDiscovery();
+		}
+		
 		List<String> result = new ArrayList<String>();
 		
 		for (BluetoothDevice device : devices) {
@@ -47,11 +56,11 @@ public class BluetoothManager extends ConnectionManager {
 				// server's response.
 				byte[] outputBuffer = s.getBytes();
 				outputStream.write(outputBuffer);
-				
+
 				byte[] inputBuffer = new byte[MAX_MSG_LENGTH];
 				int bytes;		// bytes read from inputStream
 				bytes = inputStream.read(inputBuffer);
-				String inputMessage = new String(inputBuffer);
+				String inputMessage = new String(inputBuffer, 0, bytes);
 				
 				Log.d("TIANYI", bytes + " bytes of message read: " + inputMessage);
 				
@@ -101,6 +110,20 @@ public class BluetoothManager extends ConnectionManager {
 		this.devices.clear();
 		return mBluetoothAdapter.startDiscovery();
 	}
+	
+	@Override
+	public boolean startDiscoveryAndWait() {
+		this.devices.clear();
+		boolean status = mBluetoothAdapter.startDiscovery();
+		
+		try {
+			Thread.sleep(DISCOVERY_LENGTH * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return status;
+	};
 	
 	@Override
 	public boolean stopDiscovery() {

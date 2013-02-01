@@ -28,7 +28,9 @@ public class ProcessConnectionThread implements Runnable {
 		String email = (String) jsonObj.get("email");
 		String pwd = (String) jsonObj.get("pwd");
 		
-		String data = "email=" + email + "&password=" + pwd;
+		String data = "request_name=authenticate&email=" + email + "&pwd=" + pwd;
+		
+		System.out.println("Sending data " + data + " to global server.");
 		
 		String response = Utils.sendPostToGlobalServer(data);
 		
@@ -54,10 +56,10 @@ public class ProcessConnectionThread implements Runnable {
 			byte[] inputBuffer = new byte[MAX_MSG_LENGTH];
 			int bytes;		// bytes read from inputStream
 			bytes = inputStream.read(inputBuffer);
-			String inputMessage = new String(inputBuffer);
+			String inputMessage = new String(inputBuffer, 0, bytes);
 			
 			System.out.println("Received " + bytes + " bytes of client message: " + inputMessage);
-			
+
 			// Now handle client's request.
 			try {
 				JSONObject jsonObj = (JSONObject) new JSONParser().parse(inputMessage);

@@ -34,7 +34,7 @@ public class Communicator {
 	private ConnectionManager connectionManager;
 	
 	private boolean tryAuthenticateWithLocalServer(String email, String password) {
-		
+
 		JSONObject jInputObject = new JSONObject();
 		
 		try {
@@ -45,7 +45,7 @@ public class Communicator {
 			e.printStackTrace();
 		}
 		
-		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true);
+		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
 		boolean success = false;
 
 		if (result.size() > 0) {
@@ -114,7 +114,7 @@ public class Communicator {
 	 * @return whether or not user's credential is authenticated.
 	 */
 	public boolean tryAuthenticate(String email, String password) {
-		
+
 		if (Utils.isNetworkConnected(activity)) {
 			Log.d("TIANYI", "Using global server to authenticate.");
 			return tryAuthenticateWithGlobalServer(email, password);
