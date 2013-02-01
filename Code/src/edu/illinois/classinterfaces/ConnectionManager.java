@@ -1,5 +1,7 @@
 package edu.illinois.classinterfaces;
 
+import java.util.List;
+
 import android.content.IntentFilter;
 import edu.illinois.database.DatabaseAccessObj;
 import edu.illinois.digitalstickynotes.MainActivity;
@@ -21,7 +23,7 @@ public abstract class ConnectionManager {
 	
 	abstract public boolean connectionEnabled();
 
-	abstract public String talkToServers(String s, boolean talkToOneServer);
+	abstract public List<String> talkToServers(String s, boolean talkToOneServer);
 	
 	protected void insertMessage(Message message) {
 		// Insert to the database.

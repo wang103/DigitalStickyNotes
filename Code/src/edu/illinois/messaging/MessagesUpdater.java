@@ -1,5 +1,7 @@
 package edu.illinois.messaging;
 
+import java.util.List;
+
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.os.Handler;
@@ -25,8 +27,8 @@ public class MessagesUpdater implements Runnable {
 		
 		boolean status;
 		
-		String response = connectionManager.talkToServers("Hello", false);
-		Log.d("TIANYI", "Server response: " + response);
+		List<String> response = connectionManager.talkToServers("Hello", false);
+		Log.d("TIANYI", response.size() + " local server(s) responsed.");
 		
 		status = connectionManager.startDiscovery();
 		

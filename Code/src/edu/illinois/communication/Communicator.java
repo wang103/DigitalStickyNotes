@@ -45,12 +45,12 @@ public class Communicator {
 			e.printStackTrace();
 		}
 		
-		String result = connectionManager.talkToServers(jInputObject.toString(), true);
+		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true);
 		
 		JSONObject jOutputObject = null;
 		boolean success = false;
 		try {
-			jOutputObject = new JSONObject(result);
+			jOutputObject = new JSONObject(result.get(0));
 			success = jOutputObject.getBoolean("success");
 		} catch (JSONException e) {
 			e.printStackTrace();

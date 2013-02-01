@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import edu.illinois.classinterfaces.ConnectionManager;
@@ -29,7 +30,9 @@ public class BluetoothManager extends ConnectionManager {
 	private BTBroadcastReceiver broadcastReceiver;
 	
 	@Override
-	public String talkToServers(String s, boolean talkToOneServer) {
+	public List<String> talkToServers(String s, boolean talkToOneServer) {
+		List<String> result = new ArrayList<String>();
+		
 		for (BluetoothDevice device : devices) {
 			BluetoothSocket bluetoothSocket;
 			try {
@@ -40,10 +43,9 @@ public class BluetoothManager extends ConnectionManager {
 				InputStream inputStream = bluetoothSocket.getInputStream();
 				OutputStream outputStream = bluetoothSocket.getOutputStream();
 				
-				// First send identification information, then wait for
-				// server's messages.
-				String outputMessage = "Hello from client A.\n";
-				byte[] outputBuffer = outputMessage.getBytes();
+				// First send request to the local server, then wait for
+				// server's response.
+				byte[] outputBuffer = s.getBytes();
 				outputStream.write(outputBuffer);
 				
 				byte[] inputBuffer = new byte[MAX_MSG_LENGTH];
@@ -53,7 +55,7 @@ public class BluetoothManager extends ConnectionManager {
 				
 				Log.d("TIANYI", bytes + " bytes of message read: " + inputMessage);
 				
-				//TODO: do something with this information, update the UI.
+				result.add(inputMessage);
 				
 				// Done with this connection, clean up.
 				outputStream.close();
@@ -68,7 +70,7 @@ public class BluetoothManager extends ConnectionManager {
 			}
 		}
 		
-		return null;
+		return result;
 	}
 	
 	private void initIntentFilter() {

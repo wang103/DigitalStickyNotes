@@ -1,5 +1,7 @@
 package edu.illinois.wifidirect;
 
+import java.util.List;
+
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.app.Activity;
@@ -128,7 +130,7 @@ public class WifiDirectManager extends ConnectionManager {
 	}
 
 	@Override
-	public String talkToServers(String s, boolean talkToOneServer) {
+	public List<String> talkToServers(String s, boolean talkToOneServer) {
 		// TODO Auto-generated method stub
 		return null;
 	}
