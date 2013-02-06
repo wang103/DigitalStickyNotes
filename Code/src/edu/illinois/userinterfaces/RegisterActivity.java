@@ -2,11 +2,17 @@ package edu.illinois.userinterfaces;
 
 import edu.illinois.digitalstickynotes.R;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 
 public class RegisterActivity extends Activity {
@@ -18,6 +24,7 @@ public class RegisterActivity extends Activity {
 	
 	private String mEmail;
 	private String mPassword;
+	private String mPassword2;
 	private String mFirstName;
 	private String mLastName;
 	private String mUsername;
@@ -77,7 +84,135 @@ public class RegisterActivity extends Activity {
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attempRegister() {
-		//TODO:
+		if (mRegisterTask != null) {
+			return;
+		}
+		
+		// Reset errors.
+		mEmailView.setError(null);
+		mPasswordView1.setError(null);
+		mPasswordView2.setError(null);
+		mFirstNameView.setError(null);
+		mLastNameView.setError(null);
+		mUsernameView.setError(null);
+		
+		// Store values at the time of the register attempt.
+		mEmail = mEmailView.getText().toString();
+		mPassword = mPasswordView1.getText().toString();
+		mPassword2 = mPasswordView2.getText().toString();
+		mFirstName = mFirstNameView.getText().toString();
+		mLastName = mLastNameView.getText().toString();
+		mUsername = mUsernameView.getText().toString();
+		
+		boolean cancel = false;
+		View focusView = null;
+		
+		// Check for validity.
+		if (TextUtils.isEmpty(mPassword2)) {
+			mPasswordView2.setError(getString(R.string.error_field_required));
+			focusView = mPasswordView2;
+			cancel = true;
+		} else if (mPassword2.equals(mPassword) == false) {
+			mPasswordView2.setError(getString(R.string.error_passwords_no_match));
+			focusView = mPasswordView2;
+			cancel = true;
+		}
+		
+		if (TextUtils.isEmpty(mPassword)) {
+			mPasswordView1.setError(getString(R.string.error_field_required));
+			focusView = mPasswordView1;
+			cancel = true;
+		} else if (mPassword.length() < LoginActivity.PASSWORD_MIN_LEN) {
+			mPasswordView1.setError(getString(R.string.error_short_password));
+			focusView = mPasswordView1;
+			cancel = true;
+		} else if (mPassword.length() > LoginActivity.PASSWORD_MAX_LEN) {
+			mPasswordView1.setError(getString(R.string.error_long_password));
+			focusView = mPasswordView1;
+			cancel = true;
+		}
+		
+		if (TextUtils.isEmpty(mEmail)) {
+			mEmailView.setError(getString(R.string.error_field_required));
+			focusView = mEmailView;
+			cancel = true;
+		} else if (!mEmail.contains("@")) {
+			mEmailView.setError(getString(R.string.error_invalid_email));
+			focusView = mEmailView;
+			cancel = true;
+		}
+		
+		if (TextUtils.isEmpty(mLastName)) {
+			mLastNameView.setError(getString(R.string.error_field_required));
+			focusView = mLastNameView;
+			cancel = true;
+		}
+		
+		if (TextUtils.isEmpty(mFirstName)) {
+			mFirstNameView.setError(getString(R.string.error_field_required));
+			focusView = mFirstNameView;
+			cancel = true;
+		}
+		
+		if (TextUtils.isEmpty(mUsername)) {
+			mUsernameView.setError(getString(R.string.error_field_required));
+			focusView = mUsernameView;
+			cancel = true;
+		}
+		
+		if (cancel) {
+			// There was an error; don't attempt register and focus the first
+			// form field with an error.
+			focusView.requestFocus();
+		} else {
+			// Show a progress spinner, and kick off a background task to
+			// perform the user register attempt.
+			mRegisterStatusMessageView.setText(R.string.login_progress_register);
+			showProgress(true);
+			mRegisterTask = new UserRegisterTask();
+			mRegisterTask.execute((Void) null);
+		}
+	}
+
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mRegisterStatusView.setVisibility(View.VISIBLE);
+			mRegisterStatusView.animate().setDuration(shortAnimTime)
+			.alpha(show ? 1 : 0)
+			.setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mRegisterStatusView.setVisibility(show ? View.VISIBLE
+							: View.GONE);
+				}
+			});
+
+			mRegisterFormView.setVisibility(View.VISIBLE);
+			mRegisterFormView.animate().setDuration(shortAnimTime)
+			.alpha(show ? 0 : 1)
+			.setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mRegisterFormView.setVisibility(show ? View.GONE
+							: View.VISIBLE);
+				}
+			});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mRegisterStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
 	}
 	
 	/**
@@ -93,12 +228,24 @@ public class RegisterActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			//TODO:
+			mRegisterTask = null;
+			showProgress(false);
+			
+			if (success) {
+				setResult(RESULT_OK);
+				Log.d("TIANYI", "Registered successfully.");
+				finish();
+			} else {
+				//TODO: show error.
+				mEmailView.setError("hahaha");
+				mEmailView.requestFocus();
+			}
 		}
 
 		@Override
 		protected void onCancelled() {
-			//TODO:
+			mRegisterTask = null;
+			showProgress(false);
 		}
 	}
 }

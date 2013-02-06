@@ -21,5 +21,6 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_sign_in_failed">Email and/or password is incorrect</string>
+    <string name="error_passwords_no_match">Passwords do not match</string>
     
 </resources>
