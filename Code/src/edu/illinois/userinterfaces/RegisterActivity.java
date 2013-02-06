@@ -1,5 +1,6 @@
 package edu.illinois.userinterfaces;
 
+import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.digitalstickynotes.R;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -220,10 +221,14 @@ public class RegisterActivity extends Activity {
 	 */
 	public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
+		private int errorCode;
+		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			//TODO:
-			return false;
+			// Attempt register.
+			errorCode = MainActivity.communicator.tryRegister(mEmail, mPassword,
+					mFirstName, mLastName, mUsername);
+			return errorCode == 0;
 		}
 
 		@Override
@@ -235,10 +240,14 @@ public class RegisterActivity extends Activity {
 				setResult(RESULT_OK);
 				Log.d("TIANYI", "Registered successfully.");
 				finish();
-			} else {
-				//TODO: show error.
-				mEmailView.setError("hahaha");
-				mEmailView.requestFocus();
+			} else {				
+				if (errorCode == 1) {
+					mEmailView.setError("Email is already used by someone else.");
+					mEmailView.requestFocus();
+				} else if (errorCode == 2) {
+					mUsernameView.setError("Username is already used by someone else.");
+					mUsernameView.requestFocus();
+				}
 			}
 		}
 

@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
 	
 	public static final int ACTIVITY_CODE_SIGN_IN = 0;
 	public static final int ACTIVITY_CODE_BLUETOOTH = 1;
+	public static final int ACTIVITY_CODE_REGISTER = 2;
 	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;

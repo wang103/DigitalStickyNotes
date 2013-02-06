@@ -128,6 +128,24 @@ public class Communicator {
 		return false;
 	}
 	
+	/**
+	 * First try to register the user credential with the global server, if
+	 * Internet connection is not available, try to register with the local
+	 * server.
+	 * 
+	 * @param email user's email address.
+	 * @param password user's password.
+	 * @param firstName user's first name.
+	 * @param lastName user's last name.
+	 * @param username user picked nickname for his/her account.
+	 * @return 0 for success. 1 if email is used. 2 if username is used.
+	 */
+	public int tryRegister(String email, String password, String firstName,
+			String lastName, String username) {
+		
+		return 1;
+	}
+	
 	public Communicator(Activity activity) {
 		httpClient = new DefaultHttpClient();
 		httpPost = new HttpPost(urlAddress);

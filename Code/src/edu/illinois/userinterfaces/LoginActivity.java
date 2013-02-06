@@ -84,7 +84,7 @@ public class LoginActivity extends Activity {
 					@Override
 					public void onClick(View view) {
 						Intent intent = new Intent(view.getContext(), RegisterActivity.class);
-						view.getContext().startActivity(intent);
+						startActivityForResult(intent, MainActivity.ACTIVITY_CODE_REGISTER);
 					}
 				});
 	}
@@ -157,6 +157,17 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == MainActivity.ACTIVITY_CODE_REGISTER) {
+			if (resultCode == RESULT_OK) {
+				setResult(RESULT_OK);
+				Log.d("TIANYI", "Registered and signed in successfully.");
+				finish();
+			}
+		}
+	};
+	
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
