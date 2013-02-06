@@ -45,6 +45,32 @@ public class ProcessConnectionThread implements Runnable {
 		}
 	}
 	
+	private void handleRegistration(JSONObject jsonObj, OutputStream outputStream) {
+		
+		String email = (String) jsonObj.get("email");
+		String pwd = (String) jsonObj.get("pwd");
+		String firstName = (String) jsonObj.get("firstname");
+		String lastName = (String) jsonObj.get("lastname");
+		String username = (String) jsonObj.get("username");
+		
+		String data = "request_name=register&email=" + email + "&pwd=" + pwd +
+				"&firstname=" + firstName + "&lastname=" + lastName + "&username=" + username;
+
+		System.out.println("Sending data " + data + " to global server.");
+		
+		String response = Utils.sendPostToGlobalServer(data);
+		
+		System.out.println("Response from the global server: " + response);
+		
+		// Send the result back to the client.
+		byte[] outputBuffer = response.getBytes();
+		try {
+			outputStream.write(outputBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void run() {
 		try {
@@ -68,6 +94,8 @@ public class ProcessConnectionThread implements Runnable {
 				
 				if (request.equals("authenticate")) {
 					handleAuthenticate(jsonObj, outputStream);
+				} else if (request.equals("register")) {
+					handleRegistration(jsonObj, outputStream);
 				} else {
 					System.out.println("Unsupported request from client!");
 				}

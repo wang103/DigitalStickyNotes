@@ -159,7 +159,7 @@ public class Communicator {
 		
 		return code;
 	}
-	
+
 	private int tryRegisterWithGlobalServer(String email, String password,
 			String firstName, String lastName, String username) {
 		
