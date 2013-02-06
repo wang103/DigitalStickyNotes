@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,8 +25,8 @@ import android.widget.TextView;
  */
 public class LoginActivity extends Activity {
 
-	private final static int PASSWORD_MIN_LEN = 4;
-	private final static int PASSWORD_MAX_LEN = 12;
+	public final static int PASSWORD_MIN_LEN = 4;
+	public final static int PASSWORD_MAX_LEN = 12;
 	
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -82,7 +83,8 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						//TODO: change activity to register.
+						Intent intent = new Intent(view.getContext(), RegisterActivity.class);
+						view.getContext().startActivity(intent);
 					}
 				});
 	}
@@ -95,7 +97,7 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * Attempts to sign in or register the account specified by the login form.
+	 * Attempts to sign in the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
@@ -197,8 +199,7 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
+	 * Represents an asynchronous login task.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
