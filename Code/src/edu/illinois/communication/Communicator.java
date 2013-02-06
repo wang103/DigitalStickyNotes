@@ -128,6 +128,85 @@ public class Communicator {
 		return false;
 	}
 	
+	private int tryRegisterWithLocalServer(String email, String password,
+			String firstName, String lastName, String username) {
+
+		JSONObject jInputObject = new JSONObject();
+		
+		try {
+			jInputObject.put("request_name", "register");
+			jInputObject.put("email", email);
+			jInputObject.put("pwd", password);
+			jInputObject.put("firstname", firstName);
+			jInputObject.put("lastname", lastName);
+			jInputObject.put("username", username);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
+		int code = 3;
+
+		if (result.size() > 0) {
+			JSONObject jOutputObject = null;
+			try {
+				jOutputObject = new JSONObject(result.get(0));
+				code = jOutputObject.getInt("code");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return code;
+	}
+	
+	private int tryRegisterWithGlobalServer(String email, String password,
+			String firstName, String lastName, String username) {
+		
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
+		nameValuePairs.add(new BasicNameValuePair("request_name", "register"));
+		nameValuePairs.add(new BasicNameValuePair("email", email));
+		nameValuePairs.add(new BasicNameValuePair("pwd", password));
+		nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
+		nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
+		nameValuePairs.add(new BasicNameValuePair("username", username));
+		
+		try {
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		HttpResponse response = null;
+		try {
+			response = httpClient.execute(httpPost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		String result = null;
+		try {
+			result = Utils.inputStreamToString(response.getEntity().getContent());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject jsonObject = null;
+		int code = 3;
+		try {
+			jsonObject = new JSONObject(result);
+			code = jsonObject.getInt("code");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return code;
+	}
+	
 	/**
 	 * First try to register the user credential with the global server, if
 	 * Internet connection is not available, try to register with the local
@@ -138,12 +217,22 @@ public class Communicator {
 	 * @param firstName user's first name.
 	 * @param lastName user's last name.
 	 * @param username user picked nickname for his/her account.
-	 * @return 0 for success. 1 if email is used. 2 if username is used.
+	 * @return 0 for success. 1 if email is used. 2 if username is used. 3 for other reasons.
 	 */
 	public int tryRegister(String email, String password, String firstName,
 			String lastName, String username) {
 		
-		return 1;
+		if (Utils.isNetworkConnected(activity)) {
+			Log.d("TIANYI", "Using global server to register.");
+			return tryRegisterWithGlobalServer(email, password, firstName, lastName, username);
+		}
+		else if (this.connectionManager != null) {
+			Log.d("TIANYI", "Using local server to register.");
+			return tryRegisterWithLocalServer(email, password, firstName, lastName, username);
+		}
+		
+		Log.d("TIANYI", "Can't authenticate. No Network available.");		
+		return 3;
 	}
 	
 	public Communicator(Activity activity) {
