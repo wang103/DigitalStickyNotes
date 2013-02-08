@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
 	public static final int ACTIVITY_CODE_SIGN_IN = 0;
 	public static final int ACTIVITY_CODE_BLUETOOTH = 1;
 	public static final int ACTIVITY_CODE_REGISTER = 2;
+	public static final int ACTIVITY_CODE_TOKEN = 3;
 	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
@@ -97,6 +98,16 @@ public class MainActivity extends Activity {
 		} else if (requestCode == ACTIVITY_CODE_BLUETOOTH) {
 			if (resultCode != RESULT_OK) {
 				setIsBTEnabled(false, false);
+			}
+		} else if (requestCode == ACTIVITY_CODE_TOKEN) {
+			if (resultCode != RESULT_OK) {
+				TextView textView = (TextView) findViewById(R.id.show_message);
+				textView.setText("Authenticator doesn't have sufficient access level.");
+			} else {
+				Log.d("TIANYI", "User granted sufficient access level.");
+				
+				// Now try to get token again.
+				//TODO:
 			}
 		}
 	};

@@ -20,7 +20,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+	
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -69,6 +71,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.illinois.userinterfaces.LoginActivity" />
         </activity>
+        
     </application>
 
 </manifest>
