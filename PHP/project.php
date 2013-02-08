@@ -18,6 +18,8 @@
         <label>Code:</label> <input type="text" name="code" required>
         </p>
         <p>
+        <label>Redirect URI:</label> <input type="text" name="uri" required>
+        <p>
         <input type="submit" value="Submit">
         </p>
         </form>';

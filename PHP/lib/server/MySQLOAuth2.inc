@@ -1,6 +1,5 @@
 <?php
-
-include "../OAuth2.inc";
+include 'lib/OAuth2.inc';
 
 /**
  * OAuth2 Library MySQL DB Implementation.
@@ -15,11 +14,11 @@ class MySQLAuth2 extends OAuth2 {
     public function __construct() {
         parent::__construct();
 
-        $con = mysql_connect('68.178.137.113', 'dsntianyi', 'Digital!1');
-        if (!$con) {
+        $this->con = mysql_connect('68.178.137.113', 'dsntianyi', 'Digital!1');
+        if (!$this->con) {
             die('Could not connect: ' . mysql_error());
         }
-        mysql_select_db('dsntianyi', $con);
+        mysql_select_db('dsntianyi', $this->con);
     }
 
     /**
@@ -30,8 +29,10 @@ class MySQLAuth2 extends OAuth2 {
      * @param $redirect_uri Redirect URI to be stored.
      */
     public function addClient($client_id, $client_secret, $redirect_uri) {
+        $redirect_uri = mysql_real_escape_string($redirect_uri);
         $qry = 'INSERT INTO clients (id, secret, redirect_uri) VALUES ("' . $client_id . '", "' . $client_secret . '", "' . $redirect_uri . '")';
-        if (!mysql_query($qry, $con)) {
+        
+        if (!mysql_query($qry, $this->con)) {
             die('Error: ' . mysql_error());
         }
     }
@@ -85,7 +86,7 @@ class MySQLAuth2 extends OAuth2 {
      */
     protected function setAccessToken($oauth_token, $client_id, $expires, $scope = NULL) {
         $qry = 'INSERT INTO tokens (token_id, client_id, expires, scope) VALUES ("' . $oauth_token . '", "' . $client_id . '", "' . $expires . '", "' . $scope . '")';
-        if (!mysql_query($qry, $con)) {
+        if (!mysql_query($qry, $this->con)) {
             die('Error: ' . mysql_error());
         }
     }
@@ -119,7 +120,7 @@ class MySQLAuth2 extends OAuth2 {
      */
     protected function setAuthCode($code, $client_id, $redirect_uri, $expires, $scope = NULL) {
         $qry = 'INSERT INTO auth_codes (code_id, client_id, redirect_uri, expires, scope) VALUES ("' . $code . '", "' . $client_id . '", "' . $redirect_uri . '", "' . $expires . '", "' . $scope . '")';
-        if (!mysql_query($qry, $con)) {
+        if (!mysql_query($qry, $this->con)) {
             die('Error: ' . mysql_error());
         }
     }
