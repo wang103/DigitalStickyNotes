@@ -1,6 +1,8 @@
 # Papers for this research
 Papers/
 
+*.swp
+
 # Temp files created by gedit
 *~
 
