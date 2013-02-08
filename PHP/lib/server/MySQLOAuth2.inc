@@ -23,6 +23,20 @@ class MySQLAuth2 extends OAuth2 {
     }
 
     /**
+     * Helper function to add a new client to the database.
+     *
+     * @param $client_id Client identifier to be stored.
+     * @param $client_secret Client secret to be stored.
+     * @param $redirect_uri Redirect URI to be stored.
+     */
+    public function addClient($client_id, $client_secret, $redirect_uri) {
+        $qry = 'INSERT INTO clients (id, secret, redirect_uri) VALUES ("' . $client_id . '", "' . $client_secret . '", "' . $redirect_uri . '")';
+        if (!mysql_query($qry, $con)) {
+            die('Error: ' . mysql_error());
+        }
+    }
+
+    /**
      * Implements OAuth2::checkClientCredentials().
      */
     protected function checkClientCredentials($client_id, $client_secret = NULL) {
@@ -36,4 +50,43 @@ class MySQLAuth2 extends OAuth2 {
         }
     }
 
+    /**
+     * Implements OAuth2::getRedirectUri().
+     */
+    protected function getRedirectUri($client_id) {
+        $qry = "SELECT redirect_uri FROM clients WHERE id='" . $client_id . "'";
+        $qry_result = mysql_query($qry);
+
+        if (mysql_num_rows($qry_result) > 0) {
+            $client = mysql_fetch_assoc($qry_result);
+            return $client['redirect_uri'];
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Implements OAuth2::getAccessToken().
+     */
+    protected function getAccessToken($oauth_token) {
+        $qry = "SELECT client_id,expires,scope FROM tokens WHERE token_id='" . $oauth_token . "'";
+        $qry_result = mysql_query($qry);
+
+        if (mysql_num_rows($qry_result) > 0) {
+            $client = mysql_fetch_assoc($qry_result);
+            return array("client_id" => $client['client_id'], "expires" => $client['expires'], "scope" => $client['scope']);
+        } else {
+            return NULL;
+        }
+    }
+
+    /**
+     * Implements OAuth2::setAccessToken().
+     */
+    protected function setAccessToken($oauth_token, $client_id, $expires, $scope = NULL) {
+        $qry = 'INSERT INTO tokens (token_id, client_id, expires, scope) VALUES ("' . $oauth_token . '", "' . $client_id . '", "' . $expires . '", "' . $scope . '")';
+        if (!mysql_query($qry, $con)) {
+            die('Error: ' . mysql_error());
+        }
+    }
 }
