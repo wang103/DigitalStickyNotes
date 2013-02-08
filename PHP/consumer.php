@@ -1,9 +1,10 @@
 <?php
+include 'lib/server/Utils.inc';
 
 if ($_POST['code'] === 'tianyiwang') {
     # Generate the consumer id and secret.
-    $consumer_id = sha1(OAuthProvider::generateToken(40, true));
-    $consumer_secret = sha1(OAuthProvider::generateToken(40, true));
+    $consumer_id = generateToken();
+    $consumer_secret = generateToken();
 
     # Save them in the DB.
 
