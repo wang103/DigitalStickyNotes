@@ -1,4 +1,5 @@
 <?php
+session_save_path('/home/content/49/10017049/html/tmp/sessions');
 session_start();
 
 $con = mysql_connect('68.178.137.113', 'dsntianyi', 'Digital!1');
