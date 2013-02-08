@@ -89,4 +89,38 @@ class MySQLAuth2 extends OAuth2 {
             die('Error: ' . mysql_error());
         }
     }
+
+    /**
+     * Overrides OAuth2::getSupportedGrantTypes().
+     */
+    protected function getSupportedGrantTypes() {
+        return array(
+            OAUTH2_GRANT_TYPE_AUTH_CODE,
+        );
+    }
+
+    /**
+     * Overrides OAuth2::getAuthCode().
+     */
+    protected function getAuthCode($code) {
+        $qry = "SELECT client_id,redirect_uri,expires,scope FROM auth_codes WHERE code_id='" . $code . "'";
+        $qry_result = mysql_query($qry);
+
+        if (mysql_num_rows($qry_result) > 0) {
+            $client = mysql_fetch_assoc($qry_result);
+            return array("client_id" => $client['client_id'], "redirect_uri" => $client['redirect_uri'], "expires" => $client['expires'], "scope" => $client['scope']);
+        } else {
+            return NULL;
+        }
+    }
+    
+    /**
+     * Overrides OAuth2::setAuthCode().
+     */
+    protected function setAuthCode($code, $client_id, $redirect_uri, $expires, $scope = NULL) {
+        $qry = 'INSERT INTO auth_codes (code_id, client_id, redirect_uri, expires, scope) VALUES ("' . $code . '", "' . $client_id . '", "' . $redirect_uri . '", "' . $expires . '", "' . $scope . '")';
+        if (!mysql_query($qry, $con)) {
+            die('Error: ' . mysql_error());
+        }
+    }
 }
