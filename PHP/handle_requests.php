@@ -2,7 +2,7 @@
 session_save_path('/home/content/49/10017049/html/tmp/sessions');
 session_start();
 
-require "lib/server/MySQLAuth2.inc";
+require "lib/server/MySQLOAuth2.inc";
 
 $con = mysql_connect('68.178.137.113', 'dsntianyi', 'Digital!1');
 if (!$con) {

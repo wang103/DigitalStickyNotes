@@ -1,11 +1,14 @@
 package edu.illinois.userinterfaces;
 
+import edu.illinois.authentication.AccountAuthenticator;
 import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.digitalstickynotes.R;
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,11 +26,13 @@ import android.widget.TextView;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends AccountAuthenticatorActivity {
 
 	public final static int PASSWORD_MIN_LEN = 4;
 	public final static int PASSWORD_MAX_LEN = 12;
 	
+    private AccountManager mAccountManager;
+
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
@@ -50,6 +55,8 @@ public class LoginActivity extends Activity {
 
 		setContentView(R.layout.activity_login);
 
+        mAccountManager = AccountManager.get(this);
+		
 		// Set up the login form.
 		mEmailView = (EditText) findViewById(R.id.email);
 
@@ -228,6 +235,11 @@ public class LoginActivity extends Activity {
 			if (success) {
 				setResult(RESULT_OK);
 				Log.d("TIANYI", "Signed in successfully.");
+				
+				String token = null;	//TODO: need to get access token from the server.
+				Account account = new Account(mEmail, AccountAuthenticator.ACCOUNT_TYPE);
+				
+				
 				finish();
 			} else {
 				mPasswordView

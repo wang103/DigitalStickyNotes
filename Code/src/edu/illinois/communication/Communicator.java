@@ -16,15 +16,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
-import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
-import edu.illinois.authentication.OnError;
-import edu.illinois.authentication.OnTokenAcquired;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.utils.Utils;
@@ -32,9 +26,7 @@ import edu.illinois.utils.Utils;
 public class Communicator {
 	
 	private static final String urlAddress = "http://tianyiwang.info/project/handle_requests.php";
-	
-	private AccountManager am;
-	
+		
 	private HttpClient httpClient;
 	private HttpPost httpPost;
 	
@@ -70,17 +62,6 @@ public class Communicator {
 	}
 	
 	private boolean tryAuthenticateWithGlobalServer(String email, String password) {
-		
-		am = AccountManager.get(activity);
-		Bundle options = new Bundle();
-		
-		Account[] accounts = am.getAccountsByType("edu.illinois.digitalstickynotes");
-		Account account = accounts[0];
-		
-		am.invalidateAuthToken("all", null);		//TODO: fix token here.
-		am.getAuthToken(account, "all", options, activity, new OnTokenAcquired(activity), new Handler(new OnError()));
-		
-		////////////////////////////////////////////////
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("request_name", "authenticate"));
@@ -252,6 +233,10 @@ public class Communicator {
 		
 		Log.d("TIANYI", "Can't authenticate. No Network available.");		
 		return 3;
+	}
+	
+	public String tryRefreshToken(String token) {
+		return null;
 	}
 	
 	public Communicator(Activity activity) {
