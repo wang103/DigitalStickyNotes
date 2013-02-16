@@ -75,7 +75,9 @@ class MySQLAuth2 extends OAuth2 {
 
         if (mysql_num_rows($qry_result) > 0) {
             $client = mysql_fetch_assoc($qry_result);
-            return array("client_id" => $client['client_id'], "expires" => $client['expires'], "scope" => $client['scope']);
+			return array("client_id" => $client['client_id'],
+						 "expires" => $client['expires'],
+						 "scope" => $client['scope']);
         } else {
             return NULL;
         }
@@ -109,7 +111,10 @@ class MySQLAuth2 extends OAuth2 {
 
         if (mysql_num_rows($qry_result) > 0) {
             $client = mysql_fetch_assoc($qry_result);
-            return array("client_id" => $client['client_id'], "redirect_uri" => $client['redirect_uri'], "expires" => $client['expires'], "scope" => $client['scope']);
+			return array("client_id" => $client['client_id'],
+						 "redirect_uri" => $client['redirect_uri'],
+						 "expires" => $client['expires'],
+						 "scope" => $client['scope']);
         } else {
             return NULL;
         }
