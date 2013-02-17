@@ -5,13 +5,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,15 +24,14 @@ import edu.illinois.utils.Utils;
 
 public class Communicator {
 	
-	private static final String urlAddress = "http://tianyiwang.info/project/handle_requests.php";
-		
-	private HttpClient httpClient;
-	private HttpPost httpPost;
+	private static final String BASE_URL = "http://tianyiwang.info/project";
+	private static final String AUTH_URL = BASE_URL + "/request_token.php";
+	private static final String API_URL = BASE_URL + "/handle_requests.php";
 	
 	private Activity activity;
 	private ConnectionManager connectionManager;
 	
-	private boolean tryAuthenticateWithLocalServer(String email, String password) {
+	private String tryAuthenticateWithLocalServer(String email, String password) {
 
 		JSONObject jInputObject = new JSONObject();
 		
@@ -46,37 +44,41 @@ public class Communicator {
 		}
 		
 		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
-		boolean success = false;
+		String token = null;
 
 		if (result.size() > 0) {
 			JSONObject jOutputObject = null;
 			try {
 				jOutputObject = new JSONObject(result.get(0));
-				success = jOutputObject.getBoolean("success");
+				token = jOutputObject.getString("token");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		return success;
+		return token;
 	}
 	
-	private boolean tryAuthenticateWithGlobalServer(String email, String password) {
+	private String tryAuthenticateWithGlobalServer(String email, String password) {
 		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-		nameValuePairs.add(new BasicNameValuePair("request_name", "authenticate"));
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("email", email));
 		nameValuePairs.add(new BasicNameValuePair("pwd", password));
 		
+		HttpEntity entity = null;
 		try {
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			entity = new UrlEncodedFormEntity(nameValuePairs);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		
+		final HttpPost post = new HttpPost(AUTH_URL);
+		post.addHeader(entity.getContentType());
+		post.setEntity(entity);
 		HttpResponse response = null;
+		
 		try {
-			response = httpClient.execute(httpPost);
+			response = Utils.getHttpClient().execute(post);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -93,15 +95,15 @@ public class Communicator {
 		}
 
 		JSONObject jsonObject = null;
-		boolean success = false;
+		String token = null;
 		try {
 			jsonObject = new JSONObject(result);
-			success = jsonObject.getBoolean("success");
+			token = jsonObject.getString("token");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
-		return success;
+		return token;
 	}
 	
 	/**
@@ -111,9 +113,9 @@ public class Communicator {
 	 * 
 	 * @param email user's email address.
 	 * @param password user's password.
-	 * @return whether or not user's credential is authenticated.
+	 * @return authentication token, or null if failed.
 	 */
-	public boolean tryAuthenticate(String email, String password) {
+	public String tryAuthenticate(String email, String password) {
 
 		if (Utils.isNetworkConnected(activity)) {
 			Log.d("TIANYI", "Using global server to authenticate.");
@@ -125,7 +127,7 @@ public class Communicator {
 		}
 		
 		Log.d("TIANYI", "Can't authenticate. No Network available.");
-		return false;
+		return null;
 	}
 	
 	private int tryRegisterWithLocalServer(String email, String password,
@@ -171,15 +173,20 @@ public class Communicator {
 		nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
 		nameValuePairs.add(new BasicNameValuePair("username", username));
 		
+		HttpEntity entity = null;
 		try {
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			entity = new UrlEncodedFormEntity(nameValuePairs);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		
+		final HttpPost post = new HttpPost(API_URL);
+		post.addHeader(entity.getContentType());
+		post.setEntity(entity);
 		HttpResponse response = null;
+		
 		try {
-			response = httpClient.execute(httpPost);
+			response = Utils.getHttpClient().execute(post);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -240,9 +247,6 @@ public class Communicator {
 	}
 	
 	public Communicator(Activity activity) {
-		httpClient = new DefaultHttpClient();
-		httpPost = new HttpPost(urlAddress);
-		
 		this.activity = activity;
 		this.connectionManager = MainActivity.connectionManager;
 	}

@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -15,6 +21,21 @@ import android.net.NetworkInfo;
  */
 public class Utils {
 	
+	/** Timeout (in ms) we specify for each HTTP request */
+    public static final int HTTP_REQUEST_TIMEOUT_MS = 30 * 1000;
+    
+	/**
+     * Configures the httpClient to connect to the URL provided.
+     */
+    public static HttpClient getHttpClient() {
+        HttpClient httpClient = new DefaultHttpClient();
+        final HttpParams params = httpClient.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, HTTP_REQUEST_TIMEOUT_MS);
+        HttpConnectionParams.setSoTimeout(params, HTTP_REQUEST_TIMEOUT_MS);
+        ConnManagerParams.setTimeout(params, HTTP_REQUEST_TIMEOUT_MS);
+        return httpClient;
+    }
+    
 	public static boolean isNetworkConnected(Activity activity) {
 		ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();

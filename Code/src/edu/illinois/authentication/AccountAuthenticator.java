@@ -17,16 +17,14 @@ import android.text.TextUtils;
  * This class is an implementation of AbstractAccountAuthenticator for
  * authenticating accounts in the tianyiwang.info/project domain. This class
  * uses authTokens as part of the authentication process. In the account setup
- * UI, the user enters their username and password. But for the subsequent
+ * UI, the user enters their email and password. But for the subsequent
  * calls off to the service for syncing, authtoken is used instead. When
  * getAuthToken() is called, need to return the appropriate authToken for the
  * specified account. If we already have an authToken stored in the account, we
- * return that authToken. If we don't, but we do have a username and password,
- * then we'll attempt to talk to the sample service to fetch an authToken. If
- * that fails (or we didn't have a username/password), then we need to prompt
- * the user - so we create an AuthenticatorActivity intent and return that.
- * That will display the dialog that prompts the user for their login
- * information.
+ * return that authToken. If that fails (or we didn't have a email/password),
+ * then we need to prompt the user - so we create an AuthenticatorActivity
+ * intent and return that. That will display the dialog that prompts the user
+ * for their login information.
  */
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
@@ -70,7 +68,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 	@Override
 	public Bundle editProperties(AccountAuthenticatorResponse response,
 			String accountType) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

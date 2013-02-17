@@ -30,8 +30,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
 	public final static int PASSWORD_MIN_LEN = 4;
 	public final static int PASSWORD_MAX_LEN = 12;
-	
-    private AccountManager mAccountManager;
+
+	private AccountManager mAccountManager;
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -55,24 +55,24 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
 		setContentView(R.layout.activity_login);
 
-        mAccountManager = AccountManager.get(this);
-		
+		mAccountManager = AccountManager.get(this);
+
 		// Set up the login form.
 		mEmailView = (EditText) findViewById(R.id.email);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
+		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id,
+					KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					attemptLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
@@ -85,7 +85,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 						attemptLogin();
 					}
 				});
-		
+
 		findViewById(R.id.register_button).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -174,7 +174,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 			}
 		}
 	};
-	
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -189,25 +189,25 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
 			mLoginStatusView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
-						}
-					});
+			.alpha(show ? 1 : 0)
+			.setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginStatusView.setVisibility(show ? View.VISIBLE
+							: View.GONE);
+				}
+			});
 
 			mLoginFormView.setVisibility(View.VISIBLE);
 			mLoginFormView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
-						}
-					});
+			.alpha(show ? 0 : 1)
+			.setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginFormView.setVisibility(show ? View.GONE
+							: View.VISIBLE);
+				}
+			});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
@@ -217,33 +217,53 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 	}
 
 	/**
+	 * Called when response is received from the server for authentication
+	 * request. See onAuthenticationResult(). Sets the
+	 * AccountAuthenticatorResult which is sent back to the caller. We store the
+	 * authToken that's returned from the server as the 'password' for this
+	 * account - so we're never storing the user's actual password locally.
+	 *
+	 * @param result the confirmCredentials result.
+	 */
+	private void finishLogin(String authToken) {
+
+		final Account account = new Account(mEmail, AccountAuthenticator.ACCOUNT_TYPE);
+		mAccountManager.setPassword(account, authToken);
+		
+		final Intent intent = new Intent();
+		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mEmail);
+		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, AccountAuthenticator.ACCOUNT_TYPE);
+		setAccountAuthenticatorResult(intent.getExtras());
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+
+	/**
 	 * Represents an asynchronous login task.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected String doInBackground(Void... params) {
 			// Attempt authentication.
 			return MainActivity.communicator.tryAuthenticate(mEmail, mPassword);
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean success) {
+		protected void onPostExecute(final String authToken) {
 			mAuthTask = null;
 			showProgress(false);
 
+			boolean success = ((authToken != null) && (authToken.length() > 0));
+			Log.d("TIANYI", "onAuthenticationResult(" + success + ")");
+			
 			if (success) {
-				setResult(RESULT_OK);
 				Log.d("TIANYI", "Signed in successfully.");
 				
-				String token = null;	//TODO: need to get access token from the server.
-				Account account = new Account(mEmail, AccountAuthenticator.ACCOUNT_TYPE);
-				
-				
-				finish();
+				finishLogin(authToken);
 			} else {
 				mPasswordView
-						.setError(getString(R.string.error_sign_in_failed));
+				.setError(getString(R.string.error_sign_in_failed));
 				mPasswordView.requestFocus();
 			}
 		}
