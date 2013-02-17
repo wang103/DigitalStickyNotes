@@ -41,7 +41,7 @@ class MySQLAuth2 extends OAuth2 {
      * Implements OAuth2::checkClientCredentials().
      */
     protected function checkClientCredentials($client_id, $client_secret = NULL) {
-        $qry = "SELECT id FROM clients WHERE id='" . $client_id . "' AND secret='" . md5($client_secret) . "'";
+        $qry = "SELECT id FROM clients WHERE id='" . $client_id . "' AND secret='" . $client_secret . "'";
         $qry_result = mysql_query($qry);
 
         if (mysql_num_rows($qry_result) > 0) {
