@@ -12,7 +12,7 @@ class MySQLAuth2 extends OAuth2 {
      * Overrides OAuth2::__construct().
      */
     public function __construct() {
-        parent::__construct();
+        parent::__construct(array("display_error" => true));
 
         $this->con = mysql_connect('68.178.137.113', 'dsntianyi', 'Digital!1');
         if (!$this->con) {
