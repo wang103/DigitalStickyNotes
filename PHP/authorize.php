@@ -5,7 +5,7 @@ require "lib/server/MySQLOAuth2.inc";
 $oauth = new MySQLOAuth2();
 
 if ($_POST) {
-  $oauth->finishClientAuthorization($_POST["accept"] == "Yes", $_POST);
+    $oauth->finishClientAuthorization($_POST["accept"] == "Yes", $_POST);
 }
 
 $auth_params = $oauth->getAuthorizeParams();

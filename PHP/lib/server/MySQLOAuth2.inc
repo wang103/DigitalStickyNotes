@@ -112,10 +112,10 @@ class MySQLAuth2 extends OAuth2 {
 
         if (mysql_num_rows($qry_result) > 0) {
             $client = mysql_fetch_assoc($qry_result);
-			return array("client_id" => $client['client_id'],
-						 "redirect_uri" => $client['redirect_uri'],
-						 "expires" => $client['expires'],
-						 "scope" => $client['scope']);
+            return array("client_id" => $client['client_id'],
+                         "redirect_uri" => $client['redirect_uri'],
+                         "expires" => $client['expires'],
+                         "scope" => $client['scope']);
         } else {
             return NULL;
         }
@@ -129,13 +129,13 @@ class MySQLAuth2 extends OAuth2 {
         if (!mysql_query($qry, $this->con)) {
             die('Error: ' . mysql_error());
         }
-	}
+    }
 
-	/**
-	 * Overrides OAuth2::checkUserCredentials().
-	 */
-	protected function checkUserCredentials($client_id, $username, $password) {
-		$qry = "SELECT user_name FROM users WHERE email='" . $username . "' AND password='" . md5($password) . "'";
+    /**
+     * Overrides OAuth2::checkUserCredentials().
+     */
+    protected function checkUserCredentials($client_id, $username, $password) {
+        $qry = "SELECT user_name FROM users WHERE email='" . $username . "' AND password='" . md5($password) . "'";
         $qry_result = mysql_query($qry);
 
         if (mysql_num_rows($qry_result) > 0) {
@@ -143,5 +143,5 @@ class MySQLAuth2 extends OAuth2 {
         } else {
             return false;
         }
-	}
+    }
 }
