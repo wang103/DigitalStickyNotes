@@ -1010,7 +1010,7 @@ abstract class OAuth2 {
     $client = $this->getClientCredentials();
 
     if ($this->checkClientCredentials($client[0], $client[1]) === FALSE)
-      $this->errorJsonResponse(OAUTH2_HTTP_BAD_REQUEST, OAUTH2_ERROR_INVALID_CLIENT);
+      $this->errorJsonResponse(OAUTH2_HTTP_BAD_REQUEST, OAUTH2_ERROR_INVALID_CLIENT, 'Invalid client credentials');
 
     if (!$this->checkRestrictedGrantType($client[0], $input["grant_type"]))
       $this->errorJsonResponse(OAUTH2_HTTP_BAD_REQUEST, OAUTH2_ERROR_UNAUTHORIZED_CLIENT);
@@ -1121,7 +1121,7 @@ abstract class OAuth2 {
     }
 
     // No credentials were specified
-    $this->errorJsonResponse(OAUTH2_HTTP_BAD_REQUEST, OAUTH2_ERROR_INVALID_CLIENT);
+    $this->errorJsonResponse(OAUTH2_HTTP_BAD_REQUEST, OAUTH2_ERROR_INVALID_CLIENT, 'Missing client credentials');
   }
 
   // End-user/client Authorization (Section 3 of IETF Draft).

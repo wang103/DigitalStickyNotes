@@ -20,6 +20,7 @@ import android.util.Log;
 
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
+import edu.illinois.userinterfaces.LoginActivity;
 import edu.illinois.utils.Utils;
 
 public class Communicator {
@@ -58,12 +59,15 @@ public class Communicator {
 		
 		return token;
 	}
-	
+
 	private String tryAuthenticateWithGlobalServer(String email, String password) {
 		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("email", email));
-		nameValuePairs.add(new BasicNameValuePair("pwd", password));
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
+		nameValuePairs.add(new BasicNameValuePair("username", email));
+		nameValuePairs.add(new BasicNameValuePair("password", password));
+		nameValuePairs.add(new BasicNameValuePair("client_id", LoginActivity.CLIENT_ID));
+		nameValuePairs.add(new BasicNameValuePair("client_secret", LoginActivity.CLIENT_SECRET));
 		
 		HttpEntity entity = null;
 		try {
