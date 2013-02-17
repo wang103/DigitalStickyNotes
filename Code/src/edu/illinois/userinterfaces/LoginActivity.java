@@ -28,8 +28,8 @@ import android.widget.TextView;
  */
 public class LoginActivity extends AccountAuthenticatorActivity {
 
-	public final static String CLIENT_ID = "986c5469f484a5736e53f414c128f97dfc23702b";
-	public final static String CLIENT_SECRET = "c01e675d40fe18c3ae748b06dcd12d690a6e2e56";
+	public final static String CLIENT_ID = "4fb1d4e675ced5f8cdafb16d07e278f7ff1a0a8b";
+	public final static String CLIENT_SECRET = "7718a364d7c6fca8d64343393fd2dbcaa4a8f73f";
 	
 	public final static int PASSWORD_MIN_LEN = 4;
 	public final static int PASSWORD_MAX_LEN = 12;

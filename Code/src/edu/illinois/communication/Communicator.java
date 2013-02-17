@@ -75,7 +75,7 @@ public class Communicator {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		final HttpPost post = new HttpPost(AUTH_URL);
 		post.addHeader(entity.getContentType());
 		post.setEntity(entity);
@@ -102,7 +102,7 @@ public class Communicator {
 		String token = null;
 		try {
 			jsonObject = new JSONObject(result);
-			token = jsonObject.getString("token");
+			token = jsonObject.getString("access_token");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
