@@ -98,7 +98,8 @@ class MySQLAuth2 extends OAuth2 {
      */
     protected function getSupportedGrantTypes() {
         return array(
-            OAUTH2_GRANT_TYPE_AUTH_CODE,
+			OAUTH2_GRANT_TYPE_AUTH_CODE,
+			OAUTH2_GRANT_TYPE_USER_CREDENTIALS,
         );
     }
 
@@ -128,5 +129,19 @@ class MySQLAuth2 extends OAuth2 {
         if (!mysql_query($qry, $this->con)) {
             die('Error: ' . mysql_error());
         }
-    }
+	}
+
+	/**
+	 * Overrides OAuth2::checkUserCredentials().
+	 */
+	protected function checkUserCredentials($client_id, $username, $password) {
+		$qry = "SELECT user_name FROM users WHERE email='" . $username . "' AND password='" . md5($password) . "'";
+        $qry_result = mysql_query($qry);
+
+        if (mysql_num_rows($qry_result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+	}
 }
