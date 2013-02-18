@@ -8,7 +8,7 @@ import edu.illinois.data.User;
 /**
  * @author Tianyi Wang
  */
-public class Message {
+public class Note {
 	private long messageID;
 	
 	private String title;
@@ -21,7 +21,7 @@ public class Message {
 	private User sender;
 	private Group receivers;
 	
-	public Message(long messageID, String title, String msg, Date receivedDate,
+	public Note(long messageID, String title, String msg, Date receivedDate,
 			Date availableDate, Date expireDate, User sender) {
 		this.messageID = messageID;
 		this.title = title;

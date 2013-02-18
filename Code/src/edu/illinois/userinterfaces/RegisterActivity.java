@@ -15,9 +15,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 
 public class RegisterActivity extends Activity {
 
+	public final static String INTENT_KEY_EMAIL = "RESULT_EMAIL";
+	public final static String INTENT_KEY_PW = "RESULT_PW";
+	
 	/**
 	 * Keep track of the register task to ensure we can cancel it if requested.
 	 */
@@ -237,10 +241,13 @@ public class RegisterActivity extends Activity {
 			showProgress(false);
 			
 			if (success) {
-				setResult(RESULT_OK);
+				final Intent intent = new Intent();
+				intent.putExtra(INTENT_KEY_EMAIL, mEmail);
+				intent.putExtra(INTENT_KEY_PW, mPassword);
+				setResult(RESULT_OK, intent);
 				Log.d("TIANYI", "Registered successfully.");
 				finish();
-			} else {				
+			} else {
 				if (errorCode == 1) {
 					mEmailView.setError("Email is already used by someone else.");
 					mEmailView.requestFocus();

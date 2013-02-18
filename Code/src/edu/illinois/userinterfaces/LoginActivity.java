@@ -1,14 +1,11 @@
 package edu.illinois.userinterfaces;
 
-import edu.illinois.authentication.AccountAuthenticator;
 import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.digitalstickynotes.R;
-import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
-import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -26,15 +23,15 @@ import android.widget.TextView;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends AccountAuthenticatorActivity {
+public class LoginActivity extends Activity {
 
+	public final static String INTENT_KEY_TOKEN = "RESULT_TOKEN";
+	
 	public final static String CLIENT_ID = "4fb1d4e675ced5f8cdafb16d07e278f7ff1a0a8b";
 	public final static String CLIENT_SECRET = "7718a364d7c6fca8d64343393fd2dbcaa4a8f73f";
 	
 	public final static int PASSWORD_MIN_LEN = 4;
 	public final static int PASSWORD_MAX_LEN = 12;
-
-	private AccountManager mAccountManager;
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -55,10 +52,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_login);
-
-		mAccountManager = AccountManager.get(this);
 
 		// Set up the login form.
 		mEmailView = (EditText) findViewById(R.id.email);
@@ -158,22 +152,32 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and kick off a background task to
-			// perform the user login attempt.
-			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
-			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+			startTaskForLogin();
 		}
+	}
+	
+	/**
+	 * Show a progress spinner, and kick off a background task to perform the
+	 * user login attempt.
+	 */
+	private void startTaskForLogin() {
+		mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+		showProgress(true);
+		mAuthTask = new UserLoginTask();
+		mAuthTask.execute((Void) null);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == MainActivity.ACTIVITY_CODE_REGISTER) {
 			if (resultCode == RESULT_OK) {
-				setResult(RESULT_OK);
-				Log.d("TIANYI", "Registered and signed in successfully.");
-				finish();
+				
+				mEmail = data.getStringExtra(RegisterActivity.INTENT_KEY_EMAIL);
+				mPassword = data.getStringExtra(RegisterActivity.INTENT_KEY_PW);
+				
+				Log.d("TIANYI", "Registered successfully, now try to sign in.");
+				
+				startTaskForLogin();
 			}
 		}
 	};
@@ -221,22 +225,13 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
 	/**
 	 * Called when response is received from the server for authentication
-	 * request. See onAuthenticationResult(). Sets the
-	 * AccountAuthenticatorResult which is sent back to the caller. We store the
-	 * authToken that's returned from the server as the 'password' for this
-	 * account - so we're never storing the user's actual password locally.
+	 * request.
 	 *
-	 * @param result the confirmCredentials result.
+	 * @param token the access token.
 	 */
-	private void finishLogin(String authToken) {
-
-		final Account account = new Account(mEmail, AccountAuthenticator.ACCOUNT_TYPE);
-		mAccountManager.setPassword(account, authToken);
-		
+	private void finishLogin(String token) {
 		final Intent intent = new Intent();
-		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mEmail);
-		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, AccountAuthenticator.ACCOUNT_TYPE);
-		setAccountAuthenticatorResult(intent.getExtras());
+		intent.putExtra(INTENT_KEY_TOKEN, token);
 		setResult(RESULT_OK, intent);
 		finish();
 	}
@@ -253,17 +248,17 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 		}
 
 		@Override
-		protected void onPostExecute(final String authToken) {
+		protected void onPostExecute(final String token) {
 			mAuthTask = null;
 			showProgress(false);
 
-			boolean success = ((authToken != null) && (authToken.length() > 0));
+			boolean success = ((token != null) && (token.length() > 0));
 			Log.d("TIANYI", "onAuthenticationResult(" + success + ")");
 			
 			if (success) {
 				Log.d("TIANYI", "Signed in successfully.");
 				
-				finishLogin(authToken);
+				finishLogin(token);
 			} else {
 				mPasswordView
 				.setError(getString(R.string.error_sign_in_failed));

@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.illinois.database.DatabaseAccessObj;
 import edu.illinois.digitalstickynotes.R;
-import edu.illinois.messaging.Message;
+import edu.illinois.messaging.Note;
 import android.os.Bundle;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -30,10 +30,10 @@ public class ShowMessagesActivity extends ListActivity {
 		databaseAccessObj = new DatabaseAccessObj(this);
 		databaseAccessObj.open();
 		
-		List<Message> messages = databaseAccessObj.getAllAvailableMessages();
+		List<Note> messages = databaseAccessObj.getAllAvailableMessages();
 		
 		// Use the SimpleCursorAdapter to show the messages in this ListView.
-		ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this,
+		ArrayAdapter<Note> adapter = new ArrayAdapter<Note>(this,
 				android.R.layout.simple_list_item_1, messages);
 		setListAdapter(adapter);
 
@@ -47,7 +47,7 @@ public class ShowMessagesActivity extends ListActivity {
 	protected void onListItemClick(ListView l, android.view.View v, int position, long id) {
 		Log.d("TIANYI", "List item " + position + " clicked.");
 		
-		Message message = (Message) getListView().getItemAtPosition(position);
+		Note message = (Note) getListView().getItemAtPosition(position);
 		
 		Intent intent = new Intent(this, ShowDetailedMessageActivity.class);
 		

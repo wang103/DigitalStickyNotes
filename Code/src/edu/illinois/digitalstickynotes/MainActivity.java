@@ -3,7 +3,7 @@ package edu.illinois.digitalstickynotes;
 import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.communication.Communicator;
-import edu.illinois.messaging.MessagesUpdater;
+import edu.illinois.messaging.NotesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
 import edu.illinois.userinterfaces.LoginActivity;
 import edu.illinois.userinterfaces.ServerSetupActivity;
@@ -11,7 +11,9 @@ import edu.illinois.userinterfaces.ShowMessagesActivity;
 import edu.illinois.wifidirect.WifiDirectManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +24,7 @@ public class MainActivity extends Activity {
 
 	public static ConnectionManager connectionManager;
 	public static Communicator communicator;
-	public static MessagesUpdater messagesUpdater;
+	public static NotesUpdater messagesUpdater;
 
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
@@ -30,7 +32,19 @@ public class MainActivity extends Activity {
 	public static final int ACTIVITY_CODE_SIGN_IN = 0;
 	public static final int ACTIVITY_CODE_BLUETOOTH = 1;
 	public static final int ACTIVITY_CODE_REGISTER = 2;
-	public static final int ACTIVITY_CODE_TOKEN = 3;
+	
+	public static final String PREF_NAME = "edu.illinois.digitalstickynotes";
+	public static final String PREF_TOKEN_KEY = "edu.illinois.digitalstickynotes.token";
+	
+	private String token;
+	
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	public String getToken() {
+		return token;
+	}
 	
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
@@ -76,21 +90,48 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Call this method after connection (WIFI Direct or Bluetooth) is
+	 * established to do more setup.
+	 */
 	private void postSetupConnection() {
 		communicator = new Communicator(this);
 		
-		//TODO: Only do this if not log in already
-		Intent loginIntent = new Intent(this, LoginActivity.class);
-		startActivityForResult(loginIntent, ACTIVITY_CODE_SIGN_IN);
+		// Check to see if the app has the access token, if not, start the
+		// login activity to ask for user's credentials.
+		SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		
+		if (prefs.contains(PREF_TOKEN_KEY)) {
+			setToken(prefs.getString(PREF_TOKEN_KEY, null));
+			postSigningIn();
+		} else {
+			Intent loginIntent = new Intent(this, LoginActivity.class);
+			startActivityForResult(loginIntent, ACTIVITY_CODE_SIGN_IN);
+		}
 	}
 
+	/**
+	 * Call this method after access token is acquired.
+	 */
+	private void postSigningIn() {
+		//TODO: uncomment below.
+		//startMessagesUpdater();
+		//switchViewToShowMessages();
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ACTIVITY_CODE_SIGN_IN) {
 			if (resultCode == RESULT_OK) {
-				//TODO: uncomment below.
-				//startMessagesUpdater();
-				//switchViewToShowMessages();
+				// Store the access token in the preferences.
+				String token = data.getStringExtra(LoginActivity.INTENT_KEY_TOKEN);
+				
+				SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+				prefs.edit().putString(PREF_TOKEN_KEY, token);
+				
+				setToken(token);
+				
+				postSigningIn();
 			} else {
 				TextView textView = (TextView) findViewById(R.id.show_message);
 				textView.setText("Please sign in first (Client Settings).");
@@ -98,16 +139,6 @@ public class MainActivity extends Activity {
 		} else if (requestCode == ACTIVITY_CODE_BLUETOOTH) {
 			if (resultCode != RESULT_OK) {
 				setIsBTEnabled(false, false);
-			}
-		} else if (requestCode == ACTIVITY_CODE_TOKEN) {
-			if (resultCode != RESULT_OK) {
-				TextView textView = (TextView) findViewById(R.id.show_message);
-				textView.setText("Authenticator doesn't have sufficient access level.");
-			} else {
-				Log.d("TIANYI", "User granted sufficient access level.");
-				
-				// Now try to get token again.
-				//TODO:
 			}
 		}
 	};
@@ -117,7 +148,7 @@ public class MainActivity extends Activity {
 	 */
 	private void startMessagesUpdater() {
 		Log.d("TIANYI", "MessagesUpdater started.");
-		messagesUpdater = new MessagesUpdater();
+		messagesUpdater = new NotesUpdater();
 		messagesUpdater.start();
 	}
 	
@@ -132,7 +163,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void switchViewToShowMessages() {
-		//TODO: fix.
+		//TODO: fix to actually switch the view instead of starting a new activity.
 		Intent intent = new Intent(this, ShowMessagesActivity.class);
 		startActivity(intent);
 	}
@@ -200,7 +231,6 @@ public class MainActivity extends Activity {
 			startActivity(intent);
 			return true;
 		case R.id.menu_settings:
-			//TODO: implementation.
 			startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
 			return true;
 		}

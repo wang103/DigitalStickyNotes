@@ -20,6 +20,7 @@ import android.util.Log;
 
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
+import edu.illinois.messaging.Note;
 import edu.illinois.userinterfaces.LoginActivity;
 import edu.illinois.utils.Utils;
 
@@ -27,10 +28,83 @@ public class Communicator {
 	
 	private static final String BASE_URL = "http://tianyiwang.info/project";
 	private static final String AUTH_URL = BASE_URL + "/request_token.php";
+	private static final String REG_URL = BASE_URL + "/register.php";
 	private static final String API_URL = BASE_URL + "/handle_requests.php";
 	
 	private Activity activity;
 	private ConnectionManager connectionManager;
+	
+	private List<Note> getNotesWithLocalServer(String token) {
+		return null;
+	}
+	
+	private List<Note> getNotesWithGlobalServer(String token) {
+		
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("request_name", "get_notes"));
+		nameValuePairs.add(new BasicNameValuePair("token", token));
+		
+		HttpEntity entity = null;
+		try {
+			entity = new UrlEncodedFormEntity(nameValuePairs);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		final HttpPost post = new HttpPost(API_URL);
+		post.addHeader(entity.getContentType());
+		post.setEntity(entity);
+		HttpResponse response = null;
+		
+		try {
+			response = Utils.getHttpClient().execute(post);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		String result = null;
+		try {
+			result = Utils.inputStreamToString(response.getEntity().getContent());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		//TODO: finish this.
+		@SuppressWarnings("unused")
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(result);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * First try to get user's notes with the global server, if Internet
+	 * connection is not available, try to authenticate with the local server.
+	 * 
+	 * @param token the access token.
+	 * @return a list of user's notes.
+	 */
+	public List<Note> getNotes(String token) {
+		if (Utils.isNetworkConnected(activity)) {
+			Log.d("TIANYI", "Using global server to get notes.");
+			return getNotesWithGlobalServer(token);
+		}
+		else if (this.connectionManager != null) {
+			Log.d("TIANYI", "Using local server to get notes.");
+			return getNotesWithLocalServer(token);
+		}
+		
+		Log.d("TIANYI", "Can't get notes. No Network available.");		
+		return null;
+	}
 	
 	private String tryAuthenticateWithLocalServer(String email, String password) {
 
@@ -38,8 +112,11 @@ public class Communicator {
 		
 		try {
 			jInputObject.put("request_name", "authenticate");
+			jInputObject.put("grant_type", "password");
 			jInputObject.put("email", email);
 			jInputObject.put("pwd", password);
+			jInputObject.put("client_id", LoginActivity.CLIENT_ID);
+			jInputObject.put("client_secret", LoginActivity.CLIENT_SECRET);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -51,7 +128,7 @@ public class Communicator {
 			JSONObject jOutputObject = null;
 			try {
 				jOutputObject = new JSONObject(result.get(0));
-				token = jOutputObject.getString("token");
+				token = jOutputObject.getString("access_token");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -117,7 +194,7 @@ public class Communicator {
 	 * 
 	 * @param email user's email address.
 	 * @param password user's password.
-	 * @return authentication token, or null if failed.
+	 * @return access token, or null if failed.
 	 */
 	public String tryAuthenticate(String email, String password) {
 
@@ -169,8 +246,7 @@ public class Communicator {
 	private int tryRegisterWithGlobalServer(String email, String password,
 			String firstName, String lastName, String username) {
 		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
-		nameValuePairs.add(new BasicNameValuePair("request_name", "register"));
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
 		nameValuePairs.add(new BasicNameValuePair("email", email));
 		nameValuePairs.add(new BasicNameValuePair("pwd", password));
 		nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
@@ -184,7 +260,7 @@ public class Communicator {
 			e.printStackTrace();
 		}
 		
-		final HttpPost post = new HttpPost(API_URL);
+		final HttpPost post = new HttpPost(REG_URL);
 		post.addHeader(entity.getContentType());
 		post.setEntity(entity);
 		HttpResponse response = null;
@@ -228,7 +304,7 @@ public class Communicator {
 	 * @param firstName user's first name.
 	 * @param lastName user's last name.
 	 * @param username user picked nickname for his/her account.
-	 * @return 0 for success. 1 if email is used. 2 if username is used. 3 for other reasons.
+	 * @return 0 for success. 1 if email is used. 2 if username is used. 3 if no connection.
 	 */
 	public int tryRegister(String email, String password, String firstName,
 			String lastName, String username) {
@@ -244,10 +320,6 @@ public class Communicator {
 		
 		Log.d("TIANYI", "Can't authenticate. No Network available.");		
 		return 3;
-	}
-	
-	public String tryRefreshToken(String token) {
-		return null;
 	}
 	
 	public Communicator(Activity activity) {

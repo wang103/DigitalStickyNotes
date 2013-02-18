@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import edu.illinois.data.User;
-import edu.illinois.messaging.Message;
+import edu.illinois.messaging.Note;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -31,7 +31,7 @@ public class DatabaseAccessObj {
 		messageDBHelper.close();
 	}
 	
-	public void insertMessage(Message message) {
+	public void insertMessage(Note message) {
 		ContentValues values = new ContentValues();
 		
 		values.put(SQLiteHelperMessage.COLUMN_ID, message.getMessageID());
@@ -45,7 +45,7 @@ public class DatabaseAccessObj {
 		database.insert(SQLiteHelperMessage.TABLE_NAME, null, values);
 	}
 	
-	public void deleteMessage(Message message) {
+	public void deleteMessage(Note message) {
 		long messageID = message.getMessageID();
 		
 		database.delete(SQLiteHelperMessage.TABLE_NAME,
@@ -58,15 +58,15 @@ public class DatabaseAccessObj {
 	 * 
 	 * @return a list of available messages.
 	 */
-	public List<Message> getAllAvailableMessages() {
-		List<Message> messages = new ArrayList<Message>();
+	public List<Note> getAllAvailableMessages() {
+		List<Note> messages = new ArrayList<Note>();
 		
 		Cursor cursor = database.query(SQLiteHelperMessage.TABLE_NAME,
 				columnNames, null, null, null, null, null);
 		
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Message message = cursorToMessage(cursor);
+			Note message = cursorToMessage(cursor);
 			
 			//TODO: remove the commented out here.
 			/*
@@ -83,12 +83,12 @@ public class DatabaseAccessObj {
 		return messages;
 	}
 	
-	private Message cursorToMessage(Cursor cursor) {
+	private Note cursorToMessage(Cursor cursor) {
 		//TODO: fix the string to date conversion.
-		Message message = new Message(cursor.getLong(0), cursor.getString(4),
+		Note message = new Note(cursor.getLong(0), cursor.getString(4),
 				cursor.getString(5), new Date() /*cursor.getString(1))*/,
 				new Date() /*cursor.getString(2))*/, new Date() /*cursor.getString(2)*/,
-				new User(cursor.getString(6), null));
+				new User(cursor.getString(6)));
 		return message;
 	}
 }

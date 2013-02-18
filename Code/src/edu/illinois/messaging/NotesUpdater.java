@@ -10,7 +10,7 @@ import android.util.Log;
 /**
  * @author tianyiw
  */
-public class MessagesUpdater implements Runnable {
+public class NotesUpdater implements Runnable {
 	
 	private ConnectionManager connectionManager;
 	
@@ -56,7 +56,7 @@ public class MessagesUpdater implements Runnable {
 		updateHandler.removeCallbacks(this);
 	}
 	
-	public MessagesUpdater() {
+	public NotesUpdater() {
 		this.updateHandler = new Handler();
 		
 		this.connectionManager = MainActivity.connectionManager;

@@ -17,7 +17,7 @@ $oauth->verifyAccessToken();
 $request_name = $_POST['request_name'];
 
 # Handle request.
-if ($request_name === 'get_messages') {
+if ($request_name === 'get_notes') {
     $result = array('success' => false);
 }
 else {

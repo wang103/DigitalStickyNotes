@@ -5,7 +5,7 @@ import java.util.List;
 import android.content.IntentFilter;
 import edu.illinois.database.DatabaseAccessObj;
 import edu.illinois.digitalstickynotes.MainActivity;
-import edu.illinois.messaging.Message;
+import edu.illinois.messaging.Note;
 
 /**
  * @author tianyiw
@@ -27,7 +27,7 @@ public abstract class ConnectionManager {
 
 	abstract public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery);
 	
-	protected void insertMessage(Message message) {
+	protected void insertMessage(Note message) {
 		// Insert to the database.
 		databaseAccessObj.insertMessage(message);
 	}
