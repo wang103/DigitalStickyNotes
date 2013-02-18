@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
 
 	public void setIsBTEnabled(boolean isBTEnabled, boolean doPost) {
 		this.isBTEnabled = isBTEnabled;
-		
+	
 		// Notify the user.
 		TextView textView = (TextView) findViewById(R.id.show_message);
 		if (isBTEnabled) {
@@ -146,7 +146,9 @@ public class MainActivity extends Activity {
 	/**
 	 * Start the periodic updater.
 	 */
+	@SuppressWarnings("unused")
 	private void startMessagesUpdater() {
+		//TODO: use it later.
 		Log.d("TIANYI", "MessagesUpdater started.");
 		messagesUpdater = new NotesUpdater();
 		messagesUpdater.start();
@@ -162,6 +164,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void switchViewToShowMessages() {
 		//TODO: fix to actually switch the view instead of starting a new activity.
 		Intent intent = new Intent(this, ShowMessagesActivity.class);

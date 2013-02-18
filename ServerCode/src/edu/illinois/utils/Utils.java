@@ -3,51 +3,70 @@ package edu.illinois.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import edu.illinois.digitalstickynotesserver.DigitalStickyNotesServer;
 
 public class Utils {
 	
-	public static String sendPostToGlobalServer(String data) {
+	/**
+	 * Send HTTP POST request to the central server.
+	 * 
+	 * @param data the data to be sent.
+	 * @param dataType 0 indicates authentication data, 1 indicates register data, 2 indicates API request data.
+	 * @return the response from the central server.
+	 */
+	public static String sendPostToGlobalServer(List<NameValuePair> data, int dataType) {
 		
 		if (data == null) {
 			return null;
 		}
+				
+		String urlString = null;
+		switch (dataType) {
+		case 0:
+			urlString = DigitalStickyNotesServer.AUTH_URL;
+			break;
+		case 1:
+			urlString = DigitalStickyNotesServer.REG_URL;
+			break;
+		case 2:
+			urlString = DigitalStickyNotesServer.API_URL;
+		default:
+			break;
+		}
 		
-		String response = null;
-		
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost(urlString);
+		StringBuffer sb = new StringBuffer();
 		try {
-			URL url = new URL(DigitalStickyNotesServer.globalServerAddress);
-			URLConnection conn = url.openConnection();
-			conn.setDoOutput(true);
-			OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+			post.setEntity(new UrlEncodedFormEntity(data));
 			
-			writer.write(data);
-			writer.flush();
+			HttpResponse httpResponse = client.execute(post);
 			
-			// Get the response.
-			StringBuffer stringBuffer = new StringBuffer();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				stringBuffer.append(line);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+			String line = null;
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);
 			}
 			
-			reader.close();
-			writer.close();
-			
-			response = stringBuffer.toString();
-			
-		} catch (MalformedURLException e) {
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		return response;
+		return sb.toString();
 	}
 }

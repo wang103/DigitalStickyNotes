@@ -226,7 +226,7 @@ public class RegisterActivity extends Activity {
 	public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
 		private int errorCode;
-		
+
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// Attempt register.
@@ -239,7 +239,7 @@ public class RegisterActivity extends Activity {
 		protected void onPostExecute(final Boolean success) {
 			mRegisterTask = null;
 			showProgress(false);
-			
+
 			if (success) {
 				final Intent intent = new Intent();
 				intent.putExtra(INTENT_KEY_EMAIL, mEmail);

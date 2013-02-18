@@ -109,7 +109,7 @@ public class Communicator {
 	private String tryAuthenticateWithLocalServer(String email, String password) {
 
 		JSONObject jInputObject = new JSONObject();
-		
+
 		try {
 			jInputObject.put("request_name", "authenticate");
 			jInputObject.put("grant_type", "password");
@@ -120,7 +120,7 @@ public class Communicator {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+	
 		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
 		String token = null;
 
@@ -145,7 +145,7 @@ public class Communicator {
 		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("client_id", LoginActivity.CLIENT_ID));
 		nameValuePairs.add(new BasicNameValuePair("client_secret", LoginActivity.CLIENT_SECRET));
-		
+	
 		HttpEntity entity = null;
 		try {
 			entity = new UrlEncodedFormEntity(nameValuePairs);
@@ -157,7 +157,7 @@ public class Communicator {
 		post.addHeader(entity.getContentType());
 		post.setEntity(entity);
 		HttpResponse response = null;
-		
+
 		try {
 			response = Utils.getHttpClient().execute(post);
 		} catch (ClientProtocolException e) {
@@ -165,7 +165,7 @@ public class Communicator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+	
 		String result = null;
 		try {
 			result = Utils.inputStreamToString(response.getEntity().getContent());

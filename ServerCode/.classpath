@@ -5,5 +5,12 @@
 	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/bluecove-2.1.0.jar"/>
 	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/bluecove-gpl-2.1.0.jar"/>
 	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/httpcomponents-client-4.2.3/lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/httpcomponents-client-4.2.3/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/httpcomponents-client-4.2.3/lib/fluent-hc-4.2.3.jar"/>
+	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/httpcomponents-client-4.2.3/lib/httpclient-4.2.3.jar"/>
+	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/httpcomponents-client-4.2.3/lib/httpclient-cache-4.2.3.jar"/>
+	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/httpcomponents-client-4.2.3/lib/httpcore-4.2.2.jar"/>
+	<classpathentry kind="lib" path="/home/tianyiw/School/DigitalStickyNotes/Libraries/httpcomponents-client-4.2.3/lib/httpmime-4.2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

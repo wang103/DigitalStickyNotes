@@ -254,7 +254,7 @@ public class LoginActivity extends Activity {
 
 			boolean success = ((token != null) && (token.length() > 0));
 			Log.d("TIANYI", "onAuthenticationResult(" + success + ")");
-			
+		
 			if (success) {
 				Log.d("TIANYI", "Signed in successfully.");
 				
