@@ -70,12 +70,13 @@ class MySQLAuth2 extends OAuth2 {
      * Implements OAuth2::getAccessToken().
      */
     protected function getAccessToken($oauth_token) {
-        $qry = "SELECT client_id,expires,scope FROM tokens WHERE token_id='" . $oauth_token . "'";
+        $qry = "SELECT user_name,client_id,expires,scope FROM tokens WHERE token_id='" . $oauth_token . "'";
         $qry_result = mysql_query($qry);
 
         if (mysql_num_rows($qry_result) > 0) {
             $client = mysql_fetch_assoc($qry_result);
-			return array("client_id" => $client['client_id'],
+            return array("user_name" => $client['user_name'],
+                         "client_id" => $client['client_id'],
 						 "expires" => $client['expires'],
 						 "scope" => $client['scope']);
         } else {
@@ -86,8 +87,8 @@ class MySQLAuth2 extends OAuth2 {
     /**
      * Implements OAuth2::setAccessToken().
      */
-    protected function setAccessToken($oauth_token, $client_id, $expires, $scope = NULL) {
-        $qry = 'INSERT INTO tokens (token_id, client_id, expires, scope) VALUES ("' . $oauth_token . '", "' . $client_id . '", "' . $expires . '", "' . $scope . '")';
+    protected function setAccessToken($oauth_token, $user_name, $client_id, $expires, $scope = NULL) {
+        $qry = 'INSERT INTO tokens (token_id, user_name, client_id, expires, scope) VALUES ("' . $oauth_token . '", "' . $user_name . '", "' . $client_id . '", "' . $expires . '", "' . $scope . '")';
         if (!mysql_query($qry, $this->con)) {
             die('Error: ' . mysql_error());
         }
@@ -143,5 +144,15 @@ class MySQLAuth2 extends OAuth2 {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Helper function to get the user name.
+     * Assume the access token is in HTTP header, and it is valid.
+     */
+    public function getUsername() {
+        $token_param = $this->getAccessTokenParams();
+        $token = $this->getAccessToken($token_param);
+        return $token['user_name'];
     }
 }

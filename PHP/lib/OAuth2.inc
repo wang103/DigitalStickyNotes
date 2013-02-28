@@ -437,10 +437,10 @@ abstract class OAuth2 {
    * @return
    *   An associative array as below, and return NULL if the supplied oauth_token
    *   is invalid:
+   *   - user_name: Stored user name.
    *   - client_id: Stored client identifier.
    *   - expires: Stored expiration in unix timestamp.
    *   - scope: (optional) Stored scope values in space-separated string.
-   *
    * @ingroup oauth2_section_5
    */
   abstract protected function getAccessToken($oauth_token);
@@ -452,6 +452,8 @@ abstract class OAuth2 {
    *
    * @param $oauth_token
    *   oauth_token to be stored.
+   * @param $user_name
+   *   user_name to be stored.
    * @param $client_id
    *   Client identifier to be stored.
    * @param $expires
@@ -998,6 +1000,10 @@ abstract class OAuth2 {
 
     $input = filter_input_array(INPUT_POST, $filters);
 
+    // User name must be specified.
+    if (!$input["username"])
+      $this->errorJsonResponse(OAUTH2_HTTP_BAD_REQUEST, OAUTH2_ERROR_INVALID_REQUEST, 'Missing user_name parameter');
+
     // Grant Type must be specified.
     if (!$input["grant_type"])
       $this->errorJsonResponse(OAUTH2_HTTP_BAD_REQUEST, OAUTH2_ERROR_INVALID_REQUEST, 'Invalid grant_type parameter or parameter missing');
@@ -1081,7 +1087,7 @@ abstract class OAuth2 {
     if (!$input["scope"])
       $input["scope"] = NULL;
 
-    $token = $this->createAccessToken($client[0], $input["scope"]);
+    $token = $this->createAccessToken($input["username"], $client[0], $input["scope"]);
 
     $this->sendJsonHeaders();
     echo json_encode($token);
@@ -1211,6 +1217,7 @@ abstract class OAuth2 {
    *   An associative array as below:
    *   - response_type: The requested response: an access token, an
    *     authorization code, or both.
+   *   - user_name: The user identifier associated with this authorization.
    *   - client_id: The client identifier as described in Section 2.
    *   - redirect_uri: An absolute URI to which the authorization server
    *     will redirect the user-agent to when the end-user authorization
@@ -1242,7 +1249,7 @@ abstract class OAuth2 {
         $result["query"]["code"] = $this->createAuthCode($client_id, $redirect_uri, $scope);
 
       if ($response_type == OAUTH2_AUTH_RESPONSE_TYPE_ACCESS_TOKEN || $response_type == OAUTH2_AUTH_RESPONSE_TYPE_CODE_AND_TOKEN)
-        $result["fragment"] = $this->createAccessToken($client_id, $scope);
+        $result["fragment"] = $this->createAccessToken($user_name, $client_id, $scope);
     }
 
     $this->doRedirectUriCallback($redirect_uri, $result);
@@ -1310,6 +1317,8 @@ abstract class OAuth2 {
    * This belongs in a separate factory, but to keep it simple, I'm just
    * keeping it here.
    *
+   * @param $user_name
+   *   User identifier related to the access token.
    * @param $client_id
    *   Client identifier related to the access token.
    * @param $scope
@@ -1317,14 +1326,14 @@ abstract class OAuth2 {
    *
    * @ingroup oauth2_section_4
    */
-  protected function createAccessToken($client_id, $scope = NULL) {
+  protected function createAccessToken($user_name, $client_id, $scope = NULL) {
     $token = array(
       "access_token" => $this->genAccessToken(),
       "expires_in" => $this->getVariable('access_token_lifetime', OAUTH2_DEFAULT_ACCESS_TOKEN_LIFETIME),
       "scope" => $scope
     );
 
-    $this->setAccessToken($token["access_token"], $client_id, time() + $this->getVariable('access_token_lifetime', OAUTH2_DEFAULT_ACCESS_TOKEN_LIFETIME), $scope);
+    $this->setAccessToken($token["access_token"], $user_name, $client_id, time() + $this->getVariable('access_token_lifetime', OAUTH2_DEFAULT_ACCESS_TOKEN_LIFETIME), $scope);
 
     // Issue a refresh token also, if we support them
     if (in_array(OAUTH2_GRANT_TYPE_REFRESH_TOKEN, $this->getSupportedGrantTypes())) {
