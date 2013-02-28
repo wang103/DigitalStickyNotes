@@ -463,7 +463,7 @@ abstract class OAuth2 {
    *
    * @ingroup oauth2_section_4
    */
-  abstract protected function setAccessToken($oauth_token, $client_id, $expires, $scope = NULL);
+  abstract protected function setAccessToken($oauth_token, $user_name, $client_id, $expires, $scope = NULL);
 
   // Stuff that should get overridden by subclasses.
   //

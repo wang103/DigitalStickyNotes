@@ -37,7 +37,7 @@ public class Communicator {
 	private List<Note> getNotesWithLocalServer(String token) {
 		return null;
 	}
-	
+
 	private List<Note> getNotesWithGlobalServer(String token) {
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -165,7 +165,7 @@ public class Communicator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+
 		String result = null;
 		try {
 			result = Utils.inputStreamToString(response.getEntity().getContent());
