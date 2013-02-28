@@ -114,9 +114,8 @@ public class MainActivity extends Activity {
 	 * Call this method after access token is acquired.
 	 */
 	private void postSigningIn() {
-		//TODO: uncomment below.
-		//startMessagesUpdater();
-		//switchViewToShowMessages();
+		startMessagesUpdater();
+		//TODO: switchViewToShowMessages();
 	}
 	
 	@Override
@@ -146,11 +145,9 @@ public class MainActivity extends Activity {
 	/**
 	 * Start the periodic updater.
 	 */
-	@SuppressWarnings("unused")
 	private void startMessagesUpdater() {
-		//TODO: use it later.
 		Log.d("TIANYI", "MessagesUpdater started.");
-		messagesUpdater = new NotesUpdater();
+		messagesUpdater = new NotesUpdater(this);
 		messagesUpdater.start();
 	}
 	

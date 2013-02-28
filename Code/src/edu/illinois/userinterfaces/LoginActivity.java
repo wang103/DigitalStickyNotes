@@ -257,7 +257,7 @@ public class LoginActivity extends Activity {
 		
 			if (success) {
 				Log.d("TIANYI", "Signed in successfully.");
-				
+			
 				finishLogin(token);
 			} else {
 				mPasswordView

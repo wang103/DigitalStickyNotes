@@ -2,7 +2,7 @@ package edu.illinois.messaging;
 
 import java.util.List;
 
-import edu.illinois.classinterfaces.ConnectionManager;
+import edu.illinois.communication.Communicator;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.os.Handler;
 import android.util.Log;
@@ -11,34 +11,24 @@ import android.util.Log;
  * @author tianyiw
  */
 public class NotesUpdater implements Runnable {
-	
-	private ConnectionManager connectionManager;
+
+	private MainActivity mainActivity;
+	private Communicator communicator;
 	
 	private int updateInterval = 60000;			// 60 seconds by default.
 	private Handler updateHandler;
-	
+
 	private void updateMessages() {
 		
-		if (connectionManager == null) {
+		if (communicator == null) {
 			return;
 		}
 		
-		// For every 'updateInterval' milliseconds, we start to discover
-		// devices for 'DISCOVERY_LENGTH' seconds. Then communicate with each
-		// devices discovered.
+		List<Note> notes = communicator.getNotes(mainActivity.getToken());
 		
-		boolean status;
+		Log.d("TIANYI", "Received " + notes.size() + " notes.");
 		
-		List<String> response = connectionManager.talkToServers("Hello", false, false);
-		Log.d("TIANYI", response.size() + " local server(s) responsed.");
-		
-		status = connectionManager.startDiscoveryAndWait();
-		
-		Log.d("TIANYI", "Discovery started. Status: " + status);
-
-		status = connectionManager.stopDiscovery();
-		
-		Log.d("TIANYI", "Discovery finished. Status: " + status);
+		//TODO: implementation.
 	}
 	
 	@Override
@@ -56,9 +46,10 @@ public class NotesUpdater implements Runnable {
 		updateHandler.removeCallbacks(this);
 	}
 	
-	public NotesUpdater() {
+	public NotesUpdater(MainActivity mainActivity) {
+		this.mainActivity = mainActivity;
+		this.communicator = MainActivity.communicator;
+
 		this.updateHandler = new Handler();
-		
-		this.connectionManager = MainActivity.connectionManager;
 	}
 }

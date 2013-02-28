@@ -153,6 +153,12 @@ class MySQLAuth2 extends OAuth2 {
     public function getUsername() {
         $token_param = $this->getAccessTokenParams();
         $token = $this->getAccessToken($token_param);
-        return $token['user_name'];
+        $user_email = $token['user_name'];
+
+        $qry = "SELECT user_name FROM users WHERE email='" . $user_email . "'";
+        $qry_result = mysql_query($qry);
+        
+        $user = mysql_fetch_assoc($qry_result);
+        return $user['user_name'];
     }
 }

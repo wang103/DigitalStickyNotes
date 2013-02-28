@@ -29,80 +29,52 @@ public class Communicator {
 	private static final String BASE_URL = "http://tianyiwang.info/project";
 	private static final String AUTH_URL = BASE_URL + "/request_token.php";
 	private static final String REG_URL = BASE_URL + "/register.php";
-	private static final String API_URL = BASE_URL + "/handle_requests.php";
+	//TODO: private static final String API_URL = BASE_URL + "/handle_requests.php";
 	
 	private Activity activity;
 	private ConnectionManager connectionManager;
 	
 	private List<Note> getNotesWithLocalServer(String token) {
-		return null;
-	}
+	
+		JSONObject jInputObject = new JSONObject();
 
-	private List<Note> getNotesWithGlobalServer(String token) {
-		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("request_name", "get_notes"));
-		nameValuePairs.add(new BasicNameValuePair("token", token));
-		
-		HttpEntity entity = null;
 		try {
-			entity = new UrlEncodedFormEntity(nameValuePairs);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		final HttpPost post = new HttpPost(API_URL);
-		post.addHeader(entity.getContentType());
-		post.setEntity(entity);
-		HttpResponse response = null;
-		
-		try {
-			response = Utils.getHttpClient().execute(post);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		String result = null;
-		try {
-			result = Utils.inputStreamToString(response.getEntity().getContent());
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		//TODO: finish this.
-		@SuppressWarnings("unused")
-		JSONObject jsonObject = null;
-		try {
-			jsonObject = new JSONObject(result);
+			jInputObject.put("request_name", "get_notes");
+			jInputObject.put("token", token);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
+		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
+		List<Note> notes = new ArrayList<Note>();
+
+		if (result.size() > 0) {
+			JSONObject jOutputObject = null;
+			try {
+				jOutputObject = new JSONObject(result.get(0));
+				//TODO: implementation.
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 		
-		return null;
+		return notes;
 	}
 	
 	/**
-	 * First try to get user's notes with the global server, if Internet
-	 * connection is not available, try to authenticate with the local server.
+	 * Try to get user's notes if there is a nearby local server.
 	 * 
 	 * @param token the access token.
 	 * @return a list of user's notes.
 	 */
 	public List<Note> getNotes(String token) {
-		if (Utils.isNetworkConnected(activity)) {
-			Log.d("TIANYI", "Using global server to get notes.");
-			return getNotesWithGlobalServer(token);
-		}
-		else if (this.connectionManager != null) {
+		if (this.connectionManager != null) {
 			Log.d("TIANYI", "Using local server to get notes.");
 			return getNotesWithLocalServer(token);
 		}
 		
-		Log.d("TIANYI", "Can't get notes. No Network available.");		
+		Log.d("TIANYI", "Can't get notes. No local server available.");		
 		return null;
 	}
 	

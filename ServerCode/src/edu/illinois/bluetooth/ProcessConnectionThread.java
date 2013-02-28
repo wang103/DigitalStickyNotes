@@ -26,6 +26,31 @@ public class ProcessConnectionThread implements Runnable {
 		this.streamConnection = streamConnection;
 	}
 	
+	private void handleGetNotes(JSONObject jsonObj, OutputStream outputStream) {
+		
+		//TODO: fix the hard-coded credentials.
+		String token = (String) jsonObj.get("token");
+		String location_id = "1";
+		String location_pwd = "serverpass";
+		
+		List<NameValuePair> data = new ArrayList<NameValuePair>(3);
+		data.add(new BasicNameValuePair("token", token));
+		data.add(new BasicNameValuePair("location_id", location_id));
+		data.add(new BasicNameValuePair("server_pwd", location_pwd));
+		
+		String response = Utils.sendPostToGlobalServer(data, 2);
+		
+		System.out.println("Response from the global server: " + response);
+		
+		// Send the result back to the client.
+		byte[] outputBuffer = response.getBytes();
+		try {
+			outputStream.write(outputBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void handleAuthenticate(JSONObject jsonObj, OutputStream outputStream) {
 		
 		String grantType = (String) jsonObj.get("grant_type");
@@ -105,9 +130,14 @@ public class ProcessConnectionThread implements Runnable {
 				
 				if (request.equals("authenticate")) {
 					handleAuthenticate(jsonObj, outputStream);
-				} else if (request.equals("register")) {
+				}
+				else if (request.equals("register")) {
 					handleRegistration(jsonObj, outputStream);
-				} else {
+				}
+				else if (request.equals("get_notes")) {
+					handleGetNotes(jsonObj, outputStream);
+				}
+				else {
 					System.out.println("Unsupported request from client!");
 				}
 			} catch (ParseException e) {

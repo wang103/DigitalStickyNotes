@@ -27,9 +27,32 @@ if ($request_name === 'get_notes') {
     $server_pwd = md5($_POST['server_pwd']);
     $user_name = $oauth->getUsername();
 
+    # Authorize the location.
+    $qry = "SELECT location_id FROM local_servers where location_id='" . $location_id . "' AND password='" . $server_pwd . "'";
+    $qry_result = mysql_query($qry);
+    if (mysql_num_rows($qry_result) == 0) {
+        $result = array('success' => false, 'info' => 'Authorization for local server failed!');
+        mysql_close($con);
+        echo json_encode($result);
+        exit;
+    }
 
+    $qry = "SELECT message_id,received_time,available_time,expire_time,title,message,sender_id FROM messages WHERE location_id='" . $location_id . "' AND receiver_id='" . $user_name . "'";
+    $qry_result = mysql_query($qry);
+    $num_msg = mysql_num_rows($qry_result);
+    $messages = array();
+    while ($row = mysql_fetch_array($qry_result)) {
+        $message = array('message_id' => $row['message_id'],
+                         'received_time' => $row['received_time'],
+                         'available_time' => $row['available_time'],
+                         'expire_time' => $row['expire_time'],
+                         'title' => $row['title'],
+                         'message' => $row['message'],
+                         'sender_id' => $row['sender_id']);
+        array_push($messages, $message);
+    }
 
-    $result = array('success' => false);
+    $result = array('success' => true, 'num_msg' => $num_msg, 'messages' => $messages);
 }
 else {
     $result = array('success' => false, 'info' => 'Request Not Supported!');
