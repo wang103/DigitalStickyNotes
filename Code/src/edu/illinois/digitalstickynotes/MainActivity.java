@@ -97,6 +97,7 @@ public class MainActivity extends Activity {
 	private void postSetupConnection() {
 		communicator = new Communicator(this);
 		
+		//TODO: store the username too.
 		// Check to see if the app has the access token, if not, start the
 		// login activity to ask for user's credentials.
 		SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);

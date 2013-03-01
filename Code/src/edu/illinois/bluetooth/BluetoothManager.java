@@ -34,7 +34,7 @@ public class BluetoothManager extends ConnectionManager {
 	public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery) {
 		
 		Log.d("TIANYI", "Sending " + s + "to the local server.");
-		
+	
 		if (startDiscovery) {
 			startDiscoveryAndWait();
 			stopDiscovery();
@@ -121,13 +121,15 @@ public class BluetoothManager extends ConnectionManager {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+	
 		return status;
 	};
-	
+
 	@Override
 	public boolean stopDiscovery() {
-		return mBluetoothAdapter.cancelDiscovery();
+		boolean status = mBluetoothAdapter.cancelDiscovery();
+		
+		return status;
 	}
 	
 	public boolean connectionEnabled() {

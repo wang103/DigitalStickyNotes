@@ -33,8 +33,9 @@ public class ProcessConnectionThread implements Runnable {
 		String location_id = "1";
 		String location_pwd = "serverpass";
 		
-		List<NameValuePair> data = new ArrayList<NameValuePair>(3);
-		data.add(new BasicNameValuePair("token", token));
+		List<NameValuePair> data = new ArrayList<NameValuePair>(4);
+		data.add(new BasicNameValuePair("request_name", "get_notes"));
+		data.add(new BasicNameValuePair("oauth_token", token));
 		data.add(new BasicNameValuePair("location_id", location_id));
 		data.add(new BasicNameValuePair("server_pwd", location_pwd));
 		

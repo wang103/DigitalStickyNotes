@@ -45,7 +45,7 @@ public class Communicator {
 			e.printStackTrace();
 		}
 
-		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
+		List<String> result = connectionManager.talkToServers(jInputObject.toString(), false, false);
 		List<Note> notes = new ArrayList<Note>();
 
 		if (result.size() > 0) {
@@ -58,7 +58,7 @@ public class Communicator {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return notes;
 	}
 	
