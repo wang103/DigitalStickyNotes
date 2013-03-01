@@ -2,8 +2,12 @@ package edu.illinois.communication;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,6 +16,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +24,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import edu.illinois.classinterfaces.ConnectionManager;
+import edu.illinois.data.User;
 import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.messaging.Note;
 import edu.illinois.userinterfaces.LoginActivity;
@@ -52,9 +58,34 @@ public class Communicator {
 			JSONObject jOutputObject = null;
 			try {
 				jOutputObject = new JSONObject(result.get(0));
-				//TODO: implementation.
-				
+				int numMessages = jOutputObject.getInt("num_msg");
+				JSONArray messageArray = jOutputObject.getJSONArray("messages");
+				for (int i = 0; i < numMessages; i++) {
+					JSONObject messageObj = messageArray.getJSONObject(i);
+					
+					String msgIdString = messageObj.getString("message_id");
+					String receivedTimeString = messageObj.getString("received_time");
+					String availableTimeString = messageObj.getString("availble_time");
+					String expireTimeString = messageObj.getString("expire_time");
+					String title = messageObj.getString("title");
+					String message = messageObj.getString("message");
+					String senderString = messageObj.getString("sender_id");
+					
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+					
+					int msgID = Integer.parseInt(msgIdString);
+					Date receivedTime = simpleDateFormat.parse(receivedTimeString);
+					Date availableTime = simpleDateFormat.parse(availableTimeString);
+					Date expireTime = simpleDateFormat.parse(expireTimeString);
+					User sender = new User(senderString);
+					
+					Note newNote = new Note(msgID, title, message, receivedTime, availableTime, expireTime, sender);
+					
+					notes.add(newNote);
+				}
 			} catch (JSONException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
