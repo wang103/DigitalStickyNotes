@@ -30,7 +30,7 @@ public class ShowMessagesActivity extends ListActivity {
 		databaseAccessObj = new DatabaseAccessObj(this);
 		databaseAccessObj.open();
 		
-		List<Note> messages = databaseAccessObj.getAllAvailableMessages();
+		List<Note> messages = databaseAccessObj.getAllAvailableNotes();
 		
 		// Use the SimpleCursorAdapter to show the messages in this ListView.
 		ArrayAdapter<Note> adapter = new ArrayAdapter<Note>(this,

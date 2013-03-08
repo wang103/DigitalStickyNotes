@@ -29,7 +29,7 @@ public abstract class ConnectionManager {
 	
 	protected void insertMessage(Note message) {
 		// Insert to the database.
-		databaseAccessObj.insertMessage(message);
+		databaseAccessObj.insertNote(message);
 	}
 	
 	public ConnectionManager() {

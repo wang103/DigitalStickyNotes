@@ -3,6 +3,7 @@ package edu.illinois.digitalstickynotes;
 import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.communication.Communicator;
+import edu.illinois.database.DatabaseAccessObj;
 import edu.illinois.messaging.NotesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
 import edu.illinois.userinterfaces.LoginActivity;
@@ -25,7 +26,8 @@ public class MainActivity extends Activity {
 	public static ConnectionManager connectionManager;
 	public static Communicator communicator;
 	public static NotesUpdater messagesUpdater;
-
+	public DatabaseAccessObj databaseManager;
+	
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
 	
@@ -38,14 +40,29 @@ public class MainActivity extends Activity {
 	
 	private String token;
 	
+	/**
+	 * Set the access token.
+	 * 
+	 * @param token the access token.
+	 */
 	public void setToken(String token) {
 		this.token = token;
 	}
 	
+	/**
+	 * Get the access token.
+	 * 
+	 * @return the access token.
+	 */
 	public String getToken() {
 		return token;
 	}
 	
+	/**
+	 * Set whether or not the Wifi Direct is enabled.
+	 * 
+	 * @param isWifiP2pEnabled true if Wifi Direct is enabled. Otherwise false.
+	 */
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
 		
@@ -70,6 +87,12 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Set whether or not the Bluetooth is enabled.
+	 * 
+	 * @param isBTEnabled true if Bluetooth is enabled. Otherwise false.
+	 * @param doPost true to start post setup connection. Otherwise false.
+	 */
 	public void setIsBTEnabled(boolean isBTEnabled, boolean doPost) {
 		this.isBTEnabled = isBTEnabled;
 	
@@ -115,6 +138,9 @@ public class MainActivity extends Activity {
 	 * Call this method after access token is acquired.
 	 */
 	private void postSigningIn() {
+		databaseManager = new DatabaseAccessObj(this);
+		databaseManager.open();
+		
 		startMessagesUpdater();
 		//TODO: switchViewToShowMessages();
 	}
@@ -196,6 +222,10 @@ public class MainActivity extends Activity {
 		if (isWifiP2pEnabled || isBTEnabled) {
 			this.stopMessagesUpdater();
 			connectionManager.unregisterBroadcastReceiver(this);
+		}
+		
+		if (databaseManager != null) {
+			databaseManager.close();
 		}
 	}
 	

@@ -1,8 +1,10 @@
 package edu.illinois.database;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import edu.illinois.data.User;
 import edu.illinois.messaging.Note;
@@ -12,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseAccessObj {
+	
 	private SQLiteDatabase database;
 	private SQLiteHelperMessage messageDBHelper;
 	private String[] columnNames = {SQLiteHelperMessage.COLUMN_ID,
@@ -31,34 +34,44 @@ public class DatabaseAccessObj {
 		messageDBHelper.close();
 	}
 	
-	public void insertMessage(Note message) {
+	/**
+	 * Insert a new note into the SQLite database.
+	 * 
+	 * @param note a {@link Note} object.
+	 */
+	public void insertNote(Note note) {
 		ContentValues values = new ContentValues();
 		
-		values.put(SQLiteHelperMessage.COLUMN_ID, message.getMessageID());
-		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, message.getReceivedDate().toString());
-		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, message.getAvailableDate().toString());
-		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, message.getExpireDate().toString());
-		values.put(SQLiteHelperMessage.COLUMN_TITLE, message.getTitle());
-		values.put(SQLiteHelperMessage.COLUMN_MESSAGE, message.getMessage());
-		values.put(SQLiteHelperMessage.COLUMN_SENDER, message.getSender().getUserName());
+		values.put(SQLiteHelperMessage.COLUMN_ID, note.getMessageID());
+		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, note.getReceivedDate().toString());
+		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, note.getAvailableDate().toString());
+		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, note.getExpireDate().toString());
+		values.put(SQLiteHelperMessage.COLUMN_TITLE, note.getTitle());
+		values.put(SQLiteHelperMessage.COLUMN_MESSAGE, note.getMessage());
+		values.put(SQLiteHelperMessage.COLUMN_SENDER, note.getSender().getUserName());
 		
 		database.insert(SQLiteHelperMessage.TABLE_NAME, null, values);
 	}
 	
-	public void deleteMessage(Note message) {
-		long messageID = message.getMessageID();
+	/**
+	 * Delete a note from the SQLite database.
+	 * 
+	 * @param note a {@link Note} object.
+	 */
+	public void deleteNote(Note note) {
+		long messageID = note.getMessageID();
 		
 		database.delete(SQLiteHelperMessage.TABLE_NAME,
 				SQLiteHelperMessage.COLUMN_ID + " = " + messageID, null);
 	}
 	
 	/**
-	 * This method will return all the available messages, delete all the expired
-	 * messages, and ignore all the received, but un-available message.
+	 * This method will return all the available notes, delete all the expired
+	 * notes, and ignore all the received, but un-available notes.
 	 * 
-	 * @return a list of available messages.
+	 * @return a list of available notes.
 	 */
-	public List<Note> getAllAvailableMessages() {
+	public List<Note> getAllAvailableNotes() {
 		List<Note> messages = new ArrayList<Note>();
 		
 		Cursor cursor = database.query(SQLiteHelperMessage.TABLE_NAME,
@@ -66,15 +79,13 @@ public class DatabaseAccessObj {
 		
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Note message = cursorToMessage(cursor);
+			Note message = cursorToNote(cursor);
 			
-			//TODO: remove the commented out here.
-			/*
 			if (message.hasExpired()) {
-				deleteMessage(message);
-			} else if (message.isAvailable()) {*/
+				deleteNote(message);
+			} else if (message.isAvailable()) {
 				messages.add(message);
-			//}
+			}
 			
 			cursor.moveToNext();
 		}
@@ -83,12 +94,25 @@ public class DatabaseAccessObj {
 		return messages;
 	}
 	
-	private Note cursorToMessage(Cursor cursor) {
-		//TODO: fix the string to date conversion.
-		Note message = new Note(cursor.getLong(0), cursor.getString(4),
-				cursor.getString(5), new Date() /*cursor.getString(1))*/,
-				new Date() /*cursor.getString(2))*/, new Date() /*cursor.getString(2)*/,
-				new User(cursor.getString(6)));
-		return message;
+	/**
+	 * Helper method to convert a {@link Cursor} object to a {@link Note} object.
+	 * 
+	 * @param cursor a {@link Cursor} object.
+	 * @return a {@link Note} object.
+	 */
+	private Note cursorToNote(Cursor cursor) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
+		Note note = null;
+		try {
+			note = new Note(cursor.getLong(0), cursor.getString(4), cursor.getString(5),
+					simpleDateFormat.parse(cursor.getString(1)),
+					simpleDateFormat.parse(cursor.getString(2)),
+					simpleDateFormat.parse(cursor.getString(3)),
+					new User(cursor.getString(6)));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return note;
 	}
 }
