@@ -33,7 +33,7 @@ public class DatabaseAccessObj {
 	public void close() {
 		messageDBHelper.close();
 	}
-	
+
 	/**
 	 * Insert a new note into the SQLite database.
 	 * 
@@ -43,9 +43,9 @@ public class DatabaseAccessObj {
 		ContentValues values = new ContentValues();
 		
 		values.put(SQLiteHelperMessage.COLUMN_ID, note.getMessageID());
-		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, note.getReceivedDate().toString());
-		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, note.getAvailableDate().toString());
-		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, note.getExpireDate().toString());
+		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, note.getReceivedDateString());
+		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, note.getAvailableDateString());
+		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, note.getExpireDateString());
 		values.put(SQLiteHelperMessage.COLUMN_TITLE, note.getTitle());
 		values.put(SQLiteHelperMessage.COLUMN_MESSAGE, note.getMessage());
 		values.put(SQLiteHelperMessage.COLUMN_SENDER, note.getSender().getUserName());
@@ -73,7 +73,7 @@ public class DatabaseAccessObj {
 	 */
 	public List<Note> getAllAvailableNotes() {
 		List<Note> messages = new ArrayList<Note>();
-		
+	
 		Cursor cursor = database.query(SQLiteHelperMessage.TABLE_NAME,
 				columnNames, null, null, null, null, null);
 		
@@ -86,14 +86,14 @@ public class DatabaseAccessObj {
 			} else if (message.isAvailable()) {
 				messages.add(message);
 			}
-			
+
 			cursor.moveToNext();
 		}
-		
+
 		cursor.close();
 		return messages;
 	}
-	
+
 	/**
 	 * Helper method to convert a {@link Cursor} object to a {@link Note} object.
 	 * 
@@ -102,13 +102,14 @@ public class DatabaseAccessObj {
 	 */
 	private Note cursorToNote(Cursor cursor) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
+		
 		Note note = null;
 		try {
 			note = new Note(cursor.getLong(0), cursor.getString(4), cursor.getString(5),
 					simpleDateFormat.parse(cursor.getString(1)),
 					simpleDateFormat.parse(cursor.getString(2)),
 					simpleDateFormat.parse(cursor.getString(3)),
+					cursor.getString(1), cursor.getString(2), cursor.getString(3),
 					new User(cursor.getString(6)));
 		} catch (ParseException e) {
 			e.printStackTrace();

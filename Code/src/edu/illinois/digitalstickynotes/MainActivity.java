@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 	public static ConnectionManager connectionManager;
 	public static Communicator communicator;
 	public static NotesUpdater messagesUpdater;
-	public DatabaseAccessObj databaseManager;
+	public static DatabaseAccessObj databaseManager;
 	
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
@@ -142,7 +142,7 @@ public class MainActivity extends Activity {
 		databaseManager.open();
 		
 		startMessagesUpdater();
-		//TODO: switchViewToShowMessages();
+		switchViewToShowMessages();
 	}
 	
 	@Override
@@ -188,9 +188,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private void switchViewToShowMessages() {
-		//TODO: fix to actually switch the view instead of starting a new activity.
 		Intent intent = new Intent(this, ShowMessagesActivity.class);
 		startActivity(intent);
 	}

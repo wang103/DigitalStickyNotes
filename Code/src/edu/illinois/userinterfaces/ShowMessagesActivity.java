@@ -3,22 +3,23 @@ package edu.illinois.userinterfaces;
 import java.util.List;
 
 import edu.illinois.database.DatabaseAccessObj;
+import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.digitalstickynotes.R;
 import edu.illinois.messaging.Note;
 import android.os.Bundle;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 public class ShowMessagesActivity extends ListActivity {
 
-	private DatabaseAccessObj databaseAccessObj;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_messages);
 		
@@ -27,8 +28,7 @@ public class ShowMessagesActivity extends ListActivity {
 		progressBar.setIndeterminate(true);
 		getListView().setEmptyView(progressBar);
 		
-		databaseAccessObj = new DatabaseAccessObj(this);
-		databaseAccessObj.open();
+		DatabaseAccessObj databaseAccessObj = MainActivity.databaseManager;
 		
 		List<Note> messages = databaseAccessObj.getAllAvailableNotes();
 		
@@ -41,8 +41,9 @@ public class ShowMessagesActivity extends ListActivity {
 		
 		//TODO: start a thread to periodically check new messages in the database.
 		
+		progressBar.setVisibility(View.GONE);
 	}
-	
+
 	@Override
 	protected void onListItemClick(ListView l, android.view.View v, int position, long id) {
 		Log.d("TIANYI", "List item " + position + " clicked.");
@@ -64,19 +65,15 @@ public class ShowMessagesActivity extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
-		databaseAccessObj.close();
 	}
 	
 	@Override
 	protected void onResume() {
-		databaseAccessObj.open();
 		super.onResume();
 	}
 	
 	@Override
 	protected void onPause() {
-		databaseAccessObj.close();
 		super.onPause();
 	}
 }

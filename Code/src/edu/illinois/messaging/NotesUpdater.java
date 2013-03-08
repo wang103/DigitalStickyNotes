@@ -29,7 +29,7 @@ public class NotesUpdater implements Runnable {
 		Log.d("TIANYI", "Received " + notes.size() + " notes.");
 		
 		for (Note note : notes) {
-			mainActivity.databaseManager.insertNote(note);
+			MainActivity.databaseManager.insertNote(note);
 		}
 		
 		//TODO: notify the view to update.

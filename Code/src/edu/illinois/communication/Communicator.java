@@ -79,7 +79,9 @@ public class Communicator {
 					Date expireTime = simpleDateFormat.parse(expireTimeString);
 					User sender = new User(senderString);
 					
-					Note newNote = new Note(msgID, title, message, receivedTime, availableTime, expireTime, sender);
+					Note newNote = new Note(msgID, title, message, receivedTime,
+							availableTime, expireTime, receivedTimeString,
+							availableTimeString, expireTimeString, sender);
 					
 					notes.add(newNote);
 				}
