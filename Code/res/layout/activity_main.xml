@@ -4,12 +4,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/show_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world" />
+<TextView
+	android:id="@+id/main_title_label"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/main_title"
+	android:textSize="26sp"
+	android:gravity="center"
+	android:layout_alignParentTop="true"
+	android:layout_centerHorizontal="true" />
 
+<TextView
+	android:id="@+id/show_message"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text=""
+	android:gravity="center"
+	android:layout_below="@+id/send_note_button" 
+	android:layout_centerHorizontal="true" />
+
+<Button
+	android:id="@+id/send_note_button"
+	android:layout_width="300dp"
+	android:layout_height="wrap_content"
+	android:text="@string/send_note_button"
+	android:gravity="center"
+	android:layout_below="@+id/my_notes_button"
+	android:layout_centerHorizontal="true"  />
+
+<Button
+	android:id="@+id/my_notes_button"
+	android:layout_width="300dp"
+	android:layout_height="wrap_content"
+	android:text="@string/my_notes_button"
+	android:gravity="center"
+	android:layout_centerVertical="true"
+	android:layout_centerHorizontal="true" />
+    
 </RelativeLayout>

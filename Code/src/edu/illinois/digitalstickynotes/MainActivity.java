@@ -7,6 +7,7 @@ import edu.illinois.database.DatabaseAccessObj;
 import edu.illinois.messaging.NotesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
 import edu.illinois.userinterfaces.LoginActivity;
+import edu.illinois.userinterfaces.SendNoteActivity;
 import edu.illinois.userinterfaces.ServerSetupActivity;
 import edu.illinois.userinterfaces.ShowMessagesActivity;
 import edu.illinois.wifidirect.WifiDirectManager;
@@ -19,6 +20,7 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -193,6 +195,11 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	private void switchViewToSendNote() {
+		Intent intent = new Intent(this, SendNoteActivity.class);
+		startActivity(intent);
+	}
+	
 	/**
 	 * First try WIFI DIRECT. If it's not supported/enabled, ask for user's
 	 * permission to use Bluetooth.
@@ -208,6 +215,22 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		findViewById(R.id.my_notes_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						switchViewToShowMessages();
+					}
+		});
+		
+		findViewById(R.id.send_note_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						switchViewToSendNote();
+					}
+		});
 		
 		setupConnection();
 		Log.d("TIANYI", "Connection setup done");

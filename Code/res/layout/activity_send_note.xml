@@ -1,0 +1,98 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	tools:context=".SendNoteActivity" >
+
+<RelativeLayout
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+<Button
+	android:id="@+id/send_to_button"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/send_to_button"
+	android:layout_alignParentTop="true"
+	android:layout_alignParentLeft="true" />
+    
+<TextView
+	android:id="@+id/send_to_textview"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/empty_receivers"
+	android:layout_alignParentTop="true"
+	android:layout_toRightOf="@+id/send_to_button" />
+
+<EditText
+	android:id="@+id/title_textview"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:hint="@string/prompt_title"
+	android:textSize="18sp"
+	android:layout_below="@+id/send_to_button"
+	android:layout_alignParentLeft="true" />
+
+<EditText
+	android:id="@+id/content_textview"
+	android:layout_width="306dp"
+	android:layout_height="wrap_content"
+	android:hint="@string/prompt_content"
+	android:textSize="18sp"
+	android:layout_below="@+id/title_textview"
+	android:layout_alignParentLeft="true" />
+
+<TextView
+	android:id="@+id/available_time_textview"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/prompt_available_time"
+	android:layout_below="@+id/content_textview"
+	android:layout_alignParentLeft="true" />
+
+<DatePicker
+	android:id="@+id/available_datepicker"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_below="@+id/available_time_textview"
+	android:layout_alignParentLeft="true" />
+
+<TimePicker
+	android:id="@+id/available_timepicker"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_alignTop="@+id/available_datepicker"
+	android:layout_toRightOf="@+id/available_datepicker" />
+
+<TextView
+	android:id="@+id/expire_time_textview"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/prompt_expire_time"
+	android:layout_below="@+id/available_datepicker"
+	android:layout_alignParentLeft="true" />
+
+<DatePicker
+	android:id="@+id/expire_datepicker"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_below="@+id/expire_time_textview"
+	android:layout_toLeftOf="@+id/available_timepicker" />
+
+<TimePicker
+	android:id="@+id/expire_timepicker"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_alignTop="@+id/expire_datepicker"
+	android:layout_alignLeft="@+id/available_timepicker" />
+
+<Button
+	android:id="@+id/send_note_button"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/send_note_button"
+	android:layout_alignParentTop="true"
+	android:layout_below="@+id/expire_datepicker" />
+
+</RelativeLayout>
+</ScrollView>

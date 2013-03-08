@@ -3,6 +3,7 @@
 
     <string name="app_name">DigitalStickyNotes</string>
     <string name="hello_world">Hello world!</string>
+    <string name="main_title">Digital Sticky Notes</string>
     <string name="client_settings">Client Settings</string>
     <string name="server_settings">Server Settings</string>
     <string name="menu_settings">Settings</string>
@@ -11,5 +12,6 @@
     <string name="title_activity_show_messages">Messages</string>
     <string name="title_activity_show_detailed_message">MessageTitle</string>
     <string name="title_activity_register">Register</string>
+    <string name="title_activity_send_note">Send Note</string>
 
 </resources>
