@@ -32,7 +32,7 @@
         <!--  Providers -->
         <provider
        		android:authorities="edu.illinois.digitalstickynotes.notecontentprovider"
-       		android:name=".notecontentprovider.NoteContentProvider"
+       		android:name="edu.illinois.database.NoteContentProvider"
        		android:exported="false" >
 		</provider>
 
@@ -67,14 +67,14 @@
         </activity>
         <activity
             android:name="edu.illinois.userinterfaces.ShowMessagesActivity"
-            android:label="@string/title_activity_show_messages" >
+            android:label="@string/title_activity_show_notes" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.illinois.digitalstickynotes.MainActivity" />
         </activity>
         <activity
             android:name="edu.illinois.userinterfaces.ShowDetailedMessageActivity"
-            android:label="@string/title_activity_show_detailed_message" >
+            android:label="@string/title_activity_show_detailed_note" >
         </activity>
         <activity
             android:name="edu.illinois.userinterfaces.RegisterActivity"

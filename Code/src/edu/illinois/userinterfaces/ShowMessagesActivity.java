@@ -39,7 +39,7 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 		DatabaseAccessObj databaseAccessObj = MainActivity.databaseManager;
 		
 		List<Note> messages = databaseAccessObj.getAllAvailableNotes();
-		
+
 		// Use the SimpleCursorAdapter to show the messages in this ListView.
 		ArrayAdapter<Note> adapter = new ArrayAdapter<Note>(this,
 				android.R.layout.simple_list_item_1, messages);
