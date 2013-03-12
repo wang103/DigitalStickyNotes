@@ -7,8 +7,8 @@ import android.util.Log;
 
 public class SQLiteHelperMessage extends SQLiteOpenHelper {
 	
-	public static final String TABLE_NAME = "messages";
-	public static final String COLUMN_ID = "message_id";
+	public static final String TABLE_NAME = "notes";
+	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_RECEIVED_TIME = "received_time";
 	public static final String COLUMN_AVAILABLE_TIME = "available_time";
 	public static final String COLUMN_EXPIRE_TIME = "expire_time";
@@ -16,7 +16,7 @@ public class SQLiteHelperMessage extends SQLiteOpenHelper {
 	public static final String COLUMN_MESSAGE = "message";
 	public static final String COLUMN_SENDER = "sender_id";
 	
-	private static final String DATABASE_NAME = "messages.db";
+	private static final String DATABASE_NAME = "digitalstickynotes.db";
 	private static final int DATABASE_VERSION = 1;
 	
 	public SQLiteHelperMessage(Context context) {

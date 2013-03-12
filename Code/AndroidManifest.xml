@@ -29,6 +29,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <!--  Providers -->
+        <provider
+       		android:authorities="edu.illinois.digitalstickynotes.notecontentprovider"
+       		android:name=".notecontentprovider.NoteContentProvider"
+       		android:exported="false" >
+		</provider>
+
         <!-- Activities -->
         <activity
             android:name="edu.illinois.digitalstickynotes.MainActivity"

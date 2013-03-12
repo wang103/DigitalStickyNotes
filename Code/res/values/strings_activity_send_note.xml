@@ -6,6 +6,5 @@
 	<string name="prompt_content">Content</string>
 	<string name="prompt_available_time">Available at:</string>
 	<string name="prompt_expire_time">Expires at:</string>
-	<string name="send_note_button">Send</string>
 	
 </resources>

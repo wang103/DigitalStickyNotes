@@ -8,7 +8,10 @@ import edu.illinois.digitalstickynotes.R;
 import edu.illinois.messaging.Note;
 import android.os.Bundle;
 import android.app.ListActivity;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-public class ShowMessagesActivity extends ListActivity {
+public class ShowMessagesActivity extends ListActivity implements LoaderCallbacks<Cursor> {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class ShowMessagesActivity extends ListActivity {
 		ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 		progressBar.setIndeterminate(true);
 		getListView().setEmptyView(progressBar);
-		
+
 		DatabaseAccessObj databaseAccessObj = MainActivity.databaseManager;
 		
 		List<Note> messages = databaseAccessObj.getAllAvailableNotes();
@@ -97,5 +100,20 @@ public class ShowMessagesActivity extends ListActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		return null;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
+		
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		
 	}
 }
