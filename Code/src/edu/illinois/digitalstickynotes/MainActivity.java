@@ -3,7 +3,6 @@ package edu.illinois.digitalstickynotes;
 import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.communication.Communicator;
-import edu.illinois.database.DatabaseAccessObj;
 import edu.illinois.messaging.NotesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
 import edu.illinois.userinterfaces.LoginActivity;
@@ -28,15 +27,14 @@ public class MainActivity extends Activity {
 	public static ConnectionManager connectionManager;
 	public static Communicator communicator;
 	public static NotesUpdater messagesUpdater;
-	public static DatabaseAccessObj databaseManager;
-	
+
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
 	
 	public static final int ACTIVITY_CODE_SIGN_IN = 0;
 	public static final int ACTIVITY_CODE_BLUETOOTH = 1;
 	public static final int ACTIVITY_CODE_REGISTER = 2;
-	
+
 	public static final String PREF_NAME = "edu.illinois.digitalstickynotes";
 	public static final String PREF_TOKEN_KEY = "edu.illinois.digitalstickynotes.token";
 	
@@ -140,9 +138,6 @@ public class MainActivity extends Activity {
 	 * Call this method after access token is acquired.
 	 */
 	private void postSigningIn() {
-		databaseManager = new DatabaseAccessObj(this);
-		databaseManager.open();
-		
 		startMessagesUpdater();
 		switchViewToShowMessages();
 	}
@@ -206,7 +201,7 @@ public class MainActivity extends Activity {
 	 */
 	private void setupConnection() {
 		connectionManager = new WifiDirectManager(this);
-		//TODO: for now, WIFI Direct is not supported on my device.
+		// For now, WIFI Direct is not supported. This may change in the future.
 		// Fall back to BT right away.
 		setIsWifiP2pEnabled(false);
 	}
@@ -243,10 +238,6 @@ public class MainActivity extends Activity {
 		if (isWifiP2pEnabled || isBTEnabled) {
 			this.stopMessagesUpdater();
 			connectionManager.unregisterBroadcastReceiver(this);
-		}
-		
-		if (databaseManager != null) {
-			databaseManager.close();
 		}
 	}
 	

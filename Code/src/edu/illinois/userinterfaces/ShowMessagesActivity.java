@@ -1,71 +1,70 @@
 package edu.illinois.userinterfaces;
 
-import java.util.List;
-
-import edu.illinois.database.DatabaseAccessObj;
-import edu.illinois.digitalstickynotes.MainActivity;
+import edu.illinois.database.NoteContentProvider;
+import edu.illinois.database.SQLiteHelperMessage;
 import edu.illinois.digitalstickynotes.R;
-import edu.illinois.messaging.Note;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.ListActivity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.SimpleCursorAdapter;
 
 public class ShowMessagesActivity extends ListActivity implements LoaderCallbacks<Cursor> {
 
+	private static final int DELETE_ID = Menu.FIRST + 1;
+	
+	private SimpleCursorAdapter adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_messages);
 
+		this.getListView().setDividerHeight(2);
+		
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		// Create a progress bar to display while the list loads.
-		ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-		progressBar.setIndeterminate(true);
-		getListView().setEmptyView(progressBar);
-
-		DatabaseAccessObj databaseAccessObj = MainActivity.databaseManager;
+		fillData();
 		
-		List<Note> messages = databaseAccessObj.getAllAvailableNotes();
-
-		// Use the SimpleCursorAdapter to show the messages in this ListView.
-		ArrayAdapter<Note> adapter = new ArrayAdapter<Note>(this,
-				android.R.layout.simple_list_item_1, messages);
-		setListAdapter(adapter);
-
-		Log.d("TIANYI", "ShowMessages List Activity creation done with " + messages.size() + " messages.");
+		registerForContextMenu(getListView());
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
 		
-		//TODO: start a thread to periodically check new messages in the database.
-		
-		progressBar.setVisibility(View.GONE);
+		switch (item.getItemId()) {
+		case DELETE_ID:
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			Uri uri = Uri.parse(NoteContentProvider.CONTENT_URI + "/" + info.id);
+			getContentResolver().delete(uri, null, null);
+			fillData();
+			return true;
+		}
+		return super.onContextItemSelected(item);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, android.view.View v, int position, long id) {
-		Log.d("TIANYI", "List item " + position + " clicked.");
-		
-		Note message = (Note) getListView().getItemAtPosition(position);
-		
+
+		super.onListItemClick(l, v, position, id);
+				
 		Intent intent = new Intent(this, ShowDetailedMessageActivity.class);
-		
-		intent.putExtra("Title", message.getTitle());
-		intent.putExtra("Message", message.getMessage());
-		intent.putExtra("Sender", message.getSender().getUserName());
-		intent.putExtra("AvailableTime", message.getAvailableDate().toString());
-		intent.putExtra("ReceivedTime", message.getReceivedDate().toString());
-		intent.putExtra("ExpireTime", message.getExpireDate().toString());
+		Uri noteUri = Uri.parse(NoteContentProvider.CONTENT_URI + "/" + id);
+		intent.putExtra(NoteContentProvider.CONTENT_ITEM_TYPE, noteUri);
 
 		startActivity(intent);
 	};
@@ -84,7 +83,25 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 	protected void onPause() {
 		super.onPause();
 	}
-
+	
+	/**
+	 * Populate the list view.
+	 */
+	private void fillData() {
+		
+		// Fields from the database.
+		String[] from = new String[] {SQLiteHelperMessage.COLUMN_TITLE, SQLiteHelperMessage.COLUMN_SENDER};
+		
+		// Fields on the UI to map.
+		int[] to = new int[] {R.id.row_title, R.id.row_sender};
+		
+		getLoaderManager().initLoader(0, null, this);
+		
+		adapter = new SimpleCursorAdapter(this, R.layout.note_row, null, from, to, 0);
+		
+		setListAdapter(adapter);
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -103,17 +120,28 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 	}
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return null;
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
-		
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		String[] projection = {SQLiteHelperMessage.COLUMN_ID, SQLiteHelperMessage.COLUMN_TITLE,
+				SQLiteHelperMessage.COLUMN_SENDER};
+		CursorLoader cursorLoader = new CursorLoader(this, NoteContentProvider.CONTENT_URI,
+				projection, null, null, null);
+		return cursorLoader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		adapter.swapCursor(data);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		
+		adapter.swapCursor(null);
 	}
 }

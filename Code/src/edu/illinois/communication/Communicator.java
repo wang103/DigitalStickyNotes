@@ -35,7 +35,6 @@ public class Communicator {
 	private static final String BASE_URL = "http://tianyiwang.info/project";
 	private static final String AUTH_URL = BASE_URL + "/request_token.php";
 	private static final String REG_URL = BASE_URL + "/register.php";
-	//TODO: private static final String API_URL = BASE_URL + "/handle_requests.php";
 	
 	private Activity activity;
 	private ConnectionManager connectionManager;
@@ -171,6 +170,10 @@ public class Communicator {
 			e.printStackTrace();
 		}
 
+		if (response == null) {
+			return null;
+		}
+		
 		String result = null;
 		try {
 			result = Utils.inputStreamToString(response.getEntity().getContent());

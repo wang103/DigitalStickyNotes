@@ -13,6 +13,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * The database access object, allows multiple operations with the database.
+ * This class is only used for debugging purpose.
+ * Actual interactions with the database is done directly via ContentProvider.
+ * 
+ * @author tianyiw
+ */
 public class DatabaseAccessObj {
 	
 	private SQLiteDatabase database;

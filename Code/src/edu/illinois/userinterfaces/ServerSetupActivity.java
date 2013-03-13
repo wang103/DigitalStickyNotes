@@ -9,9 +9,6 @@ import android.support.v4.app.NavUtils;
 
 public class ServerSetupActivity extends Activity {
 
-	@SuppressWarnings("unused")		//TODO: remove this.
-	private boolean isServerActive = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -1,41 +1,77 @@
 package edu.illinois.userinterfaces;
 
+import edu.illinois.database.NoteContentProvider;
+import edu.illinois.database.SQLiteHelperMessage;
 import edu.illinois.digitalstickynotes.R;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.database.Cursor;
 import android.view.Menu;
 import android.widget.TextView;
 
 public class ShowDetailedMessageActivity extends Activity {
 
+	private TextView messageTextView;
+	private TextView availableTextView;
+	private TextView receivedTextView;
+	private TextView expireTextView;
+	private TextView senderTextView;
+	
+	private Uri noteUri;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_detailed_message);
-		
+				
+		messageTextView = (TextView) findViewById(R.id.message_content);
+		availableTextView = (TextView) findViewById(R.id.available_time);
+		receivedTextView = (TextView) findViewById(R.id.received_time);
+		expireTextView = (TextView) findViewById(R.id.expire_time);
+		senderTextView = (TextView) findViewById(R.id.sender);
+
 		Bundle extras = getIntent().getExtras();
 		
-		String title = extras.getString("Title");
-		String message = extras.getString("Message");
-		String sender = extras.getString("Sender");
-		String availableDate = extras.getString("AvailableTime");
-		String receivedDate = extras.getString("ReceivedTime");
-		String expireDate = extras.getString("ExpireTime");
-		
-		TextView messageTextView = (TextView) findViewById(R.id.message_content);
-		TextView availableTextView = (TextView) findViewById(R.id.available_time);
-		TextView receivedTextView = (TextView) findViewById(R.id.received_time);
-		TextView expireTextView = (TextView) findViewById(R.id.expire_time);
-		TextView senderTextView = (TextView) findViewById(R.id.sender);
-		
-		setTitle(title);
-		messageTextView.setText("Note: " + message);
-		availableTextView.setText("Available Time: " + availableDate);
-		receivedTextView.setText("Received Time: " + receivedDate);
-		expireTextView.setText("Expire Time: " + expireDate);
-		senderTextView.setText("Sender: " + sender);
+		if (extras != null) {
+			noteUri = extras.getParcelable(NoteContentProvider.CONTENT_ITEM_TYPE);
+			fillData(noteUri);
+		}
 	}
 
+	/**
+	 * Populate the current note.
+	 * 
+	 * @param uri the URI indicating the note.
+	 */
+	private void fillData(Uri uri) {
+		
+		String[] projection = {SQLiteHelperMessage.COLUMN_TITLE, SQLiteHelperMessage.COLUMN_MESSAGE,
+				SQLiteHelperMessage.COLUMN_SENDER, SQLiteHelperMessage.COLUMN_RECEIVED_TIME,
+				SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, SQLiteHelperMessage.COLUMN_EXPIRE_TIME};
+		
+		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+		
+		if (cursor != null) {
+			cursor.moveToFirst();
+		
+			setTitle(cursor.getString(cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_TITLE)));
+			messageTextView.setText("Note: " + cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_MESSAGE));
+			availableTextView.setText("Available Time: " + cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME));
+			receivedTextView.setText("Received Time: " + cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_RECEIVED_TIME));
+			expireTextView.setText("Expire Time: " + cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_EXPIRE_TIME));
+			senderTextView.setText("Sender: " + cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_SENDER));
+			
+			cursor.close();
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
