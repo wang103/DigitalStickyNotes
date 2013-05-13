@@ -5,6 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * {@link SQLiteOpenHelper} object for message.
+ * 
+ * @author tianyiw
+ */
 public class SQLiteHelperMessage extends SQLiteOpenHelper {
 	
 	public static final String TABLE_NAME = "notes";
@@ -19,6 +24,11 @@ public class SQLiteHelperMessage extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "digitalstickynotes.db";
 	private static final int DATABASE_VERSION = 1;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param context the {@link Context} object.
+	 */
 	public SQLiteHelperMessage(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}

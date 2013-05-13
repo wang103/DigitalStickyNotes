@@ -3,6 +3,8 @@ package edu.illinois.database;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import edu.illinois.messaging.Note;
+
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -13,6 +15,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+/**
+ * The {@link ContentProvider} for {@link Note} in the database.
+ * 
+ * @author tianyiw
+ */
 public class NoteContentProvider extends ContentProvider {
 	
 	private SQLiteHelperMessage messageDBHelper;

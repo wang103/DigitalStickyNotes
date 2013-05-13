@@ -29,16 +29,19 @@ public class DatabaseAccessObj {
 			SQLiteHelperMessage.COLUMN_EXPIRE_TIME, SQLiteHelperMessage.COLUMN_TITLE,
 			SQLiteHelperMessage.COLUMN_MESSAGE, SQLiteHelperMessage.COLUMN_SENDER};
 	
-	public DatabaseAccessObj(Context context) {
-		messageDBHelper = new SQLiteHelperMessage(context);
-	}
-	
+	/**
+	 * Open the database. Must be called before any other operations.
+	 */
 	public void open() {
 		database = messageDBHelper.getWritableDatabase();
 	}
 	
+	/**
+	 * Close the database.
+	 */
 	public void close() {
 		messageDBHelper.close();
+		database = null;
 	}
 
 	/**
@@ -122,5 +125,14 @@ public class DatabaseAccessObj {
 			e.printStackTrace();
 		}
 		return note;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param context the {@link Context} object.
+	 */
+	public DatabaseAccessObj(Context context) {
+		messageDBHelper = new SQLiteHelperMessage(context);
 	}
 }
