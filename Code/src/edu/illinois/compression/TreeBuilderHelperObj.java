@@ -11,19 +11,6 @@ public class TreeBuilderHelperObj {
 	private byte[] bytes;
 	private int byteCount;
 	private int bitPos;
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param bytes the Huffman Tree in its binary form.
-	 * @param byteCount starting position in bytes.
-	 * @param bitPos starting position in bits.
-	 */
-	public TreeBuilderHelperObj(byte[] bytes, int byteCount, int bitPos) {
-		this.bytes = bytes;
-		this.byteCount = byteCount;
-		this.bitPos = bitPos;
-	}
 	
 	/**
 	 * Get the current bit.
@@ -64,6 +51,19 @@ public class TreeBuilderHelperObj {
 		}
 		
 		return theChar;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param bytes the Huffman Tree in its binary form.
+	 * @param byteCount starting position in bytes.
+	 * @param bitPos starting position in bits.
+	 */
+	public TreeBuilderHelperObj(byte[] bytes, int byteCount, int bitPos) {
+		this.bytes = bytes;
+		this.byteCount = byteCount;
+		this.bitPos = bitPos;
 	}
 	
 	public int getByteCount() {

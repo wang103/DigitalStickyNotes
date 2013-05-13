@@ -6,12 +6,42 @@ package edu.illinois.compression;
  * @author Tianyi Wang
  */
 public class TreeNode {
+	
 	private char character;			// only used for leaf node.
 	private int count;				// count of the node.
 	private TreeNode leftNode;		// path of 0.
 	private TreeNode rightNode;		// path of 1.
 	private TreeNode parentNode;
-
+	
+	/**
+	 * Determine if this node is a leaf node.
+	 * 
+	 * @return true for leaf node, false for internal node.
+	 */
+	public boolean isLeafNode() {
+		return leftNode == null && rightNode == null;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param count the count of the character.
+	 * @param leftNode left node of this node.
+	 * @param rightNode right node of this node.
+	 */
+	public TreeNode(int count, TreeNode leftNode, TreeNode rightNode) {
+		this.count = count;
+		this.leftNode = leftNode;
+		this.rightNode = rightNode;
+		this.parentNode = null;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param character the character of this node in the tree.
+	 * @param count the count of the character.
+	 */
 	public TreeNode(char character, int count) {
 		this.character = character;
 		this.count = count;
@@ -20,27 +50,12 @@ public class TreeNode {
 		this.parentNode = null;
 	}
 	
-	public TreeNode(int count, TreeNode leftNode, TreeNode rightNode) {
-		this.count = count;
-		this.leftNode = leftNode;
-		this.rightNode = rightNode;
-		this.parentNode = null;
-	}
-
 	public char getCharacter() {
 		return character;
 	}
 	
 	public int getCount() {
 		return count;
-	}
-	
-	public TreeNode getParentNode() {
-		return parentNode;
-	}
-
-	public void setParentNode(TreeNode parentNode) {
-		this.parentNode = parentNode;
 	}
 	
 	public TreeNode getLeftNode() {
@@ -51,12 +66,11 @@ public class TreeNode {
 		return rightNode;
 	}
 	
-	/**
-	 * Determine if this node is a leaf node.
-	 * 
-	 * @return true for leaf node, false for internal node.
-	 */
-	public boolean isLeafNode() {
-		return leftNode == null && rightNode == null;
+	public TreeNode getParentNode() {
+		return parentNode;
+	}
+
+	public void setParentNode(TreeNode parentNode) {
+		this.parentNode = parentNode;
 	}
 }

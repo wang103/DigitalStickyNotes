@@ -7,8 +7,9 @@ package edu.illinois.compression;
  * @author Tianyi Wang
  */
 public class BitStream {
+	
 	private byte[] bytes;
-
+	
 	/**
 	 * Constructor.
 	 * 

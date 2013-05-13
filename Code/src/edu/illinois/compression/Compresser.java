@@ -14,9 +14,6 @@ import edu.illinois.utils.Utils;
  */
 public class Compresser {
 	
-	public Compresser() {
-	}
-	
 	/**
 	 * Convert a Huffman Tree to a binary form. In the binary form, 0 indicates
 	 * a leaf node, and it's followed by the actual 8-bit character.
