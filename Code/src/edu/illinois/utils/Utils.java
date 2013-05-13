@@ -17,15 +17,19 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
+ * This class contains useful static methods.
+ * 
  * @author Tianyi Wang
  */
 public class Utils {
 	
-	/** Timeout (in ms) we specify for each HTTP request */
+	/** Timeout (in ms) for each HTTP request */
     public static final int HTTP_REQUEST_TIMEOUT_MS = 30 * 1000;
     
-	/**
+    /**
      * Configures the httpClient to connect to the URL provided.
+     * 
+     * @return the {@link HttpClient} object.
      */
     public static HttpClient getHttpClient() {
         HttpClient httpClient = new DefaultHttpClient();
@@ -36,6 +40,12 @@ public class Utils {
         return httpClient;
     }
     
+    /**
+     * Check if there is network connection (Wifi or 3G/4G).
+     * 
+     * @param activity the {@link Activity} object.
+     * @return true if there is network connection. Otherwise false.
+     */
 	public static boolean isNetworkConnected(Activity activity) {
 		ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -46,6 +56,12 @@ public class Utils {
 		return true;
 	}
 	
+	/**
+	 * Convert {@link InputStream} object to {@link String} object.
+	 * 
+	 * @param is the {@link InputStream} object.
+	 * @return the {@link String} object.
+	 */
 	public static String inputStreamToString(InputStream is) {
 		String line;
 		StringBuilder total = new StringBuilder();

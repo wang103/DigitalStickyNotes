@@ -10,6 +10,8 @@ import android.content.ContentValues;
 import android.os.Handler;
 
 /**
+ * Periodically check for user's notes in the location.
+ * 
  * @author tianyiw
  */
 public class NotesUpdater implements Runnable {
