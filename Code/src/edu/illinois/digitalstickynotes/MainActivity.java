@@ -118,7 +118,7 @@ public class MainActivity extends Activity {
 
 		// Check to see if the app has the access token, if not, start the
 		// login activity to ask for user's credentials.
-		SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, 0);
 
 		if (prefs.contains(PREF_TOKEN_KEY)) {
 			setToken(prefs.getString(PREF_TOKEN_KEY, null));
@@ -253,8 +253,10 @@ public class MainActivity extends Activity {
 				token = data.getStringExtra(LoginActivity.INTENT_KEY_TOKEN);
 
 				SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-				prefs.edit().putString(PREF_TOKEN_KEY, token);
-
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putString(PREF_TOKEN_KEY, token);
+				editor.commit();
+				
 				postSigningIn();
 			} else {
 				TextView textView = (TextView) findViewById(R.id.show_message);
