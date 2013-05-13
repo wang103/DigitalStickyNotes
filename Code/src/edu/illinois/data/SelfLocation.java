@@ -1,9 +1,12 @@
 package edu.illinois.data;
 
 /**
+ * This class represents the location of the client.
+ * 
  * @author Tianyi Wang
  */
 public class SelfLocation {
+	
 	private String locationName;
 	
 	private String country;
@@ -12,6 +15,11 @@ public class SelfLocation {
 	private String buildName;
 	private String roomName;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param locationName the location name used in this system.
+	 */
 	public SelfLocation(String locationName) {
 		this.locationName = locationName;
 	}
