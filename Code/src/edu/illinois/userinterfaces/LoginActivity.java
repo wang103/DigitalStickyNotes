@@ -33,6 +33,7 @@ public class LoginActivity extends Activity {
 
 	public final static String INTENT_KEY_TOKEN = "RESULT_TOKEN";
 
+	// Obtained from the service. These are for OAuth2.0 authentication protocol.
 	public final static String CLIENT_ID = "4fb1d4e675ced5f8cdafb16d07e278f7ff1a0a8b";
 	public final static String CLIENT_SECRET = "7718a364d7c6fca8d64343393fd2dbcaa4a8f73f";
 

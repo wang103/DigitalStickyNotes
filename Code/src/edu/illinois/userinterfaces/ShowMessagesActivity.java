@@ -85,7 +85,7 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 	}
 	
 	/**
-	 * Populate the list view.
+	 * Populate the list view with notes.
 	 */
 	private void fillData() {
 		

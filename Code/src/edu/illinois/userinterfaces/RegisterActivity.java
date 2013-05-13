@@ -20,6 +20,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 
+/**
+ * Activity which displays a registration screen to the user.
+ */
 public class RegisterActivity extends Activity {
 
 	private Communicator communicator;

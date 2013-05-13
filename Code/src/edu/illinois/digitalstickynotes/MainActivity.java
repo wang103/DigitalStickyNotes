@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
 	// Client's access token.
 	private String token = null;
 
-	// UI elements.
+	// UI references.
 	private Button myNotesButton;
 	private Button sendNoteButton;
 	private Button signInButton;
