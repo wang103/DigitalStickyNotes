@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.database.Cursor;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 public class ShowDetailedMessageActivity extends Activity {
@@ -17,14 +19,17 @@ public class ShowDetailedMessageActivity extends Activity {
 	private TextView receivedTextView;
 	private TextView expireTextView;
 	private TextView senderTextView;
-	
+
 	private Uri noteUri;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_detailed_message);
-				
+
+		// Show the Up button in the action bar.
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		messageTextView = (TextView) findViewById(R.id.message_content);
 		availableTextView = (TextView) findViewById(R.id.available_time);
 		receivedTextView = (TextView) findViewById(R.id.received_time);
@@ -32,7 +37,7 @@ public class ShowDetailedMessageActivity extends Activity {
 		senderTextView = (TextView) findViewById(R.id.sender);
 
 		Bundle extras = getIntent().getExtras();
-		
+
 		if (extras != null) {
 			noteUri = extras.getParcelable(NoteContentProvider.CONTENT_ITEM_TYPE);
 			fillData(noteUri);
@@ -45,16 +50,16 @@ public class ShowDetailedMessageActivity extends Activity {
 	 * @param uri the URI indicating the note.
 	 */
 	private void fillData(Uri uri) {
-		
+
 		String[] projection = {SQLiteHelperMessage.COLUMN_TITLE, SQLiteHelperMessage.COLUMN_MESSAGE,
 				SQLiteHelperMessage.COLUMN_SENDER, SQLiteHelperMessage.COLUMN_RECEIVED_TIME,
 				SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, SQLiteHelperMessage.COLUMN_EXPIRE_TIME};
-		
+
 		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-		
+
 		if (cursor != null) {
 			cursor.moveToFirst();
-		
+
 			setTitle(cursor.getString(cursor.
 					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_TITLE)));
 			messageTextView.setText("Note: " + cursor.
@@ -67,15 +72,25 @@ public class ShowDetailedMessageActivity extends Activity {
 					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_EXPIRE_TIME));
 			senderTextView.setText("Sender: " + cursor.
 					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_SENDER));
-			
+
 			cursor.close();
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_show_detailed_message, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

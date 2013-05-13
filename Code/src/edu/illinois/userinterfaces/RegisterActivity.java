@@ -6,9 +6,11 @@ import edu.illinois.digitalstickynotes.TheApplication;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,22 +23,22 @@ import android.content.Intent;
 public class RegisterActivity extends Activity {
 
 	private Communicator communicator;
-	
+
 	public final static String INTENT_KEY_EMAIL = "RESULT_EMAIL";
 	public final static String INTENT_KEY_PW = "RESULT_PW";
-	
+
 	/**
 	 * Keep track of the register task to ensure we can cancel it if requested.
 	 */
 	private UserRegisterTask mRegisterTask = null;
-	
+
 	private String mEmail;
 	private String mPassword;
 	private String mPassword2;
 	private String mFirstName;
 	private String mLastName;
 	private String mUsername;
-	
+
 	// UI references.
 	private EditText mEmailView;
 	private EditText mPasswordView1;
@@ -44,22 +46,22 @@ public class RegisterActivity extends Activity {
 	private EditText mFirstNameView;
 	private EditText mLastNameView;
 	private EditText mUsernameView;
-	
+
 	private View mRegisterFormView;
 	private View mRegisterStatusView;
 	private TextView mRegisterStatusMessageView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		
+
 		// Set the communicator.
 		this.communicator = ((TheApplication)(this.getApplication())).getCommunicator();
-		
+
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		// Set up the register form.
 		mEmailView = (EditText) findViewById(R.id.email_register);
 		mPasswordView1 = (EditText) findViewById(R.id.password_register_1);
@@ -67,11 +69,11 @@ public class RegisterActivity extends Activity {
 		mFirstNameView = (EditText) findViewById(R.id.firstname_register);
 		mLastNameView = (EditText) findViewById(R.id.lastname_register);
 		mUsernameView = (EditText) findViewById(R.id.username_register);
-	
+
 		mRegisterFormView = findViewById(R.id.register_form);
 		mRegisterStatusView = findViewById(R.id.register_status);
 		mRegisterStatusMessageView = (TextView) findViewById(R.id.register_status_message);
-	
+
 		findViewById(R.id.submit_register_button).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -87,7 +89,7 @@ public class RegisterActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_register, menu);
 		return true;
 	}
-	
+
 	/**
 	 * Attempts to register the account specified by the register form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
@@ -97,7 +99,7 @@ public class RegisterActivity extends Activity {
 		if (mRegisterTask != null) {
 			return;
 		}
-		
+
 		// Reset errors.
 		mEmailView.setError(null);
 		mPasswordView1.setError(null);
@@ -105,7 +107,7 @@ public class RegisterActivity extends Activity {
 		mFirstNameView.setError(null);
 		mLastNameView.setError(null);
 		mUsernameView.setError(null);
-		
+
 		// Store values at the time of the register attempt.
 		mEmail = mEmailView.getText().toString();
 		mPassword = mPasswordView1.getText().toString();
@@ -113,10 +115,10 @@ public class RegisterActivity extends Activity {
 		mFirstName = mFirstNameView.getText().toString();
 		mLastName = mLastNameView.getText().toString();
 		mUsername = mUsernameView.getText().toString();
-		
+
 		boolean cancel = false;
 		View focusView = null;
-		
+
 		// Check for validity.
 		if (TextUtils.isEmpty(mPassword2)) {
 			mPasswordView2.setError(getString(R.string.error_field_required));
@@ -127,7 +129,7 @@ public class RegisterActivity extends Activity {
 			focusView = mPasswordView2;
 			cancel = true;
 		}
-		
+
 		if (TextUtils.isEmpty(mPassword)) {
 			mPasswordView1.setError(getString(R.string.error_field_required));
 			focusView = mPasswordView1;
@@ -141,7 +143,7 @@ public class RegisterActivity extends Activity {
 			focusView = mPasswordView1;
 			cancel = true;
 		}
-		
+
 		if (TextUtils.isEmpty(mEmail)) {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
@@ -151,25 +153,25 @@ public class RegisterActivity extends Activity {
 			focusView = mEmailView;
 			cancel = true;
 		}
-		
+
 		if (TextUtils.isEmpty(mLastName)) {
 			mLastNameView.setError(getString(R.string.error_field_required));
 			focusView = mLastNameView;
 			cancel = true;
 		}
-		
+
 		if (TextUtils.isEmpty(mFirstName)) {
 			mFirstNameView.setError(getString(R.string.error_field_required));
 			focusView = mFirstNameView;
 			cancel = true;
 		}
-		
+
 		if (TextUtils.isEmpty(mUsername)) {
 			mUsernameView.setError(getString(R.string.error_field_required));
 			focusView = mUsernameView;
 			cancel = true;
 		}
-		
+
 		if (cancel) {
 			// There was an error; don't attempt register and focus the first
 			// form field with an error.
@@ -224,7 +226,7 @@ public class RegisterActivity extends Activity {
 			mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
-	
+
 	/**
 	 * Represents an asynchronous registration task.
 	 */
@@ -268,5 +270,15 @@ public class RegisterActivity extends Activity {
 			mRegisterTask = null;
 			showProgress(false);
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

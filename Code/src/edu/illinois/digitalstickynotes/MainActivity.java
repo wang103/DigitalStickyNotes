@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 	private Button myNotesButton;
 	private Button sendNoteButton;
 	private Button signInButton;
+	private Button signOutButton;
 
 	/**
 	 * Set whether or not the Wifi Direct is enabled.
@@ -125,6 +126,7 @@ public class MainActivity extends Activity {
 			postSigningIn();
 		} else {
 			this.signInButton.setEnabled(true);
+			this.signOutButton.setEnabled(false);
 		}
 	}
 
@@ -153,9 +155,10 @@ public class MainActivity extends Activity {
 	private void postSigningIn() {
 		this.myNotesButton.setEnabled(true);
 		this.sendNoteButton.setEnabled(true);
+		this.signInButton.setEnabled(false);
+		this.signOutButton.setEnabled(true);
 		
 		startMessagesUpdater();
-		switchViewToShowNotes();
 	}
 
 	/**
@@ -191,6 +194,23 @@ public class MainActivity extends Activity {
 		// TODO: For now, WIFI Direct is not supported. This may change in the
 		// future. Fall back to Bluetooth right away.
 		setIsWifiP2pEnabled(false);
+	}
+	
+	/**
+	 * Sign out user's account.
+	 */
+	private void signOut() {
+		token = null;
+		
+		SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.remove(PREF_TOKEN_KEY);
+		editor.commit();
+		
+		myNotesButton.setEnabled(false);
+		sendNoteButton.setEnabled(false);
+		signInButton.setEnabled(true);
+		signOutButton.setEnabled(false);
 	}
 
 	@Override
@@ -231,6 +251,17 @@ public class MainActivity extends Activity {
 		// Can only sign in if connection is established.
 		signInButton.setEnabled(false);
 
+		signOutButton = (Button) findViewById(R.id.logout_button);
+		signOutButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				signOut();
+			}
+		});
+		
+		// Can only sign out if signed in.
+		signOutButton.setEnabled(false);
+		
 		setupConnection();
 		Log.d("TIANYI", "Connection setup done");
 	}
@@ -248,6 +279,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ACTIVITY_CODE_SIGN_IN) {
+			TextView textView = (TextView) findViewById(R.id.show_message);
 			if (resultCode == RESULT_OK) {
 				// Store the access token in the preferences.
 				token = data.getStringExtra(LoginActivity.INTENT_KEY_TOKEN);
@@ -258,8 +290,9 @@ public class MainActivity extends Activity {
 				editor.commit();
 				
 				postSigningIn();
+				
+				textView.setText("");
 			} else {
-				TextView textView = (TextView) findViewById(R.id.show_message);
 				textView.setText("Please sign in first.");
 			}
 		}

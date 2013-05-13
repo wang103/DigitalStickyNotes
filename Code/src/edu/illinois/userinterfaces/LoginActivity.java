@@ -12,10 +12,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -28,12 +30,12 @@ import android.widget.TextView;
 public class LoginActivity extends Activity {
 
 	private Communicator communicator;
-	
+
 	public final static String INTENT_KEY_TOKEN = "RESULT_TOKEN";
-	
+
 	public final static String CLIENT_ID = "4fb1d4e675ced5f8cdafb16d07e278f7ff1a0a8b";
 	public final static String CLIENT_SECRET = "7718a364d7c6fca8d64343393fd2dbcaa4a8f73f";
-	
+
 	public final static int PASSWORD_MIN_LEN = 4;
 	public final static int PASSWORD_MAX_LEN = 12;
 
@@ -57,10 +59,13 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
+		// Show the Up button in the action bar.
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		// Set the communicator.
 		this.communicator = ((TheApplication)(this.getApplication())).getCommunicator();
-		
+
 		// Set up the login form.
 		mEmailView = (EditText) findViewById(R.id.email);
 
@@ -162,7 +167,7 @@ public class LoginActivity extends Activity {
 			startTaskForLogin();
 		}
 	}
-	
+
 	/**
 	 * Show a progress spinner, and kick off a background task to perform the
 	 * user login attempt.
@@ -178,12 +183,12 @@ public class LoginActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == MainActivity.ACTIVITY_CODE_REGISTER) {
 			if (resultCode == RESULT_OK) {
-				
+
 				mEmail = data.getStringExtra(RegisterActivity.INTENT_KEY_EMAIL);
 				mPassword = data.getStringExtra(RegisterActivity.INTENT_KEY_PW);
-				
+
 				Log.d("TIANYI", "Registered successfully, now try to sign in.");
-				
+
 				startTaskForLogin();
 			}
 		}
@@ -247,7 +252,7 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login task.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, String> {
-		
+
 		@Override
 		protected String doInBackground(Void... params) {
 			// Attempt authentication.
@@ -261,10 +266,10 @@ public class LoginActivity extends Activity {
 
 			boolean success = ((token != null) && (token.length() > 0));
 			Log.d("TIANYI", "onAuthenticationResult(" + success + ")");
-		
+
 			if (success) {
 				Log.d("TIANYI", "Signed in successfully.");
-			
+
 				finishLogin(token);
 			} else {
 				mPasswordView
@@ -278,5 +283,15 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

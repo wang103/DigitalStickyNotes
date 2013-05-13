@@ -65,6 +65,9 @@
             android:name="edu.illinois.userinterfaces.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.illinois.digitalstickynotes.MainActivity" />
         </activity>
         <activity
             android:name="edu.illinois.userinterfaces.ShowMessagesActivity"
@@ -76,6 +79,9 @@
         <activity
             android:name="edu.illinois.userinterfaces.ShowDetailedMessageActivity"
             android:label="@string/title_activity_show_detailed_note" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.illinois.userinterfaces.ShowMessagesActivity" />
         </activity>
         <activity
             android:name="edu.illinois.userinterfaces.RegisterActivity"
