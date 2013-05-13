@@ -8,7 +8,6 @@ import edu.illinois.database.SQLiteHelperMessage;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.content.ContentValues;
 import android.os.Handler;
-import android.util.Log;
 
 /**
  * @author tianyiw
@@ -54,11 +53,11 @@ public class NotesUpdater implements Runnable {
 	
 		List<Note> notes = communicator.getNotes(mainActivity.getToken());
 		
-		Log.d("TIANYI", "Received " + notes.size() + " notes.");
-		
-		for (Note note : notes) {
-			insertNote(note);
-		}		
+		if (notes != null) {
+			for (Note note : notes) {
+				insertNote(note);
+			}
+		}
 	}
 	
 	@Override
@@ -76,9 +75,9 @@ public class NotesUpdater implements Runnable {
 		updateHandler.removeCallbacks(this);
 	}
 	
-	public NotesUpdater(MainActivity mainActivity) {
+	public NotesUpdater(MainActivity mainActivity, Communicator communicator) {
 		this.mainActivity = mainActivity;
-		this.communicator = MainActivity.communicator;
+		this.communicator = communicator;
 
 		this.updateHandler = new Handler();
 	}

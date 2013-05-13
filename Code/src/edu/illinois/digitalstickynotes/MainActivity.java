@@ -24,9 +24,8 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	public static ConnectionManager connectionManager;
-	public static Communicator communicator;
-	public static NotesUpdater messagesUpdater;
+	public ConnectionManager connectionManager;
+	public NotesUpdater messagesUpdater;
 
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
@@ -36,10 +35,12 @@ public class MainActivity extends Activity {
 	public static final int ACTIVITY_CODE_BLUETOOTH = 1;
 	public static final int ACTIVITY_CODE_REGISTER = 2;
 
+	// Preference settings.
 	public static final String PREF_NAME = "edu.illinois.digitalstickynotes";
 	public static final String PREF_TOKEN_KEY = "edu.illinois.digitalstickynotes.token";
 	
-	private String token;
+	// Client's access token.
+	private String token = null;
 	
 	/**
 	 * Set the access token.
@@ -119,7 +120,8 @@ public class MainActivity extends Activity {
 	 * established to do more setup.
 	 */
 	private void postSetupConnection() {
-		communicator = new Communicator(this, connectionManager);
+		Communicator communicator = new Communicator(this, connectionManager);
+		((TheApplication)(this.getApplication())).setCommunicator(communicator);
 		
 		//TODO: store the username too.
 		// Check to see if the app has the access token, if not, start the
@@ -172,7 +174,7 @@ public class MainActivity extends Activity {
 	 */
 	private void startMessagesUpdater() {
 		Log.d("TIANYI", "MessagesUpdater started.");
-		messagesUpdater = new NotesUpdater(this);
+		messagesUpdater = new NotesUpdater(this, ((TheApplication)getApplication()).getCommunicator());
 		messagesUpdater.start();
 	}
 	

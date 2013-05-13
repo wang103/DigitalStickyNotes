@@ -1,7 +1,8 @@
 package edu.illinois.userinterfaces;
 
-import edu.illinois.digitalstickynotes.MainActivity;
+import edu.illinois.communication.Communicator;
 import edu.illinois.digitalstickynotes.R;
+import edu.illinois.digitalstickynotes.TheApplication;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.content.Intent;
 
 public class RegisterActivity extends Activity {
 
+	private Communicator communicator;
+	
 	public final static String INTENT_KEY_EMAIL = "RESULT_EMAIL";
 	public final static String INTENT_KEY_PW = "RESULT_PW";
 	
@@ -49,8 +52,10 @@ public class RegisterActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.activity_register);
+		
+		// Set the communicator.
+		this.communicator = ((TheApplication)(this.getApplication())).getCommunicator();
 		
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -230,7 +235,7 @@ public class RegisterActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// Attempt register.
-			errorCode = MainActivity.communicator.tryRegister(mEmail, mPassword,
+			errorCode = communicator.tryRegister(mEmail, mPassword,
 					mFirstName, mLastName, mUsername);
 			return errorCode == 0;
 		}

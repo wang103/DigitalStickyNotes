@@ -1,7 +1,9 @@
 package edu.illinois.userinterfaces;
 
+import edu.illinois.communication.Communicator;
 import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.digitalstickynotes.R;
+import edu.illinois.digitalstickynotes.TheApplication;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -25,6 +27,8 @@ import android.widget.TextView;
  */
 public class LoginActivity extends Activity {
 
+	private Communicator communicator;
+	
 	public final static String INTENT_KEY_TOKEN = "RESULT_TOKEN";
 	
 	public final static String CLIENT_ID = "4fb1d4e675ced5f8cdafb16d07e278f7ff1a0a8b";
@@ -53,7 +57,10 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
+		
+		// Set the communicator.
+		this.communicator = ((TheApplication)(this.getApplication())).getCommunicator();
+		
 		// Set up the login form.
 		mEmailView = (EditText) findViewById(R.id.email);
 
@@ -240,11 +247,11 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login task.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, String> {
-
+		
 		@Override
 		protected String doInBackground(Void... params) {
 			// Attempt authentication.
-			return MainActivity.communicator.tryAuthenticate(mEmail, mPassword);
+			return communicator.tryAuthenticate(mEmail, mPassword);
 		}
 
 		@Override
