@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
 	public ConnectionManager connectionManager;
 	public NotesUpdater messagesUpdater;
 
+	// For application states.
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
 	
@@ -43,27 +44,9 @@ public class MainActivity extends Activity {
 	private String token = null;
 	
 	/**
-	 * Set the access token.
-	 * 
-	 * @param token the access token.
-	 */
-	public void setToken(String token) {
-		this.token = token;
-	}
-	
-	/**
-	 * Get the access token.
-	 * 
-	 * @return the access token.
-	 */
-	public String getToken() {
-		return token;
-	}
-	
-	/**
 	 * Set whether or not the Wifi Direct is enabled.
 	 * 
-	 * @param isWifiP2pEnabled true if Wifi Direct is enabled. Otherwise false.
+	 * @param isWifiP2pEnabled true if Wifi Direct is enabled.
 	 */
 	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
 		this.isWifiP2pEnabled = isWifiP2pEnabled;
@@ -92,8 +75,8 @@ public class MainActivity extends Activity {
 	/**
 	 * Set whether or not the Bluetooth is enabled.
 	 * 
-	 * @param isBTEnabled true if Bluetooth is enabled. Otherwise false.
-	 * @param doPost true to start post setup connection. Otherwise false.
+	 * @param isBTEnabled true if Bluetooth is enabled.
+	 * @param doPost true to start post setup connection.
 	 */
 	public void setIsBTEnabled(boolean isBTEnabled, boolean doPost) {
 		this.isBTEnabled = isBTEnabled;
@@ -117,9 +100,10 @@ public class MainActivity extends Activity {
 
 	/**
 	 * Call this method after connection (WIFI Direct or Bluetooth) is
-	 * established to do more setup.
+	 * established to do additional setup.
 	 */
 	private void postSetupConnection() {
+		
 		Communicator communicator = new Communicator(this, connectionManager);
 		((TheApplication)(this.getApplication())).setCommunicator(communicator);
 		
@@ -138,11 +122,92 @@ public class MainActivity extends Activity {
 	}
 
 	/**
+	 * Start the periodic updater.
+	 */
+	private void startMessagesUpdater() {
+		Log.d("TIANYI", "MessagesUpdater started.");
+		messagesUpdater = new NotesUpdater(this, ((TheApplication)getApplication()).getCommunicator());
+		messagesUpdater.start();
+	}
+	
+	/**
+	 * Stop the periodic updater.
+	 */
+	private void stopMessagesUpdater() {
+		if (messagesUpdater != null) {
+			messagesUpdater.terminate();
+			messagesUpdater = null;
+		}
+	}
+	
+	/**
 	 * Call this method after access token is acquired.
 	 */
 	private void postSigningIn() {
 		startMessagesUpdater();
-		switchViewToShowMessages();
+		switchViewToShowNotes();
+	}
+
+	/**
+	 * Switch view to show user's notes.
+	 */
+	private void switchViewToShowNotes() {
+		Intent intent = new Intent(this, ShowMessagesActivity.class);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Switch view to send user's note.
+	 */
+	private void switchViewToSendNote() {
+		Intent intent = new Intent(this, SendNoteActivity.class);
+		startActivity(intent);
+	}
+	
+	/**
+	 * First try WIFI DIRECT. If it's not supported/enabled, ask for user's
+	 * permission to use Bluetooth.
+	 */
+	private void setupConnection() {
+		connectionManager = new WifiDirectManager(this);
+		// TODO: For now, WIFI Direct is not supported. This may change in the
+		// future. Fall back to Bluetooth right away.
+		setIsWifiP2pEnabled(false);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		
+		findViewById(R.id.my_notes_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						switchViewToShowNotes();
+					}
+		});
+		
+		findViewById(R.id.send_note_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						switchViewToSendNote();
+					}
+		});
+		
+		setupConnection();
+		Log.d("TIANYI", "Connection setup done");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		if (isWifiP2pEnabled || isBTEnabled) {
+			this.stopMessagesUpdater();
+			connectionManager.destroy(this);
+		}
 	}
 	
 	@Override
@@ -166,81 +231,6 @@ public class MainActivity extends Activity {
 			if (resultCode != RESULT_OK) {
 				setIsBTEnabled(false, false);
 			}
-		}
-	};
-	
-	/**
-	 * Start the periodic updater.
-	 */
-	private void startMessagesUpdater() {
-		Log.d("TIANYI", "MessagesUpdater started.");
-		messagesUpdater = new NotesUpdater(this, ((TheApplication)getApplication()).getCommunicator());
-		messagesUpdater.start();
-	}
-	
-	/**
-	 * Stop the periodic updater.
-	 */
-	private void stopMessagesUpdater() {
-		if (messagesUpdater != null) {
-			messagesUpdater.terminate();
-			messagesUpdater = null;
-		}
-	}
-
-	private void switchViewToShowMessages() {
-		Intent intent = new Intent(this, ShowMessagesActivity.class);
-		startActivity(intent);
-	}
-	
-	private void switchViewToSendNote() {
-		Intent intent = new Intent(this, SendNoteActivity.class);
-		startActivity(intent);
-	}
-	
-	/**
-	 * First try WIFI DIRECT. If it's not supported/enabled, ask for user's
-	 * permission to use Bluetooth.
-	 */
-	private void setupConnection() {
-		connectionManager = new WifiDirectManager(this);
-		// For now, WIFI Direct is not supported. This may change in the future.
-		// Fall back to BT right away.
-		setIsWifiP2pEnabled(false);
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-		findViewById(R.id.my_notes_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						switchViewToShowMessages();
-					}
-		});
-		
-		findViewById(R.id.send_note_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						switchViewToSendNote();
-					}
-		});
-		
-		setupConnection();
-		Log.d("TIANYI", "Connection setup done");
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		
-		if (isWifiP2pEnabled || isBTEnabled) {
-			this.stopMessagesUpdater();
-			connectionManager.destroy(this);
 		}
 	}
 	
@@ -281,5 +271,13 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	public String getToken() {
+		return token;
 	}
 }

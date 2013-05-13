@@ -6,6 +6,8 @@ import edu.illinois.data.Group;
 import edu.illinois.data.User;
 
 /**
+ * This class represents a digital sticky note.
+ * 
  * @author Tianyi Wang
  */
 public class Note {
@@ -25,6 +27,20 @@ public class Note {
 	private User sender;
 	private Group receivers;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param messageID message ID.
+	 * @param title message title.
+	 * @param msg message content.
+	 * @param receivedDate message received time.
+	 * @param availableDate message available time.
+	 * @param expireDate message expiration time.
+	 * @param receivedDateString
+	 * @param availableDateString
+	 * @param expireDateString
+	 * @param sender
+	 */
 	public Note(long messageID, String title, String msg, Date receivedDate,
 			Date availableDate, Date expireDate, String receivedDateString,
 			String availableDateString, String expireDateString, User sender) {
@@ -40,11 +56,20 @@ public class Note {
 		this.sender = sender;
 	}
 	
+	/**
+	 * Check if the note should be available to the user.
+	 * 
+	 * @return true if the note is available. False otherwise.
+	 */
 	public boolean isAvailable() {
 		Date curDate = new Date();
 		return curDate.after(availableDate);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean hasExpired() {
 		Date curDate = new Date();
 		return curDate.after(expireDate);
