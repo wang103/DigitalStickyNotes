@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
 	
+	// For Activity result.
 	public static final int ACTIVITY_CODE_SIGN_IN = 0;
 	public static final int ACTIVITY_CODE_BLUETOOTH = 1;
 	public static final int ACTIVITY_CODE_REGISTER = 2;
@@ -77,7 +78,7 @@ public class MainActivity extends Activity {
 			textView.setText("WIFI Direct is not enabled!");
 			
 			// Unregister WIFI Direct's broadcast receiver.
-			connectionManager.unregisterBroadcastReceiver(this);
+			connectionManager.destroy(this);
 			
 			// Try to enable Bluetooth.
 			connectionManager = new BluetoothManager(this);
@@ -237,7 +238,7 @@ public class MainActivity extends Activity {
 		
 		if (isWifiP2pEnabled || isBTEnabled) {
 			this.stopMessagesUpdater();
-			connectionManager.unregisterBroadcastReceiver(this);
+			connectionManager.destroy(this);
 		}
 	}
 	

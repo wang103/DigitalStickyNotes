@@ -9,26 +9,74 @@ import java.util.UUID;
 
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
 /**
+ * Manage the Bluetooth connections.
+ * 
  * @author tianyiw
  */
 public class BluetoothManager extends ConnectionManager {
 
-	final private int DISCOVERY_LENGTH = 12;	// 12 seconds.
+	final private int DISCOVERY_LENGTH = 12;		// Each discovery lasts 12 seconds.
 	final private UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+	final static private int MAX_MSG_LENGTH = 1024;	// Maximum message length.
 
-	final static private int MAX_MSG_LENGTH = 1024;
-
-	private ArrayList<BluetoothDevice> devices;
+	private ArrayList<BluetoothDevice> devices;		// Devices discovered.
 
 	private BluetoothAdapter mBluetoothAdapter;
 	private BTBroadcastReceiver broadcastReceiver;
+	
+	@Override
+	public boolean startDiscovery() {
+		this.devices.clear();
+		return mBluetoothAdapter.startDiscovery();
+	}
+	
+	@Override
+	public boolean startDiscoveryAndWait() {
+		this.devices.clear();
+		boolean status = mBluetoothAdapter.startDiscovery();
+		
+		try {
+			Thread.sleep(DISCOVERY_LENGTH * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	
+		return status;
+	}
+	
+	@Override
+	public boolean stopDiscovery() {
+		return mBluetoothAdapter.cancelDiscovery();
+	}
+	
+	@Override
+	public boolean connectionEnabled() {
+		return mBluetoothAdapter != null & mBluetoothAdapter.isEnabled();
+	}
+	
+	/**
+	 * Unregister the {@link BroadcastReceiver}.
+	 * 
+	 * @param activity the {@link Activity} object.
+	 */
+	private void unregisterBroadcastReceiver(Activity activity) {
+		activity.unregisterReceiver(broadcastReceiver);
+	}
+	
+	@Override
+	public void destroy(Activity activity) {
+		unregisterBroadcastReceiver(activity);
+	};
 	
 	@Override
 	public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery) {
@@ -82,6 +130,19 @@ public class BluetoothManager extends ConnectionManager {
 		return result;
 	}
 	
+	/**
+	 * Initialize the {@link BroadcastReceiver} for Bluetooth connections.
+	 * 
+	 * @param activity the {@link MainActivity} object.
+	 */
+	private void initBroadcastReceiver(MainActivity activity) {
+		broadcastReceiver = new BTBroadcastReceiver(activity, devices);
+		activity.registerReceiver(broadcastReceiver, intentFilter);
+	}
+	
+	/**
+	 * Initialize the {@link IntentFilter} for Bluetooth connections.
+	 */
 	private void initIntentFilter() {
 		// Indicates a change in the Bluetooth status.
 		intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -90,57 +151,21 @@ public class BluetoothManager extends ConnectionManager {
 		intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
 	}
 	
-	private void initBroadcastReceiver(MainActivity activity) {
-		broadcastReceiver = new BTBroadcastReceiver(activity, devices);
-		activity.registerReceiver(broadcastReceiver, intentFilter);
-	}
-	
-	@Override
-	public void unregisterBroadcastReceiver(MainActivity activity) {
-		activity.unregisterReceiver(broadcastReceiver);
-	}
-	
+	/**
+	 * Initialize the Bluetooth settings.
+	 * 
+	 * @param activity the {@link MainActivity} object.
+	 */
 	private void initialize(MainActivity activity) {
 		initIntentFilter();
 		initBroadcastReceiver(activity);
 	}
 	
-	@Override
-	public boolean startDiscovery() {
-		this.devices.clear();
-		return mBluetoothAdapter.startDiscovery();
-	}
-	
-	@Override
-	public boolean startDiscoveryAndWait() {
-		this.devices.clear();
-		boolean status = mBluetoothAdapter.startDiscovery();
-		
-		try {
-			Thread.sleep(DISCOVERY_LENGTH * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	
-		return status;
-	};
-
-	@Override
-	public boolean stopDiscovery() {
-		boolean status = mBluetoothAdapter.cancelDiscovery();
-		
-		return status;
-	}
-	
-	public boolean connectionEnabled() {
-		return mBluetoothAdapter != null & mBluetoothAdapter.isEnabled();
-	}
-	
 	/**
 	 * Constructor.
-	 * Enable the Bluetooth.
+	 * Enable the Bluetooth Manager.
 	 * 
-	 * @param activity {@link MainActivity} object.
+	 * @param activity the {@link MainActivity} object.
 	 */
 	public BluetoothManager(MainActivity activity) {
 		super();

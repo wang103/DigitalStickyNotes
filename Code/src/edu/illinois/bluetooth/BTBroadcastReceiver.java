@@ -12,19 +12,14 @@ import android.content.Intent;
 import android.util.Log;
 
 /**
+ * Receiver for Bluetooth broadcast.
+ * 
  * @author tianyiw
  */
 public class BTBroadcastReceiver extends BroadcastReceiver {
 
 	private ArrayList<BluetoothDevice> devices;
 	private MainActivity activity;
-
-	public BTBroadcastReceiver(MainActivity activity, ArrayList<BluetoothDevice> devices) {
-		super();
-		
-		this.activity = activity;
-		this.devices = devices;
-	}
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -42,10 +37,24 @@ public class BTBroadcastReceiver extends BroadcastReceiver {
 			}
 		}
 		else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+			// New nearby devices found.
 			BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 			devices.add(device);
 			
 			Log.d("TIANYI", "New device added: " + device.getName() + " @ " + device.getAddress());
 		}
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param activity the {@link MainActivity} object.
+	 * @param devices a List to put nearby devices in.
+	 */
+	public BTBroadcastReceiver(MainActivity activity, ArrayList<BluetoothDevice> devices) {
+		super();
+		
+		this.activity = activity;
+		this.devices = devices;
 	}
 }

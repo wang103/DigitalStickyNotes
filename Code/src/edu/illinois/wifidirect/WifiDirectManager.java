@@ -5,7 +5,9 @@ import java.util.List;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -14,6 +16,8 @@ import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 
 /**
+ * Manage the WIFI Direct connections.
+ * 
  * @author tianyiw
  */
 public class WifiDirectManager extends ConnectionManager {
@@ -72,44 +76,6 @@ public class WifiDirectManager extends ConnectionManager {
 	public void resetData() {
 		peerDevicesListener.clearAll();
 	}
-	
-	private void initIntentFilter() {
-		// Indicates a change in the WiFi Peer-to-Peer status.
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-
-		// Indicates a change in the list of available peers.
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-
-		// Indicates the state of WiFi P2P connectivity has changed.
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-
-		// Indicates this device's details have changed.
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-	}
-	
-	private void initChannel(Activity activity) {
-		mManager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
-		mChannel = mManager.initialize(activity, activity.getMainLooper(), null);
-	}
-	
-	private void initBroadcastReceiver(MainActivity activity) {
-		broadcastReceiver = new WifiBroadcastReceiver(mManager, mChannel,
-													  activity, peerDevicesListener);
-		activity.registerReceiver(broadcastReceiver, intentFilter);
-	}
-	
-	@Override
-	public void unregisterBroadcastReceiver(MainActivity activity) {
-		activity.unregisterReceiver(broadcastReceiver);
-	}
-	
-	public WifiDirectManager(MainActivity activity) {
-		super();
-		
-		initIntentFilter();
-		initChannel(activity);
-		initBroadcastReceiver(activity);
-	}
 
 	@Override
 	public boolean startDiscovery() {
@@ -119,6 +85,7 @@ public class WifiDirectManager extends ConnectionManager {
 
 	@Override
 	public boolean startDiscoveryAndWait() {
+		// TODO Auto-generated method stub
 		return false;
 	};
 	
@@ -134,9 +101,74 @@ public class WifiDirectManager extends ConnectionManager {
 		return false;
 	}
 
+	/**
+	 * Unregister the {@link BroadcastReceiver}.
+	 * 
+	 * @param activity the {@link Activity} object.
+	 */
+	private void unregisterBroadcastReceiver(Activity activity) {
+		activity.unregisterReceiver(broadcastReceiver);
+	}
+	
+	@Override
+	public void destroy(Activity activity) {
+		unregisterBroadcastReceiver(activity);
+	};
+	
 	@Override
 	public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * Initialize the {@link BroadcastReceiver} for WIFI Direct connections.
+	 * 
+	 * @param activity the {@link MainActivity} object.
+	 */
+	private void initBroadcastReceiver(MainActivity activity) {
+		broadcastReceiver = new WifiBroadcastReceiver(mManager, mChannel,
+													  activity, peerDevicesListener);
+		activity.registerReceiver(broadcastReceiver, intentFilter);
+	}
+	
+	/**
+	 * Initialize the Channel for WIFI Direct connections.
+	 * 
+	 * @param activity the {@link Activity} object.
+	 */
+	private void initChannel(Activity activity) {
+		mManager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
+		mChannel = mManager.initialize(activity, activity.getMainLooper(), null);
+	}
+
+	/**
+	 * Initialize the {@link IntentFilter} for WIFI Direct connections.
+	 */
+	private void initIntentFilter() {
+		// Indicates a change in the WiFi Peer-to-Peer status.
+		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+
+		// Indicates a change in the list of available peers.
+		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+
+		// Indicates the state of WiFi P2P connectivity has changed.
+		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+
+		// Indicates this device's details have changed.
+		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param activity the {@link MainActivity} object.
+	 */
+	public WifiDirectManager(MainActivity activity) {
+		super();
+		
+		initIntentFilter();
+		initChannel(activity);
+		initBroadcastReceiver(activity);
 	}
 }
