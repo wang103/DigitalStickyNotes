@@ -29,7 +29,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	public ConnectionManager connectionManager;
-	public NotesUpdater messagesUpdater;
+	public NotesUpdater notesUpdater;
 
 	// For application states.
 	private boolean isWifiP2pEnabled = false;
@@ -135,17 +135,17 @@ public class MainActivity extends Activity {
 	 */
 	private void startMessagesUpdater() {
 		Log.d("TIANYI", "MessagesUpdater started.");
-		messagesUpdater = new NotesUpdater(this, ((TheApplication)getApplication()).getCommunicator());
-		messagesUpdater.start();
+		notesUpdater = new NotesUpdater(this, ((TheApplication)getApplication()).getCommunicator());
+		notesUpdater.start();
 	}
 
 	/**
 	 * Stop the periodic updater.
 	 */
 	private void stopMessagesUpdater() {
-		if (messagesUpdater != null) {
-			messagesUpdater.terminate();
-			messagesUpdater = null;
+		if (notesUpdater != null) {
+			notesUpdater.terminate();
+			notesUpdater = null;
 		}
 	}
 

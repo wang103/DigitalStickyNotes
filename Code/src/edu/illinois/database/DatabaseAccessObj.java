@@ -51,11 +51,12 @@ public class DatabaseAccessObj {
 	 */
 	public void insertNote(Note note) {
 		ContentValues values = new ContentValues();
-		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
 		values.put(SQLiteHelperMessage.COLUMN_ID, note.getMessageID());
-		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, note.getReceivedDateString());
-		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, note.getAvailableDateString());
-		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, note.getExpireDateString());
+		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, simpleDateFormat.format(note.getReceivedDate()));
+		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, simpleDateFormat.format(note.getAvailableDate()));
+		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, simpleDateFormat.format(note.getExpireDate()));
 		values.put(SQLiteHelperMessage.COLUMN_TITLE, note.getTitle());
 		values.put(SQLiteHelperMessage.COLUMN_MESSAGE, note.getMessage());
 		values.put(SQLiteHelperMessage.COLUMN_SENDER, note.getSender().getUserName());
@@ -119,7 +120,6 @@ public class DatabaseAccessObj {
 					simpleDateFormat.parse(cursor.getString(1)),
 					simpleDateFormat.parse(cursor.getString(2)),
 					simpleDateFormat.parse(cursor.getString(3)),
-					cursor.getString(1), cursor.getString(2), cursor.getString(3),
 					new User(cursor.getString(6)));
 		} catch (ParseException e) {
 			e.printStackTrace();

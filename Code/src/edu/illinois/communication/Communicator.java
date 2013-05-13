@@ -90,8 +90,7 @@ public class Communicator {
 					User sender = new User(senderString);
 					
 					Note newNote = new Note(msgID, title, message, receivedTime,
-							availableTime, expireTime, receivedTimeString,
-							availableTimeString, expireTimeString, sender);
+							availableTime, expireTime, sender);
 					
 					notes.add(newNote);
 				}
