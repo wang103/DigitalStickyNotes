@@ -119,7 +119,7 @@ public class MainActivity extends Activity {
 	 * established to do more setup.
 	 */
 	private void postSetupConnection() {
-		communicator = new Communicator(this);
+		communicator = new Communicator(this, connectionManager);
 		
 		//TODO: store the username too.
 		// Check to see if the app has the access token, if not, start the

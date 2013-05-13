@@ -25,20 +25,31 @@ import android.util.Log;
 
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.data.User;
-import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.messaging.Note;
 import edu.illinois.userinterfaces.LoginActivity;
 import edu.illinois.utils.Utils;
 
+/**
+ * This class is used for communicating with either the global server or the
+ * local servers.
+ * 
+ * @author tianyiw
+ */
 public class Communicator {
 	
 	private static final String BASE_URL = "http://tianyiwang.info/project";
-	private static final String AUTH_URL = BASE_URL + "/request_token.php";
-	private static final String REG_URL = BASE_URL + "/register.php";
+	private static final String AUTH_URL = BASE_URL + "/request_token.php";		// URL for authentication.
+	private static final String REG_URL = BASE_URL + "/register.php";			// URL for registration.
 	
 	private Activity activity;
 	private ConnectionManager connectionManager;
 	
+	/**
+	 * Get user's notes of the location.
+	 * 
+	 * @param token the access token.
+	 * @return a list of user's notes from that location.
+	 */
 	private List<Note> getNotesWithLocalServer(String token) {
 	
 		JSONObject jInputObject = new JSONObject();
@@ -95,10 +106,12 @@ public class Communicator {
 	}
 	
 	/**
-	 * Try to get user's notes if there is a nearby local server.
+	 * Try to get user's notes of the location if there is a nearby local
+	 * server.
 	 * 
 	 * @param token the access token.
-	 * @return a list of user's notes.
+	 * @return a list of user's notes from that location. Null if connection is
+	 * not initialized.
 	 */
 	public List<Note> getNotes(String token) {
 		if (this.connectionManager != null) {
@@ -110,6 +123,13 @@ public class Communicator {
 		return null;
 	}
 	
+	/**
+	 * Try to authenticate the user credential with a local server.
+	 * 
+	 * @param email user's email address.
+	 * @param password user's password.
+	 * @return access token, or null if failed.
+	 */
 	private String tryAuthenticateWithLocalServer(String email, String password) {
 
 		JSONObject jInputObject = new JSONObject();
@@ -141,6 +161,13 @@ public class Communicator {
 		return token;
 	}
 
+	/**
+	 * Try to authenticate the user credential with the global server.
+	 * 
+	 * @param email user's email address.
+	 * @param password user's password.
+	 * @return access token, or null if failed.
+	 */
 	private String tryAuthenticateWithGlobalServer(String email, String password) {
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
@@ -219,6 +246,16 @@ public class Communicator {
 		return null;
 	}
 	
+	/**
+	 * Try to register the user credential with a local server.
+	 * 
+	 * @param email user's email address.
+	 * @param password user's password.
+	 * @param firstName user's first name.
+	 * @param lastName user's last name.
+	 * @param username user picked nickname for his/her account.
+	 * @return 0 for success. 1 if email is used. 2 if username is used. 3 if no connection.
+	 */
 	private int tryRegisterWithLocalServer(String email, String password,
 			String firstName, String lastName, String username) {
 
@@ -251,6 +288,16 @@ public class Communicator {
 		return code;
 	}
 
+	/**
+	 * Try to register the user credential with the global server.
+	 * 
+	 * @param email user's email address.
+	 * @param password user's password.
+	 * @param firstName user's first name.
+	 * @param lastName user's last name.
+	 * @param username user picked nickname for his/her account.
+	 * @return 0 for success. 1 if email is used. 2 if username is used. 3 if no connection.
+	 */
 	private int tryRegisterWithGlobalServer(String email, String password,
 			String firstName, String lastName, String username) {
 		
@@ -330,8 +377,14 @@ public class Communicator {
 		return 3;
 	}
 	
-	public Communicator(Activity activity) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param activity the {@link Activity} object.
+	 * @param connectionManager the {@link ConnectionManager} object.
+	 */
+	public Communicator(Activity activity, ConnectionManager connectionManager) {
 		this.activity = activity;
-		this.connectionManager = MainActivity.connectionManager;
+		this.connectionManager = connectionManager;
 	}
 }
