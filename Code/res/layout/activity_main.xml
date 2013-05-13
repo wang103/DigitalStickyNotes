@@ -14,13 +14,13 @@
 	android:layout_alignParentTop="true"
 	android:layout_centerHorizontal="true" />
 
-<TextView
-	android:id="@+id/show_message"
-	android:layout_width="wrap_content"
+<Button
+	android:id="@+id/my_notes_button"
+	android:layout_width="300dp"
 	android:layout_height="wrap_content"
-	android:text=""
+	android:text="@string/my_notes_button"
 	android:gravity="center"
-	android:layout_below="@+id/send_note_button" 
+	android:layout_centerVertical="true"
 	android:layout_centerHorizontal="true" />
 
 <Button
@@ -33,12 +33,21 @@
 	android:layout_centerHorizontal="true"  />
 
 <Button
-	android:id="@+id/my_notes_button"
+	android:id="@+id/login_button"
 	android:layout_width="300dp"
 	android:layout_height="wrap_content"
-	android:text="@string/my_notes_button"
+	android:text="@string/login_button"
 	android:gravity="center"
-	android:layout_centerVertical="true"
+	android:layout_below="@+id/send_note_button"
 	android:layout_centerHorizontal="true" />
-    
+
+<TextView
+	android:id="@+id/show_message"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text=""
+	android:gravity="center"
+	android:layout_below="@+id/login_button"
+	android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

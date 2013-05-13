@@ -3,5 +3,5 @@
     
     <string name="my_notes_button">My Notes</string>
     <string name="send_note_button">Send Note</string>
-    
+    <string name="login_button">Sign in</string>
 </resources>
