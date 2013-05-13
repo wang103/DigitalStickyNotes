@@ -61,7 +61,7 @@ public class Communicator {
 			e.printStackTrace();
 		}
 
-		List<String> result = connectionManager.talkToServers(jInputObject.toString(), false, false);
+		List<String> result = connectionManager.talkToServers(jInputObject.toString(), false, true);
 		List<Note> notes = new ArrayList<Note>();
 
 		if (result.size() > 0) {
@@ -72,17 +72,17 @@ public class Communicator {
 				JSONArray messageArray = jOutputObject.getJSONArray("messages");
 				for (int i = 0; i < numMessages; i++) {
 					JSONObject messageObj = messageArray.getJSONObject(i);
-					
+
 					String msgIdString = messageObj.getString("message_id");
 					String receivedTimeString = messageObj.getString("received_time");
-					String availableTimeString = messageObj.getString("availble_time");
+					String availableTimeString = messageObj.getString("available_time");
 					String expireTimeString = messageObj.getString("expire_time");
 					String title = messageObj.getString("title");
 					String message = messageObj.getString("message");
 					String senderString = messageObj.getString("sender_id");
-					
+
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-					
+
 					int msgID = Integer.parseInt(msgIdString);
 					Date receivedTime = simpleDateFormat.parse(receivedTimeString);
 					Date availableTime = simpleDateFormat.parse(availableTimeString);
@@ -103,7 +103,7 @@ public class Communicator {
 
 		return notes;
 	}
-	
+
 	/**
 	 * Try to get user's notes of the location if there is a nearby local
 	 * server.
@@ -121,7 +121,7 @@ public class Communicator {
 		Log.d("TIANYI", "Can't get notes. No local server available.");		
 		return null;
 	}
-	
+
 	/**
 	 * Try to authenticate the user credential with a local server.
 	 * 

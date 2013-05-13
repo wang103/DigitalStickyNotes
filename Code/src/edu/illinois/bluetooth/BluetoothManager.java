@@ -39,7 +39,7 @@ public class BluetoothManager extends ConnectionManager {
 		this.devices.clear();
 		return mBluetoothAdapter.startDiscovery();
 	}
-	
+
 	@Override
 	public boolean startDiscoveryAndWait() {
 		this.devices.clear();
@@ -77,16 +77,11 @@ public class BluetoothManager extends ConnectionManager {
 	public void destroy(Activity activity) {
 		unregisterBroadcastReceiver(activity);
 	};
-	
+
 	@Override
 	public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery) {
 		
 		Log.d("TIANYI", "Sending " + s + "to the local server.");
-	
-		if (startDiscovery) {
-			startDiscoveryAndWait();
-			stopDiscovery();
-		}
 		
 		List<String> result = new ArrayList<String>();
 		
@@ -127,6 +122,11 @@ public class BluetoothManager extends ConnectionManager {
 			}
 		}
 		
+		if (startDiscovery) {
+			startDiscoveryAndWait();
+			stopDiscovery();
+		}
+
 		return result;
 	}
 	

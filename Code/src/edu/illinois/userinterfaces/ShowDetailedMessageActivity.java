@@ -12,8 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+/**
+ * Activity to show a note.
+ * 
+ * @author tianyiw
+ */
 public class ShowDetailedMessageActivity extends Activity {
 
+	// UI references.
 	private TextView messageTextView;
 	private TextView availableTextView;
 	private TextView receivedTextView;

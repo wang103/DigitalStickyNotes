@@ -20,7 +20,7 @@ public class BTBroadcastReceiver extends BroadcastReceiver {
 
 	private ArrayList<BluetoothDevice> devices;
 	private MainActivity activity;
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
@@ -40,7 +40,7 @@ public class BTBroadcastReceiver extends BroadcastReceiver {
 			// New nearby devices found.
 			BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 			devices.add(device);
-			
+		
 			Log.d("TIANYI", "New device added: " + device.getName() + " @ " + device.getAddress());
 		}
 	}

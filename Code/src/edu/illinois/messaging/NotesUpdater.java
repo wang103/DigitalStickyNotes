@@ -59,7 +59,7 @@ public class NotesUpdater implements Runnable {
 		if (communicator == null) {
 			return;
 		}
-	
+
 		List<Note> notes = communicator.getNotes(mainActivity.getToken());
 		
 		if (notes != null) {
