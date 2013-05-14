@@ -3,6 +3,7 @@ package edu.illinois.digitalstickynotes;
 import edu.illinois.bluetooth.BluetoothManager;
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.communication.Communicator;
+import edu.illinois.data.UserInformation;
 import edu.illinois.messaging.NotesUpdater;
 import edu.illinois.userinterfaces.ClientSetupActivity;
 import edu.illinois.userinterfaces.LoginActivity;
@@ -28,9 +29,10 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	public ConnectionManager connectionManager;
-	public NotesUpdater notesUpdater;
-
+	private ConnectionManager connectionManager;
+	private NotesUpdater notesUpdater;
+	private UserInformation userInfo;
+	
 	// For application states.
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
@@ -43,9 +45,6 @@ public class MainActivity extends Activity {
 	// Preference settings.
 	public static final String PREF_NAME = "edu.illinois.digitalstickynotes";
 	public static final String PREF_TOKEN_KEY = "edu.illinois.digitalstickynotes.token";
-
-	// Client's access token.
-	private String token = null;
 
 	// UI references.
 	private Button myNotesButton;
@@ -200,7 +199,7 @@ public class MainActivity extends Activity {
 	 * Sign out user's account.
 	 */
 	private void signOut() {
-		token = null;
+		userInfo.setAccessToken(null);
 		
 		SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
@@ -218,6 +217,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		userInfo = new UserInformation();
+		((TheApplication)(this.getApplication())).setUserInfo(userInfo);
+		
 		myNotesButton = (Button) findViewById(R.id.my_notes_button);
 		myNotesButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -282,8 +284,9 @@ public class MainActivity extends Activity {
 			TextView textView = (TextView) findViewById(R.id.show_message);
 			if (resultCode == RESULT_OK) {
 				// Store the access token in the preferences.
-				token = data.getStringExtra(LoginActivity.INTENT_KEY_TOKEN);
-
+				String token = data.getStringExtra(LoginActivity.INTENT_KEY_TOKEN);
+				userInfo.setAccessToken(token);
+				
 				SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putString(PREF_TOKEN_KEY, token);
@@ -360,10 +363,10 @@ public class MainActivity extends Activity {
 	}
 
 	public void setToken(String token) {
-		this.token = token;
+		userInfo.setAccessToken(token);
 	}
 
 	public String getToken() {
-		return token;
+		return userInfo.getAccessToken();
 	}
 }

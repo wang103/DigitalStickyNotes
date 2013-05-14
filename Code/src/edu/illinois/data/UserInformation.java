@@ -9,6 +9,8 @@ import java.util.ArrayList;
  */
 public class UserInformation {
 	
+	private User user;
+	private String accessToken;
 	private ArrayList<User> friendsList;
 	
 	/**
@@ -25,5 +27,17 @@ public class UserInformation {
 	 */
 	public UserInformation() {
 		friendsList = new ArrayList<User>();
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 }

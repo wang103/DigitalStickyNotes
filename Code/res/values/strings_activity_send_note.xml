@@ -2,6 +2,7 @@
     
 	<string name="send_to">Send To:</string>
 	<string name="prompt_receivers">User names separated by comma</string>
+	<string name="location">Leave Note At:</string>
 	<string name="prompt_title">Title</string>
 	<string name="prompt_content">Content</string>
 	<string name="prompt_available_time">Note available at:</string>

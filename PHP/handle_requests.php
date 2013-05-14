@@ -57,6 +57,25 @@ if ($request_name === 'get_notes') {
 
     $result = array('success' => true, 'num_msg' => $num_msg, 'messages' => $messages);
 }
+elseif ($request_name === 'get_usr_info') {
+    $result = array('success' => true,
+                    'username' => $oauth->getUsername(),
+                    'firstname' => $oauth->getUserFirstname(),
+                    'lastname' => $oauth->getUserLastname());
+}
+elseif ($request_name === 'get_locations') {
+    $qry = "SELECT location_id,location_name FROM local_servers";
+    $qry_result = mysql_query($qry);
+    $num_loc = mysql_num_rows($qry_result);
+    $locations = array();
+    while ($row = mysql_fetch_array($qry_result)) {
+        $location = array('location_id' => $row['location_id'],
+                          'location_name' => $row['location_name']);
+        array_push($locations, $location);
+    }
+
+    $result = array('success' => true, 'num_loc' => $num_loc, 'locations' => $locations);
+}
 else {
     $result = array('success' => false, 'info' => 'Request Not Supported!');
 }

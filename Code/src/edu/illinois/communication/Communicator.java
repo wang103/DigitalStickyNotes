@@ -45,6 +45,23 @@ public class Communicator {
 	private ConnectionManager connectionManager;
 	
 	/**
+	 * First try to send the note via internet connection. If not available,
+	 * try send the note using a local server.
+	 * 
+	 * @param receivers list of receivers of this note.
+	 * @param availableTime when this note becomes available.
+	 * @param expireTime when this note becomes expired.
+	 * @param locationID the location this note is associated with.
+	 * @param title the title.
+	 * @param note the content of the note.
+	 * @return 0 on success. -1 on fail.
+	 */
+	public int sendNote(List<String> receivers, String availableTime, String expireTime,
+			int locationID, String title, String note) {
+		return -1;
+	}
+	
+	/**
 	 * Get user's notes of the location.
 	 * 
 	 * @param token the access token.

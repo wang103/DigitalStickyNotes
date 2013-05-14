@@ -27,13 +27,29 @@
 	android:layout_below="@+id/send_to_textview"
 	android:layout_alignParentLeft="true" />
 
+<TextView
+	android:id="@+id/location_textview"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/location"
+	android:textSize="18sp"
+	android:layout_below="@+id/send_to_edittext"
+	android:layout_alignParentLeft="true" />
+
+<Spinner
+    android:id="@+id/location_spinner"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/location_textview"
+	android:layout_alignParentLeft="true" />
+
 <EditText
 	android:id="@+id/title_textview"
 	android:layout_width="310dp"
 	android:layout_height="wrap_content"
 	android:hint="@string/prompt_title"
 	android:textSize="18sp"
-	android:layout_below="@+id/send_to_edittext"
+	android:layout_below="@+id/location_spinner"
 	android:layout_alignParentLeft="true" />
 
 <EditText

@@ -161,4 +161,36 @@ class MySQLAuth2 extends OAuth2 {
         $user = mysql_fetch_assoc($qry_result);
         return $user['user_name'];
     }
+
+    /**
+     * Helper function to get the user's first name.
+     * Assume the access token is in HTTP header, and it is valid.
+     */
+    public function getUserFirstname() {
+        $token_param = $this->getAccessTokenParams();
+        $token = $this->getAccessToken($token_param);
+        $user_email = $token['user_name'];
+
+        $qry = "SELECT first_name FROM users WHERE email='" . $user_email . "'";
+        $qry_result = mysql_query($qry);
+        
+        $user = mysql_fetch_assoc($qry_result);
+        return $user['first_name'];
+    }
+
+    /**
+     * Helper function to get the user's last name.
+     * Assume the access token is in HTTP header, and it is valid.
+     */
+    public function getUserLastname() {
+        $token_param = $this->getAccessTokenParams();
+        $token = $this->getAccessToken($token_param);
+        $user_email = $token['user_name'];
+
+        $qry = "SELECT last_name FROM users WHERE email='" . $user_email . "'";
+        $qry_result = mysql_query($qry);
+        
+        $user = mysql_fetch_assoc($qry_result);
+        return $user['last_name'];
+    }
 }
