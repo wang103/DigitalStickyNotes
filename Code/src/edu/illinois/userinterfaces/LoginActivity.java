@@ -1,6 +1,7 @@
 package edu.illinois.userinterfaces;
 
 import edu.illinois.communication.Communicator;
+import edu.illinois.data.UserInformation;
 import edu.illinois.digitalstickynotes.MainActivity;
 import edu.illinois.digitalstickynotes.R;
 import edu.illinois.digitalstickynotes.TheApplication;
@@ -243,12 +244,44 @@ public class LoginActivity extends Activity {
 	 * @param token the access token.
 	 */
 	private void finishLogin(String token) {
+		UserInformation userInfo = ((TheApplication) getApplication()).getUserInfo();
+		userInfo.setAccessToken(token);
+		
+		GetUserInfoTask mTask = new GetUserInfoTask();
+		mTask.execute((Void) null);
+	}
+
+	/**
+	 * Called when response is received from the server for user info request.
+	 */
+	private void realFinishLogin() {
+		UserInformation userInfo = ((TheApplication) getApplication()).getUserInfo();
+		
 		final Intent intent = new Intent();
-		intent.putExtra(INTENT_KEY_TOKEN, token);
+		intent.putExtra(INTENT_KEY_TOKEN, userInfo.getAccessToken());
 		setResult(RESULT_OK, intent);
 		finish();
 	}
 
+	/**
+	 * Represents an asynchronous get info task.
+	 */
+	public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
+		
+		@Override
+		protected String doInBackground(Void... arg0) {
+			UserInformation userInfo = ((TheApplication) getApplication()).getUserInfo();
+
+			communicator.setUserInfo(userInfo.getUser(), userInfo.getAccessToken());
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(final String notUsed) {
+			realFinishLogin();
+		}
+	}
+	
 	/**
 	 * Represents an asynchronous login task.
 	 */

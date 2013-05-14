@@ -45,6 +45,9 @@ public class MainActivity extends Activity {
 	// Preference settings.
 	public static final String PREF_NAME = "edu.illinois.digitalstickynotes";
 	public static final String PREF_TOKEN_KEY = "edu.illinois.digitalstickynotes.token";
+	public static final String PREF_USER_NAME = "edu.illinois.digitalstickynotes.username";
+	public static final String PREF_FIRST_NAME = "edu.illinois.digitalstickynotes.firstname";
+	public static final String PREF_LAST_NAME = "edu.illinois.digitalstickynotes.lastname";
 
 	// UI references.
 	private Button myNotesButton;
@@ -122,6 +125,9 @@ public class MainActivity extends Activity {
 
 		if (prefs.contains(PREF_TOKEN_KEY)) {
 			setToken(prefs.getString(PREF_TOKEN_KEY, null));
+			userInfo.getUser().setUserName(prefs.getString(PREF_USER_NAME, null));
+			userInfo.getUser().setFirstName(prefs.getString(PREF_FIRST_NAME, null));
+			userInfo.getUser().setLastName(prefs.getString(PREF_LAST_NAME, null));
 			postSigningIn();
 		} else {
 			this.signInButton.setEnabled(true);
@@ -204,6 +210,9 @@ public class MainActivity extends Activity {
 		SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove(PREF_TOKEN_KEY);
+		editor.remove(PREF_USER_NAME);
+		editor.remove(PREF_FIRST_NAME);
+		editor.remove(PREF_LAST_NAME);
 		editor.commit();
 		
 		myNotesButton.setEnabled(false);
@@ -217,7 +226,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		userInfo = new UserInformation(this);
+		userInfo = new UserInformation();
 		((TheApplication)(this.getApplication())).setUserInfo(userInfo);
 		
 		myNotesButton = (Button) findViewById(R.id.my_notes_button);
@@ -290,6 +299,10 @@ public class MainActivity extends Activity {
 				SharedPreferences prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putString(PREF_TOKEN_KEY, token);
+				editor.putString(PREF_USER_NAME, userInfo.getUser().getUserName());
+				editor.putString(PREF_FIRST_NAME, userInfo.getUser().getFirstName());
+				editor.putString(PREF_LAST_NAME, userInfo.getUser().getLastName());
+				
 				editor.commit();
 				
 				postSigningIn();

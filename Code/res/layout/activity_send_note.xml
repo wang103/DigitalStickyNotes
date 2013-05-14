@@ -133,14 +133,14 @@
 	android:layout_height="wrap_content"
 	android:calendarViewShown="false"
 	android:layout_below="@+id/expire_time_textview"
-	android:layout_toLeftOf="@+id/available_timepicker" />
+	android:layout_alignParentLeft="true" />
 
 <TimePicker
 	android:id="@+id/expire_timepicker"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_below="@+id/expire_datepicker"
-	android:layout_toLeftOf="@+id/available_timepicker" />
+	android:layout_alignParentLeft="true" />
 
 <Button
 	android:id="@+id/send_note_button"
