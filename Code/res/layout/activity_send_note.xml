@@ -107,6 +107,7 @@
 	android:id="@+id/available_datepicker"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
+	android:calendarViewShown="false"
 	android:layout_below="@+id/available_time_textview"
 	android:layout_alignParentLeft="true" />
 
@@ -114,8 +115,8 @@
 	android:id="@+id/available_timepicker"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_alignTop="@+id/available_datepicker"
-	android:layout_toRightOf="@+id/available_datepicker" />
+	android:layout_below="@+id/available_datepicker"
+	android:layout_alignParentLeft="true" />
 
 <TextView
 	android:id="@+id/expire_time_textview"
@@ -123,13 +124,14 @@
 	android:layout_height="wrap_content"
 	android:text="@string/prompt_expire_time"
 	android:textSize="18sp"
-	android:layout_below="@+id/available_datepicker"
+	android:layout_below="@+id/available_timepicker"
 	android:layout_alignParentLeft="true" />
 
 <DatePicker
 	android:id="@+id/expire_datepicker"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
+	android:calendarViewShown="false"
 	android:layout_below="@+id/expire_time_textview"
 	android:layout_toLeftOf="@+id/available_timepicker" />
 
@@ -137,15 +139,15 @@
 	android:id="@+id/expire_timepicker"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_alignTop="@+id/expire_datepicker"
-	android:layout_alignLeft="@+id/available_timepicker" />
+	android:layout_below="@+id/expire_datepicker"
+	android:layout_toLeftOf="@+id/available_timepicker" />
 
 <Button
 	android:id="@+id/send_note_button"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:text="@string/send_note_button"
-	android:layout_below="@+id/expire_datepicker"
+	android:layout_below="@+id/expire_timepicker"
 	android:layout_alignParentLeft="true" />
 
 </RelativeLayout>
