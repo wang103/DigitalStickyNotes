@@ -217,7 +217,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		userInfo = new UserInformation();
+		userInfo = new UserInformation(this);
 		((TheApplication)(this.getApplication())).setUserInfo(userInfo);
 		
 		myNotesButton = (Button) findViewById(R.id.my_notes_button);

@@ -13,6 +13,13 @@ public class User {
 	
 	/**
 	 * Constructor.
+	 */
+	public User() {
+		// Do nothing.
+	}
+	
+	/**
+	 * Constructor.
 	 * 
 	 * @param userName the username.
 	 */

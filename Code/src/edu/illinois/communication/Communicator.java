@@ -62,6 +62,20 @@ public class Communicator {
 	}
 	
 	/**
+	 * Set the user information.
+	 * 
+	 * @param user the {@link User} object.
+	 * @return 0 on success. -1 on fail.
+	 */
+	public int setUserInfo(User user) {
+		user.setUserName(null);
+		user.setFirstName(null);
+		user.setLastName(null);
+		
+		return -1;
+	}
+	
+	/**
 	 * Get user's notes of the location.
 	 * 
 	 * @param token the access token.

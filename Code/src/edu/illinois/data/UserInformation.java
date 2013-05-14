@@ -2,12 +2,19 @@ package edu.illinois.data;
 
 import java.util.ArrayList;
 
+import edu.illinois.communication.Communicator;
+import edu.illinois.digitalstickynotes.TheApplication;
+
+import android.app.Activity;
+
 /**
  * Various information of the client user.
  * 
  * @author Tianyi Wang
  */
 public class UserInformation {
+	
+	private Activity activity;
 	
 	private User user;
 	private String accessToken;
@@ -25,8 +32,10 @@ public class UserInformation {
 	/**
 	 * Constructor.
 	 */
-	public UserInformation() {
-		friendsList = new ArrayList<User>();
+	public UserInformation(Activity activity) {
+		this.activity = activity;
+		this.user = new User();
+		this.friendsList = new ArrayList<User>();
 	}
 	
 	public User getUser() {
@@ -39,5 +48,11 @@ public class UserInformation {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+		
+		// Update user information.
+		if (accessToken != null) {
+			Communicator communicator = ((TheApplication)(activity.getApplication())).getCommunicator();
+			communicator.setUserInfo(user);
+		}
 	}
 }
