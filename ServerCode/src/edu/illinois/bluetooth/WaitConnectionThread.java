@@ -9,6 +9,11 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 
+/**
+ * A thread that waits for Bluetooth connections.
+ * 
+ * @author tianyiw
+ */
 public class WaitConnectionThread implements Runnable {
 
 	final private UUID uuid = new UUID("1101", true);

@@ -16,16 +16,33 @@ import org.json.simple.parser.ParseException;
 
 import edu.illinois.utils.Utils;
 
+/**
+ * A thread that process each incoming Bluetooth connection by completing
+ * the client's request.
+ * 
+ * @author tianyiw
+ */
 public class ProcessConnectionThread implements Runnable {
 
 	final static private int MAX_MSG_LENGTH = 1024;
 	
 	private StreamConnection streamConnection;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param streamConnection the {@link StreamConnection} object.
+	 */
 	public ProcessConnectionThread(StreamConnection streamConnection) {
 		this.streamConnection = streamConnection;
 	}
 	
+	/**
+	 * Handle getting user's information.
+	 * 
+	 * @param jsonObj the {@link JSONObject} object.
+	 * @param outputStream the {@link OutputStream} object.
+	 */
 	private void handleGetUsrInfo(JSONObject jsonObj, OutputStream outputStream) {
 
 		String token = (String) jsonObj.get("token");
@@ -47,6 +64,12 @@ public class ProcessConnectionThread implements Runnable {
 		}
 	}
 	
+	/**
+	 * Handle getting user's notes.
+	 * 
+	 * @param jsonObj the {@link JSONObject} object.
+	 * @param outputStream the {@link OutputStream} object.
+	 */
 	private void handleGetNotes(JSONObject jsonObj, OutputStream outputStream) {
 		
 		//TODO: fix the hard-coded credentials.
@@ -73,6 +96,12 @@ public class ProcessConnectionThread implements Runnable {
 		}
 	}
 	
+	/**
+	 * Handle user account authentication.
+	 * 
+	 * @param jsonObj the {@link JSONObject} object.
+	 * @param outputStream the {@link OutputStream} object.
+	 */
 	private void handleAuthenticate(JSONObject jsonObj, OutputStream outputStream) {
 		
 		String grantType = (String) jsonObj.get("grant_type");
@@ -101,6 +130,12 @@ public class ProcessConnectionThread implements Runnable {
 		}
 	}
 	
+	/**
+	 * Handle user account registration.
+	 * 
+	 * @param jsonObj the {@link JSONObject} object.
+	 * @param outputStream the {@link OutputStream} object.
+	 */
 	private void handleRegistration(JSONObject jsonObj, OutputStream outputStream) {
 		
 		String email = (String) jsonObj.get("email");

@@ -16,6 +16,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import edu.illinois.digitalstickynotesserver.DigitalStickyNotesServer;
 
+/**
+ * This class contains useful static methods.
+ * 
+ * @author tianyiw
+ */
 public class Utils {
 	
 	/**
@@ -26,7 +31,6 @@ public class Utils {
 	 * @return the response from the central server.
 	 */
 	public static String sendPostToGlobalServer(List<NameValuePair> data, int dataType) {
-		
 		if (data == null) {
 			return null;
 		}
