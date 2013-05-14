@@ -45,7 +45,7 @@ if ($request_name === 'get_notes') {
     $messages = array();
     while ($row = mysql_fetch_array($qry_result)) {
         $message = array('message_id' => $row['message_id'],
-                         'received_time' => NOW(),
+                         'received_time' => date('Y-m-d H:i:s'),
                          'available_time' => $row['available_time'],
                          'expire_time' => $row['expire_time'],
                          'title' => $row['title'],
