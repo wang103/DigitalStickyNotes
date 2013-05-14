@@ -40,6 +40,7 @@ public class Communicator {
 	private static final String BASE_URL = "http://tianyiwang.info/project";
 	private static final String AUTH_URL = BASE_URL + "/request_token.php";		// URL for authentication.
 	private static final String REG_URL = BASE_URL + "/register.php";			// URL for registration.
+	private static final String API_URL = BASE_URL + "/handle_requests.php";	// URL for requests.
 	
 	private Activity activity;
 	private ConnectionManager connectionManager;
@@ -62,16 +63,118 @@ public class Communicator {
 	}
 	
 	/**
+	 * Set user information with a local server.
+	 * 
+	 * @param user the {@link User} object.
+	 * @param token the access token.
+	 * @return 0 on success. -1 on fail.
+	 */
+	private int setUserInfoWithLocalServer(User user, String token) {
+
+		JSONObject jInputObject = new JSONObject();
+
+		try {
+			jInputObject.put("request_name", "get_usr_info");
+			jInputObject.put("token", token);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
+		
+		if (result.size() > 0) {
+			JSONObject jOutputObject = null;
+			try {
+				jOutputObject = new JSONObject(result.get(0));
+				user.setUserName(jOutputObject.getString("username"));
+				user.setFirstName(jOutputObject.getString("firstname"));
+				user.setLastName(jOutputObject.getString("lastname"));
+				return 0;
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return -1;
+	}
+
+	/**
+	 * Set user information with the global server.
+	 * 
+	 * @param user the {@link User} object.
+	 * @param token the access token.
+	 * @return 0 on success. -1 on fail.
+	 */
+	private int setUserInfoWithGlobalServer(User user, String token) {
+
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("request_name", "get_usr_info"));
+		nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
+
+		HttpEntity entity = null;
+		try {
+			entity = new UrlEncodedFormEntity(nameValuePairs);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		final HttpPost post = new HttpPost(API_URL);
+		post.addHeader(entity.getContentType());
+		post.setEntity(entity);
+		HttpResponse response = null;
+
+		try {
+			response = Utils.getHttpClient().execute(post);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (response == null) {
+			return -1;
+		}
+
+		String result = null;
+		try {
+			result = Utils.inputStreamToString(response.getEntity().getContent());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(result);
+			user.setUserName(jsonObject.getString("username"));
+			user.setFirstName(jsonObject.getString("firstname"));
+			user.setLastName(jsonObject.getString("lastname"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+	
+	/**
 	 * Set the user information.
 	 * 
 	 * @param user the {@link User} object.
+	 * @param token the access token.
 	 * @return 0 on success. -1 on fail.
 	 */
-	public int setUserInfo(User user) {
-		user.setUserName(null);
-		user.setFirstName(null);
-		user.setLastName(null);
+	public int setUserInfo(User user, String token) {
+		if (Utils.isNetworkConnected(activity)) {
+			Log.d("TIANYI", "Using global server to get user info.");
+			return setUserInfoWithGlobalServer(user, token);
+		}
+		else if (this.connectionManager != null) {
+			Log.d("TIANYI", "Using local server to authenticate.");
+			return setUserInfoWithLocalServer(user, token);
+		}
 		
+		Log.d("TIANYI", "Can't get user info. No Network available.");		
 		return -1;
 	}
 	

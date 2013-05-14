@@ -6,6 +6,7 @@ import edu.illinois.communication.Communicator;
 import edu.illinois.digitalstickynotes.TheApplication;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 
 /**
  * Various information of the client user.
@@ -19,6 +20,16 @@ public class UserInformation {
 	private User user;
 	private String accessToken;
 	private ArrayList<User> friendsList;
+	
+	/**
+	 * Update the user information.
+	 */
+	public void updateUserInfo() {
+		if (accessToken != null) {
+			GetUserInfoTask mTask = new GetUserInfoTask();
+			mTask.execute((Void) null);
+		}
+	}
 	
 	/**
 	 * Add a friend to the friends list.
@@ -50,9 +61,20 @@ public class UserInformation {
 		this.accessToken = accessToken;
 		
 		// Update user information.
-		if (accessToken != null) {
+		updateUserInfo();
+	}
+	
+	/**
+	 * The task to get user's information from central server.
+	 * 
+	 * @author tianyiw
+	 */
+	public class GetUserInfoTask extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... arg0) {
 			Communicator communicator = ((TheApplication)(activity.getApplication())).getCommunicator();
-			communicator.setUserInfo(user);
+			communicator.setUserInfo(user, accessToken);
+			return null;
 		}
 	}
 }

@@ -26,6 +26,27 @@ public class ProcessConnectionThread implements Runnable {
 		this.streamConnection = streamConnection;
 	}
 	
+	private void handleGetUsrInfo(JSONObject jsonObj, OutputStream outputStream) {
+
+		String token = (String) jsonObj.get("token");
+
+		List<NameValuePair> data = new ArrayList<NameValuePair>(2);
+		data.add(new BasicNameValuePair("request_name", "get_usr_info"));
+		data.add(new BasicNameValuePair("oauth_token", token));
+		
+		String response = Utils.sendPostToGlobalServer(data, 2);
+		
+		System.out.println("Response from the global server: " + response);
+		
+		// Send the result back to the client.
+		byte[] outputBuffer = response.getBytes();
+		try {
+			outputStream.write(outputBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void handleGetNotes(JSONObject jsonObj, OutputStream outputStream) {
 		
 		//TODO: fix the hard-coded credentials.
@@ -137,6 +158,9 @@ public class ProcessConnectionThread implements Runnable {
 				}
 				else if (request.equals("get_notes")) {
 					handleGetNotes(jsonObj, outputStream);
+				}
+				else if (request.equals("get_usr_info")) {
+					handleGetUsrInfo(jsonObj, outputStream);
 				}
 				else {
 					System.out.println("Unsupported request from client!");

@@ -76,7 +76,7 @@ public class BluetoothManager extends ConnectionManager {
 	@Override
 	public void destroy(Activity activity) {
 		unregisterBroadcastReceiver(activity);
-	};
+	}
 
 	@Override
 	public List<String> talkToServers(String s, boolean talkToOneServer, boolean startDiscovery) {
@@ -121,7 +121,7 @@ public class BluetoothManager extends ConnectionManager {
 				break;
 			}
 		}
-		
+
 		if (startDiscovery) {
 			startDiscoveryAndWait();
 			stopDiscovery();

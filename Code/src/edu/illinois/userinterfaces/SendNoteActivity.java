@@ -1,6 +1,7 @@
 package edu.illinois.userinterfaces;
 
 import edu.illinois.communication.Communicator;
+import edu.illinois.data.UserInformation;
 import edu.illinois.digitalstickynotes.R;
 import edu.illinois.digitalstickynotes.TheApplication;
 import android.os.Bundle;
@@ -34,6 +35,9 @@ public class SendNoteActivity extends Activity {
 	 * Send a note to the central server.
 	 */
 	private void sendNote() {
+		UserInformation userInfo = ((TheApplication) getApplication()).getUserInfo();
+		userInfo.updateUserInfo();
+		
 		
 	}
 

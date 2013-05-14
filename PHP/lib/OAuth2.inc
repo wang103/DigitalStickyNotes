@@ -879,21 +879,28 @@ abstract class OAuth2 {
    */
   public function verifyAccessToken($scope = NULL, $exit_not_present = TRUE, $exit_invalid = TRUE, $exit_expired = TRUE, $exit_scope = TRUE, $realm = NULL) {
     $token_param = $this->getAccessTokenParams();
+    
     if ($token_param === FALSE) // Access token was not provided
+    {
       return $exit_not_present ? $this->errorWWWAuthenticateResponseHeader(OAUTH2_HTTP_BAD_REQUEST, $realm, OAUTH2_ERROR_INVALID_REQUEST, 'The request is missing a required parameter, includes an unsupported parameter or parameter value, repeats the same parameter, uses more than one method for including an access token, or is otherwise malformed.', NULL, $scope) : FALSE;
+    }
+
     // Get the stored token data (from the implementing subclass)
     $token = $this->getAccessToken($token_param);
-    if ($token === NULL)
+    if ($token === NULL) {
       return $exit_invalid ? $this->errorWWWAuthenticateResponseHeader(OAUTH2_HTTP_UNAUTHORIZED, $realm, OAUTH2_ERROR_INVALID_TOKEN, 'The access token provided is invalid.', NULL, $scope) : FALSE;
+    }
 
     // Check token expiration (I'm leaving this check separated, later we'll fill in better error messages)
-    if (isset($token["expires"]) && time() > $token["expires"])
+    if (isset($token["expires"]) && time() > $token["expires"]) {
       return $exit_expired ? $this->errorWWWAuthenticateResponseHeader(OAUTH2_HTTP_UNAUTHORIZED, $realm, OAUTH2_ERROR_EXPIRED_TOKEN, 'The access token provided has expired.', NULL, $scope) : FALSE;
+    }
 
     // Check scope, if provided
     // If token doesn't have a scope, it's NULL/empty, or it's insufficient, then throw an error
-    if ($scope && (!isset($token["scope"]) || !$token["scope"] || !$this->checkScope($scope, $token["scope"])))
+    if ($scope && (!isset($token["scope"]) || !$token["scope"] || !$this->checkScope($scope, $token["scope"]))) {
       return $exit_scope ? $this->errorWWWAuthenticateResponseHeader(OAUTH2_HTTP_FORBIDDEN, $realm, OAUTH2_ERROR_INSUFFICIENT_SCOPE, 'The request requires higher privileges than provided by the access token.', NULL, $scope) : FALSE;
+    }
 
     return TRUE;
   }
