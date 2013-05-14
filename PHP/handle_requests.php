@@ -36,6 +36,8 @@ if ($request_name === 'get_notes') {
         echo json_encode($result);
         exit;
     }
+    $row = mysql_fetch_array($qry_result);
+    $loc_name = $row['location_name'];
 
     $qry = "SELECT message_id,received_time,available_time,expire_time,title,message,sender_id FROM messages WHERE location_id='" . $location_id . "' AND receiver_id='" . $user_name . "'";
     $qry_result = mysql_query($qry);
@@ -48,6 +50,7 @@ if ($request_name === 'get_notes') {
                          'expire_time' => $row['expire_time'],
                          'title' => $row['title'],
                          'message' => $row['message'],
+                         'server_loc' => $loc_name,
                          'sender_id' => $row['sender_id']);
         array_push($messages, $message);
     }

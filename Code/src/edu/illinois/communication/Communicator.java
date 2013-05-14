@@ -79,6 +79,7 @@ public class Communicator {
 					String expireTimeString = messageObj.getString("expire_time");
 					String title = messageObj.getString("title");
 					String message = messageObj.getString("message");
+					String location = messageObj.getString("server_loc");
 					String senderString = messageObj.getString("sender_id");
 
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
@@ -90,7 +91,7 @@ public class Communicator {
 					User sender = new User(senderString);
 					
 					Note newNote = new Note(msgID, title, message, receivedTime,
-							availableTime, expireTime, sender);
+							availableTime, expireTime, location, sender);
 					
 					notes.add(newNote);
 				}

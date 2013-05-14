@@ -5,17 +5,17 @@
     tools:context=".ShowDetailedMessageActivity" >
 
 <TextView
-	android:id="@+id/message_content"
+	android:id="@+id/sender"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_below="@+id/expire_time"
+	android:layout_alignParentTop="true"
 	android:layout_alignParentLeft="true" />
-
+    
 <TextView
-	android:id="@+id/expire_time"
+	android:id="@+id/available_time"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_below="@+id/received_time"
+	android:layout_below="@+id/sender"
 	android:layout_alignParentLeft="true" />
 
 <TextView
@@ -26,17 +26,24 @@
 	android:layout_alignParentLeft="true" />
 
 <TextView
-	android:id="@+id/available_time"
+	android:id="@+id/expire_time"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_below="@+id/sender"
+	android:layout_below="@+id/received_time"
 	android:layout_alignParentLeft="true" />
 
 <TextView
-	android:id="@+id/sender"
+	android:id="@+id/received_loc"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_alignParentTop="true"
+	android:layout_below="@+id/expire_time"
+	android:layout_alignParentLeft="true" />
+
+<TextView
+	android:id="@+id/message_content"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_below="@+id/received_loc"
 	android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

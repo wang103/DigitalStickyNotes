@@ -20,6 +20,8 @@ public class Note {
 	private Date availableDate;
 	private Date expireDate;
 	
+	private String receivedLocation;
+	
 	private User sender;
 	private Group receivers;
 	
@@ -52,16 +54,18 @@ public class Note {
 	 * @param receivedDate message received time.
 	 * @param availableDate message available time.
 	 * @param expireDate message expiration time.
+	 * @param location the location this message was received at.
 	 * @param sender the sender of this note.
 	 */
 	public Note(long messageID, String title, String msg, Date receivedDate,
-			Date availableDate, Date expireDate, User sender) {
+			Date availableDate, Date expireDate, String location, User sender) {
 		this.messageID = messageID;
 		this.title = title;
 		this.message = msg;
 		this.receivedDate = receivedDate;
 		this.availableDate = availableDate;
 		this.expireDate = expireDate;
+		this.receivedLocation = location;
 		this.sender = sender;
 	}
 	
@@ -94,6 +98,10 @@ public class Note {
 		return receivedDate;
 	}
 
+	public String getReceivedLocation() {
+		return receivedLocation;
+	}
+	
 	public User getSender() {
 		return sender;
 	}

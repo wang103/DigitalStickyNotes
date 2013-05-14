@@ -11,7 +11,7 @@ import android.util.Log;
  * @author tianyiw
  */
 public class SQLiteHelperMessage extends SQLiteOpenHelper {
-	
+
 	public static final String TABLE_NAME = "notes";
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_RECEIVED_TIME = "received_time";
@@ -19,11 +19,12 @@ public class SQLiteHelperMessage extends SQLiteOpenHelper {
 	public static final String COLUMN_EXPIRE_TIME = "expire_time";
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_MESSAGE = "message";
+	public static final String COLUMN_LOCATION = "received_loc";
 	public static final String COLUMN_SENDER = "sender_id";
-	
+
 	private static final String DATABASE_NAME = "digitalstickynotes.db";
 	private static final int DATABASE_VERSION = 1;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -35,7 +36,7 @@ public class SQLiteHelperMessage extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// Database creation sql statement
+		// Database creation SQL statement
 		String databaseCreateStat = "create table " + TABLE_NAME + "(" 
 				+ COLUMN_ID + " integer primary key, "
 				+ COLUMN_RECEIVED_TIME + " datetime not null, "
@@ -43,8 +44,9 @@ public class SQLiteHelperMessage extends SQLiteOpenHelper {
 				+ COLUMN_EXPIRE_TIME + " datetime not null, "
 				+ COLUMN_TITLE + " tinytext not null, "
 				+ COLUMN_MESSAGE + " text not null, "
+				+ COLUMN_LOCATION + " text not null, "
 				+ COLUMN_SENDER + " tinytext not null);";
-		
+
 		db.execSQL(databaseCreateStat);
 	}
 

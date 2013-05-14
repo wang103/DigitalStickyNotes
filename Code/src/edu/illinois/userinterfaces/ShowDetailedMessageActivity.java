@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 /**
- * Activity to show a note.
+ * Activity to show a single note.
  * 
  * @author tianyiw
  */
@@ -24,6 +24,7 @@ public class ShowDetailedMessageActivity extends Activity {
 	private TextView availableTextView;
 	private TextView receivedTextView;
 	private TextView expireTextView;
+	private TextView locationTextView;
 	private TextView senderTextView;
 
 	private Uri noteUri;
@@ -40,6 +41,7 @@ public class ShowDetailedMessageActivity extends Activity {
 		availableTextView = (TextView) findViewById(R.id.available_time);
 		receivedTextView = (TextView) findViewById(R.id.received_time);
 		expireTextView = (TextView) findViewById(R.id.expire_time);
+		locationTextView = (TextView) findViewById(R.id.received_loc);
 		senderTextView = (TextView) findViewById(R.id.sender);
 
 		Bundle extras = getIntent().getExtras();
@@ -59,7 +61,8 @@ public class ShowDetailedMessageActivity extends Activity {
 
 		String[] projection = {SQLiteHelperMessage.COLUMN_TITLE, SQLiteHelperMessage.COLUMN_MESSAGE,
 				SQLiteHelperMessage.COLUMN_SENDER, SQLiteHelperMessage.COLUMN_RECEIVED_TIME,
-				SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, SQLiteHelperMessage.COLUMN_EXPIRE_TIME};
+				SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, SQLiteHelperMessage.COLUMN_EXPIRE_TIME,
+				SQLiteHelperMessage.COLUMN_LOCATION};
 
 		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
 
@@ -76,6 +79,8 @@ public class ShowDetailedMessageActivity extends Activity {
 					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_RECEIVED_TIME));
 			expireTextView.setText("Expire Time: " + cursor.
 					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_EXPIRE_TIME));
+			locationTextView.setText("Received location: " + cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_LOCATION));
 			senderTextView.setText("Sender: " + cursor.
 					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_SENDER));
 

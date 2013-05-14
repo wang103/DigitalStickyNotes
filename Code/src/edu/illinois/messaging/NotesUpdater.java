@@ -39,6 +39,7 @@ public class NotesUpdater implements Runnable {
 		String availableTime = simpleDateFormat.format(note.getAvailableDate());
 		String receivedTime = simpleDateFormat.format(note.getReceivedDate());
 		String expireTime = simpleDateFormat.format(note.getExpireDate());
+		String receivedLocation = note.getReceivedLocation();
 
 		ContentValues values = new ContentValues();
 		values.put(SQLiteHelperMessage.COLUMN_TITLE, title);
@@ -47,6 +48,7 @@ public class NotesUpdater implements Runnable {
 		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, availableTime);
 		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, receivedTime);
 		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, expireTime);
+		values.put(SQLiteHelperMessage.COLUMN_LOCATION, receivedLocation);
 
 		mainActivity.getContentResolver().insert(NoteContentProvider.CONTENT_URI, values);
 	}
