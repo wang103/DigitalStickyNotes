@@ -1,10 +1,10 @@
 <resources>
     
-	<string name="send_to_button">Send To:</string>
-    <string name="empty_receivers">None</string>
+	<string name="send_to">Send To:</string>
+	<string name="prompt_receivers">User names separated by comma</string>
 	<string name="prompt_title">Title</string>
 	<string name="prompt_content">Content</string>
-	<string name="prompt_available_time">Available at:</string>
-	<string name="prompt_expire_time">Expires at:</string>
+	<string name="prompt_available_time">Note available at:</string>
+	<string name="prompt_expire_time">Note expires at:</string>
 	
 </resources>

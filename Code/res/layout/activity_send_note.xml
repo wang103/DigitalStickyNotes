@@ -7,39 +7,45 @@
 <RelativeLayout
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
-
-<Button
-	android:id="@+id/send_to_button"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:text="@string/send_to_button"
-	android:layout_alignParentTop="true"
-	android:layout_alignParentLeft="true" />
     
 <TextView
 	android:id="@+id/send_to_textview"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text="@string/empty_receivers"
+	android:text="@string/send_to"
+	android:textSize="18sp"
 	android:layout_alignParentTop="true"
-	android:layout_toRightOf="@+id/send_to_button" />
+	android:layout_alignParentLeft="true" />
+
+<EditText
+	android:id="@+id/send_to_edittext"
+	android:layout_width="310dp"
+	android:layout_height="wrap_content"
+	android:text=""
+	android:hint="@string/prompt_receivers"
+	android:textSize="18sp"
+	android:layout_below="@+id/send_to_textview"
+	android:layout_alignParentLeft="true" />
 
 <EditText
 	android:id="@+id/title_textview"
-	android:layout_width="wrap_content"
+	android:layout_width="310dp"
 	android:layout_height="wrap_content"
 	android:hint="@string/prompt_title"
 	android:textSize="18sp"
-	android:layout_below="@+id/send_to_button"
+	android:layout_below="@+id/send_to_edittext"
 	android:layout_alignParentLeft="true" />
 
 <EditText
 	android:id="@+id/content_textview"
-	android:layout_width="306dp"
+	android:layout_width="310dp"
 	android:layout_height="wrap_content"
 	android:hint="@string/prompt_content"
 	android:textSize="18sp"
 	android:layout_below="@+id/title_textview"
+	android:lines="8"
+	android:maxLines="8"
+	android:scrollbars="vertical"
 	android:layout_alignParentLeft="true" />
 
 <TextView
@@ -47,6 +53,7 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:text="@string/prompt_available_time"
+	android:textSize="18sp"
 	android:layout_below="@+id/content_textview"
 	android:layout_alignParentLeft="true" />
 
@@ -69,6 +76,7 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:text="@string/prompt_expire_time"
+	android:textSize="18sp"
 	android:layout_below="@+id/available_datepicker"
 	android:layout_alignParentLeft="true" />
 
@@ -91,7 +99,7 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:text="@string/send_note_button"
-	android:layout_below="@+id/expire_datepicker" 
+	android:layout_below="@+id/expire_datepicker"
 	android:layout_alignParentLeft="true" />
 
 </RelativeLayout>
