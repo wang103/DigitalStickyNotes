@@ -13,6 +13,7 @@
 	    android:id="@android:id/empty"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
 	    android:text="@string/no_notes" />
 	
 </RelativeLayout>

@@ -21,15 +21,37 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+/**
+ * A ListActivity to show all of user's notes.
+ * 
+ * @author tianyiw
+ */
 public class ShowMessagesActivity extends ListActivity implements LoaderCallbacks<Cursor> {
 
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	
 	private SimpleCursorAdapter adapter;
 	
+	/**
+	 * Populate the list view with notes.
+	 */
+	private void fillData() {
+		
+		// Fields from the database.
+		String[] from = new String[] {SQLiteHelperMessage.COLUMN_TITLE, SQLiteHelperMessage.COLUMN_SENDER};
+		
+		// Fields on the UI to map.
+		int[] to = new int[] {R.id.row_title, R.id.row_sender};
+		
+		getLoaderManager().initLoader(0, null, this);
+		
+		adapter = new SimpleCursorAdapter(this, R.layout.note_row, null, from, to, 0);
+		
+		setListAdapter(adapter);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_messages);
 
@@ -45,7 +67,6 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		
 		switch (item.getItemId()) {
 		case DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -54,14 +75,14 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 			fillData();
 			return true;
 		}
+		
 		return super.onContextItemSelected(item);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, android.view.View v, int position, long id) {
-
 		super.onListItemClick(l, v, position, id);
-				
+
 		Intent intent = new Intent(this, ShowDetailedMessageActivity.class);
 		Uri noteUri = Uri.parse(NoteContentProvider.CONTENT_URI + "/" + id);
 		intent.putExtra(NoteContentProvider.CONTENT_ITEM_TYPE, noteUri);
@@ -82,24 +103,6 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 	@Override
 	protected void onPause() {
 		super.onPause();
-	}
-	
-	/**
-	 * Populate the list view with notes.
-	 */
-	private void fillData() {
-		
-		// Fields from the database.
-		String[] from = new String[] {SQLiteHelperMessage.COLUMN_TITLE, SQLiteHelperMessage.COLUMN_SENDER};
-		
-		// Fields on the UI to map.
-		int[] to = new int[] {R.id.row_title, R.id.row_sender};
-		
-		getLoaderManager().initLoader(0, null, this);
-		
-		adapter = new SimpleCursorAdapter(this, R.layout.note_row, null, from, to, 0);
-		
-		setListAdapter(adapter);
 	}
 	
 	@Override
