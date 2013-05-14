@@ -71,18 +71,18 @@ public class ShowDetailedMessageActivity extends Activity {
 
 			setTitle(cursor.getString(cursor.
 					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_TITLE)));
-			messageTextView.setText("Note: " + cursor.
-					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_MESSAGE));
-			availableTextView.setText("Available Time: " + cursor.
-					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME));
-			receivedTextView.setText("Received Time: " + cursor.
-					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_RECEIVED_TIME));
-			expireTextView.setText("Expire Time: " + cursor.
-					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_EXPIRE_TIME));
-			locationTextView.setText("Received location: " + cursor.
-					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_LOCATION));
-			senderTextView.setText("Sender: " + cursor.
-					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_SENDER));
+			messageTextView.setText("Note: " + cursor.getString(cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_MESSAGE)));
+			availableTextView.setText("Available Time: " + cursor.getString(cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME)));
+			receivedTextView.setText("Received Time: " + cursor.getString(cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_RECEIVED_TIME)));
+			expireTextView.setText("Expire Time: " + cursor.getString(cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_EXPIRE_TIME)));
+			locationTextView.setText("Received location: " + cursor.getString(cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_LOCATION)));
+			senderTextView.setText("Sender: " + cursor.getString(cursor.
+					getColumnIndexOrThrow(SQLiteHelperMessage.COLUMN_SENDER)));
 
 			cursor.close();
 		}

@@ -28,7 +28,7 @@ if ($request_name === 'get_notes') {
     $user_name = $oauth->getUsername();
 
     # Authorize the location.
-    $qry = "SELECT location_id FROM local_servers where location_id='" . $location_id . "' AND password='" . $server_pwd . "'";
+    $qry = "SELECT location_id,location_name FROM local_servers where location_id='" . $location_id . "' AND password='" . $server_pwd . "'";
     $qry_result = mysql_query($qry);
     if (mysql_num_rows($qry_result) == 0) {
         $result = array('success' => false, 'info' => 'Authorization for local server failed!');
@@ -36,7 +36,7 @@ if ($request_name === 'get_notes') {
         echo json_encode($result);
         exit;
     }
-    $row = mysql_fetch_array($qry_result);
+    $row = mysql_fetch_assoc($qry_result);
     $loc_name = $row['location_name'];
 
     $qry = "SELECT message_id,received_time,available_time,expire_time,title,message,sender_id FROM messages WHERE location_id='" . $location_id . "' AND receiver_id='" . $user_name . "'";
