@@ -123,7 +123,7 @@ public class SendNoteActivity extends Activity {
 		mTask = new SendNotenTask();
 		mTask.execute((Void) null);
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
