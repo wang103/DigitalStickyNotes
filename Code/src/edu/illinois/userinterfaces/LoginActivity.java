@@ -193,7 +193,7 @@ public class LoginActivity extends Activity {
 				startTaskForLogin();
 			}
 		}
-	};
+	}
 
 	/**
 	 * Shows the progress UI and hides the login form.
@@ -273,8 +273,7 @@ public class LoginActivity extends Activity {
 
 				finishLogin(token);
 			} else {
-				mPasswordView
-				.setError(getString(R.string.error_sign_in_failed));
+				mPasswordView.setError(getString(R.string.error_sign_in_failed));
 				mPasswordView.requestFocus();
 			}
 		}

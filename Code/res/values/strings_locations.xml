@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="locations">
+        <item>0: Anywhere</item>
+        <item>1: 509 E. White St., Apt#22, Champaign IL 61820</item>
+        <item>2: Siebel Center - UIUC</item>
+    </string-array>
+</resources>
