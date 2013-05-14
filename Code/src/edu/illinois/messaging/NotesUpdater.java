@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.illinois.communication.Communicator;
+import edu.illinois.data.UserInformation;
 import edu.illinois.database.NoteContentProvider;
 import edu.illinois.database.SQLiteHelperMessage;
 import edu.illinois.digitalstickynotes.MainActivity;
+import edu.illinois.digitalstickynotes.TheApplication;
 import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -34,7 +36,8 @@ public class NotesUpdater implements Runnable {
 	 */
 	private void insertNote(Note note) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
+		UserInformation userInfo = ((TheApplication) (mainActivity.getApplication())).getUserInfo();
+		
 		String title = note.getTitle();
 		String message = note.getMessage();
 		String sender = note.getSender().getUserName();
@@ -47,6 +50,7 @@ public class NotesUpdater implements Runnable {
 		values.put(SQLiteHelperMessage.COLUMN_TITLE, title);
 		values.put(SQLiteHelperMessage.COLUMN_MESSAGE, message);
 		values.put(SQLiteHelperMessage.COLUMN_SENDER, sender);
+		values.put(SQLiteHelperMessage.COLUMN_RECEIVER, userInfo.getUser().getUserName());
 		values.put(SQLiteHelperMessage.COLUMN_AVAILABLE_TIME, availableTime);
 		values.put(SQLiteHelperMessage.COLUMN_RECEIVED_TIME, receivedTime);
 		values.put(SQLiteHelperMessage.COLUMN_EXPIRE_TIME, expireTime);

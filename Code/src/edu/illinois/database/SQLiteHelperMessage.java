@@ -21,6 +21,7 @@ public class SQLiteHelperMessage extends SQLiteOpenHelper {
 	public static final String COLUMN_MESSAGE = "message";
 	public static final String COLUMN_LOCATION = "received_loc";
 	public static final String COLUMN_SENDER = "sender_id";
+	public static final String COLUMN_RECEIVER = "receiver_id";
 
 	private static final String DATABASE_NAME = "digitalstickynotes.db";
 	private static final int DATABASE_VERSION = 1;
@@ -45,7 +46,8 @@ public class SQLiteHelperMessage extends SQLiteOpenHelper {
 				+ COLUMN_TITLE + " tinytext not null, "
 				+ COLUMN_MESSAGE + " text not null, "
 				+ COLUMN_LOCATION + " text not null, "
-				+ COLUMN_SENDER + " tinytext not null);";
+				+ COLUMN_SENDER + " tinytext not null, "
+				+ COLUMN_RECEIVER + " tinytext not null);";
 
 		db.execSQL(databaseCreateStat);
 	}

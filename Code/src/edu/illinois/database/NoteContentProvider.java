@@ -181,7 +181,7 @@ public class NoteContentProvider extends ContentProvider {
 				SQLiteHelperMessage.COLUMN_RECEIVED_TIME, SQLiteHelperMessage.COLUMN_AVAILABLE_TIME,
 				SQLiteHelperMessage.COLUMN_EXPIRE_TIME, SQLiteHelperMessage.COLUMN_TITLE,
 				SQLiteHelperMessage.COLUMN_MESSAGE, SQLiteHelperMessage.COLUMN_LOCATION,
-				SQLiteHelperMessage.COLUMN_SENDER};
+				SQLiteHelperMessage.COLUMN_SENDER, SQLiteHelperMessage.COLUMN_RECEIVER};
 		
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));

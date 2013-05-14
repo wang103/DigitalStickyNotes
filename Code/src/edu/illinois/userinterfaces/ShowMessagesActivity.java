@@ -1,8 +1,10 @@
 package edu.illinois.userinterfaces;
 
+import edu.illinois.data.UserInformation;
 import edu.illinois.database.NoteContentProvider;
 import edu.illinois.database.SQLiteHelperMessage;
 import edu.illinois.digitalstickynotes.R;
+import edu.illinois.digitalstickynotes.TheApplication;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.ListActivity;
@@ -131,10 +133,17 @@ public class ShowMessagesActivity extends ListActivity implements LoaderCallback
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		UserInformation userInfo = ((TheApplication) getApplication()).getUserInfo();
+		
 		String[] projection = {SQLiteHelperMessage.COLUMN_ID, SQLiteHelperMessage.COLUMN_TITLE,
 				SQLiteHelperMessage.COLUMN_SENDER};
+		
+		// Only show current user's notes.
+		String selection = "receiver_id=?";
+		String[] selectionArgs = {userInfo.getUser().getUserName()};
+		
 		CursorLoader cursorLoader = new CursorLoader(this, NoteContentProvider.CONTENT_URI,
-				projection, null, null, null);
+				projection, selection, selectionArgs, null);
 		return cursorLoader;
 	}
 
