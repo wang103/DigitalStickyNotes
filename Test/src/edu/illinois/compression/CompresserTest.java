@@ -2,6 +2,11 @@ package edu.illinois.compression;
 
 import junit.framework.TestCase;
 
+/**
+ * The class for testing compression algorithm.
+ * 
+ * @author tianyiw
+ */
 public class CompresserTest extends TestCase {
 
 	private Compresser compresser;
@@ -31,7 +36,7 @@ public class CompresserTest extends TestCase {
 		
 		assertEquals(str, oriStr);
 	}
-	
+
 	public void testCompresser1() {
 		String str = "A";
 		byte[] compressedStr = compresser.Compress(str);
@@ -43,7 +48,7 @@ public class CompresserTest extends TestCase {
 		
 		assertEquals(str, oriStr);
 	}
-	
+
 	public void testCompresser2() {
 		String str = "A1";
 		byte[] compressedStr = compresser.Compress(str);
@@ -55,7 +60,7 @@ public class CompresserTest extends TestCase {
 		
 		assertEquals(str, oriStr);
 	}
-	
+
 	public void testCompresser3() {
 		String str = "CCC";
 		byte[] compressedStr = compresser.Compress(str);
