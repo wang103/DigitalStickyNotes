@@ -25,6 +25,8 @@ import android.util.Log;
 
 import edu.illinois.classinterfaces.ConnectionManager;
 import edu.illinois.data.User;
+import edu.illinois.data.UserInformation;
+import edu.illinois.digitalstickynotes.TheApplication;
 import edu.illinois.messaging.Note;
 import edu.illinois.userinterfaces.LoginActivity;
 import edu.illinois.utils.Utils;
@@ -36,15 +38,114 @@ import edu.illinois.utils.Utils;
  * @author tianyiw
  */
 public class Communicator {
-	
+
 	private static final String BASE_URL = "http://tianyiwang.info/project";
 	private static final String AUTH_URL = BASE_URL + "/request_token.php";		// URL for authentication.
 	private static final String REG_URL = BASE_URL + "/register.php";			// URL for registration.
 	private static final String API_URL = BASE_URL + "/handle_requests.php";	// URL for requests.
-	
+
 	private Activity activity;
 	private ConnectionManager connectionManager;
-	
+
+	/**
+	 * Send the note via internet connection.
+	 * 
+	 * @param receivers array of receivers' id of this note.
+	 * @param availableTime when this note becomes available.
+	 * @param expireTime when this note becomes expired.
+	 * @param locationID the location this note is associated with.
+	 * @param title the title.
+	 * @param note the content of the note.
+	 * @param senderID user's ID.
+	 * @param token user's access token.
+	 * @return 0 on success. -1 on fail.
+	 */
+	private int sentNoteWithLocalServer(String[] receivers, String availableTime,
+			String expireTime, int locationID, String title, String note,
+			String senderID, String token) {
+
+
+		return -1;
+	}
+
+	/**
+	 * Send the note using a local server.
+	 * 
+	 * @param receivers array of receivers' id of this note.
+	 * @param availableTime when this note becomes available.
+	 * @param expireTime when this note becomes expired.
+	 * @param locationID the location this note is associated with.
+	 * @param title the title.
+	 * @param note the content of the note.
+	 * @param senderID user's ID.
+	 * @param token user's access token.
+	 * @return 0 on success. -1 on fail.
+	 */
+	private int sentNoteWithGlobalServer(String[] receivers, String availableTime,
+			String expireTime, int locationID, String title, String note,
+			String senderID, String token) {
+
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(10);
+		nameValuePairs.add(new BasicNameValuePair("request_name", "send_note"));
+		nameValuePairs.add(new BasicNameValuePair("available_time", availableTime));
+		nameValuePairs.add(new BasicNameValuePair("expire_time", expireTime));
+		nameValuePairs.add(new BasicNameValuePair("location_id", "" + locationID));
+		nameValuePairs.add(new BasicNameValuePair("title", title));
+		nameValuePairs.add(new BasicNameValuePair("note", note));
+		nameValuePairs.add(new BasicNameValuePair("sender", senderID));
+		nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
+
+		for (int i = 0; i < receivers.length; i++) {
+			nameValuePairs.add(new BasicNameValuePair("receiver", receivers[i]));
+			
+			HttpEntity entity = null;
+			try {
+				entity = new UrlEncodedFormEntity(nameValuePairs);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+
+			final HttpPost post = new HttpPost(API_URL);
+			post.addHeader(entity.getContentType());
+			post.setEntity(entity);
+			HttpResponse response = null;
+
+			try {
+				response = Utils.getHttpClient().execute(post);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			if (response == null) {
+				return -1;
+			}
+
+			String result = null;
+			try {
+				result = Utils.inputStreamToString(response.getEntity().getContent());
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			JSONObject jsonObject = null;
+			try {
+				jsonObject = new JSONObject(result);
+				boolean ret = jsonObject.getBoolean("success");
+				if (!ret) {
+					return -1;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return 0;
+	}
+
 	/**
 	 * First try to send the note via internet connection. If not available,
 	 * try send the note using a local server.
@@ -57,11 +158,28 @@ public class Communicator {
 	 * @param note the content of the note.
 	 * @return 0 on success. -1 on fail.
 	 */
-	public int sendNote(String[] receivers, String availableTime, String expireTime,
-			int locationID, String title, String note) {
+	public int sendNote(String[] receivers, String availableTime,
+			String expireTime, int locationID, String title, String note) {
+
+		UserInformation userInfo = ((TheApplication) activity.getApplication()).getUserInfo();
+		String userID = userInfo.getUser().getUserName();
+		String token = userInfo.getAccessToken();
+
+		if (Utils.isNetworkConnected(activity)) {
+			Log.d("TIANYI", "Using global server to send note.");
+			return sentNoteWithGlobalServer(receivers, availableTime,
+					expireTime, locationID, title, note, userID, token);
+		}
+		else if (this.connectionManager != null) {
+			Log.d("TIANYI", "Using local server to send note.");
+			return sentNoteWithLocalServer(receivers, availableTime,
+					expireTime, locationID, title, note, userID, token);
+		}
+
+		Log.d("TIANYI", "Can't send note. No Network available.");		
 		return -1;
 	}
-	
+
 	/**
 	 * Set user information with a local server.
 	 * 
@@ -81,7 +199,7 @@ public class Communicator {
 		}
 
 		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
-		
+
 		if (result.size() > 0) {
 			JSONObject jOutputObject = null;
 			try {
@@ -156,7 +274,7 @@ public class Communicator {
 
 		return 0;
 	}
-	
+
 	/**
 	 * Set the user information.
 	 * 
@@ -173,11 +291,11 @@ public class Communicator {
 			Log.d("TIANYI", "Using local server to authenticate.");
 			return setUserInfoWithLocalServer(user, token);
 		}
-		
+
 		Log.d("TIANYI", "Can't get user info. No Network available.");		
 		return -1;
 	}
-	
+
 	/**
 	 * Get user's notes of the location.
 	 * 
@@ -185,7 +303,7 @@ public class Communicator {
 	 * @return a list of user's notes from that location.
 	 */
 	private List<Note> getNotesWithLocalServer(String token) {
-	
+
 		JSONObject jInputObject = new JSONObject();
 
 		try {
@@ -223,10 +341,10 @@ public class Communicator {
 					Date availableTime = simpleDateFormat.parse(availableTimeString);
 					Date expireTime = simpleDateFormat.parse(expireTimeString);
 					User sender = new User(senderString);
-					
+
 					Note newNote = new Note(msgID, title, message, receivedTime,
 							availableTime, expireTime, location, sender);
-					
+
 					notes.add(newNote);
 				}
 			} catch (JSONException e) {
@@ -252,7 +370,7 @@ public class Communicator {
 			Log.d("TIANYI", "Using local server to get notes.");
 			return getNotesWithLocalServer(token);
 		}
-		
+
 		Log.d("TIANYI", "Can't get notes. No local server available.");		
 		return null;
 	}
@@ -278,7 +396,7 @@ public class Communicator {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	
+
 		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
 		String token = null;
 
@@ -291,7 +409,7 @@ public class Communicator {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return token;
 	}
 
@@ -303,14 +421,14 @@ public class Communicator {
 	 * @return access token, or null if failed.
 	 */
 	private String tryAuthenticateWithGlobalServer(String email, String password) {
-		
+
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
 		nameValuePairs.add(new BasicNameValuePair("username", email));
 		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("client_id", LoginActivity.CLIENT_ID));
 		nameValuePairs.add(new BasicNameValuePair("client_secret", LoginActivity.CLIENT_SECRET));
-	
+
 		HttpEntity entity = null;
 		try {
 			entity = new UrlEncodedFormEntity(nameValuePairs);
@@ -334,7 +452,7 @@ public class Communicator {
 		if (response == null) {
 			return null;
 		}
-		
+
 		String result = null;
 		try {
 			result = Utils.inputStreamToString(response.getEntity().getContent());
@@ -352,10 +470,10 @@ public class Communicator {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return token;
 	}
-	
+
 	/**
 	 * First try to authenticate the user credential with the global server, if
 	 * Internet connection is not available, try to authenticate with the local
@@ -375,11 +493,11 @@ public class Communicator {
 			Log.d("TIANYI", "Using local server to authenticate.");
 			return tryAuthenticateWithLocalServer(email, password);
 		}
-		
+
 		Log.d("TIANYI", "Can't authenticate. No Network available.");
 		return null;
 	}
-	
+
 	/**
 	 * Try to register the user credential with a local server.
 	 * 
@@ -394,7 +512,7 @@ public class Communicator {
 			String firstName, String lastName, String username) {
 
 		JSONObject jInputObject = new JSONObject();
-		
+
 		try {
 			jInputObject.put("request_name", "register");
 			jInputObject.put("email", email);
@@ -405,7 +523,7 @@ public class Communicator {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		List<String> result = connectionManager.talkToServers(jInputObject.toString(), true, true);
 		int code = 3;
 
@@ -418,7 +536,7 @@ public class Communicator {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return code;
 	}
 
@@ -434,26 +552,26 @@ public class Communicator {
 	 */
 	private int tryRegisterWithGlobalServer(String email, String password,
 			String firstName, String lastName, String username) {
-		
+
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
 		nameValuePairs.add(new BasicNameValuePair("email", email));
 		nameValuePairs.add(new BasicNameValuePair("pwd", password));
 		nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
 		nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
 		nameValuePairs.add(new BasicNameValuePair("username", username));
-		
+
 		HttpEntity entity = null;
 		try {
 			entity = new UrlEncodedFormEntity(nameValuePairs);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		final HttpPost post = new HttpPost(REG_URL);
 		post.addHeader(entity.getContentType());
 		post.setEntity(entity);
 		HttpResponse response = null;
-		
+
 		try {
 			response = Utils.getHttpClient().execute(post);
 		} catch (ClientProtocolException e) {
@@ -461,7 +579,7 @@ public class Communicator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		String result = null;
 		try {
 			result = Utils.inputStreamToString(response.getEntity().getContent());
@@ -479,10 +597,10 @@ public class Communicator {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return code;
 	}
-	
+
 	/**
 	 * First try to register the user credential with the global server, if
 	 * Internet connection is not available, try to register with the local
@@ -497,7 +615,7 @@ public class Communicator {
 	 */
 	public int tryRegister(String email, String password, String firstName,
 			String lastName, String username) {
-		
+
 		if (Utils.isNetworkConnected(activity)) {
 			Log.d("TIANYI", "Using global server to register.");
 			return tryRegisterWithGlobalServer(email, password, firstName, lastName, username);
@@ -506,11 +624,11 @@ public class Communicator {
 			Log.d("TIANYI", "Using local server to register.");
 			return tryRegisterWithLocalServer(email, password, firstName, lastName, username);
 		}
-		
+
 		Log.d("TIANYI", "Can't authenticate. No Network available.");		
 		return 3;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
