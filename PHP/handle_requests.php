@@ -58,8 +58,8 @@ if ($request_name === 'get_notes') {
     $result = array('success' => true, 'num_msg' => $num_msg, 'messages' => $messages);
 }
 elseif ($request_name === 'send_note') {
-    $available_time = $_POST['available_time'];
-    $expire_time = $_POST['expire_time'];
+    $available_time = DateTime::createFromFormat('Y-m-d H:i:s', $_POST['available_time']);
+    $expire_time = DateTime::createFromFormat('Y-m-d H:i:s', $_POST['expire_time']);
     $location_id = $_POST['location_id'];
     $title = $_POST['title'];
     $note = $_POST['note'];

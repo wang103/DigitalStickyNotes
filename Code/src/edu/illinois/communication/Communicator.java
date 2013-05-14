@@ -87,13 +87,13 @@ public class Communicator {
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(10);
 		nameValuePairs.add(new BasicNameValuePair("request_name", "send_note"));
+		nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
 		nameValuePairs.add(new BasicNameValuePair("available_time", availableTime));
 		nameValuePairs.add(new BasicNameValuePair("expire_time", expireTime));
 		nameValuePairs.add(new BasicNameValuePair("location_id", "" + locationID));
 		nameValuePairs.add(new BasicNameValuePair("title", title));
 		nameValuePairs.add(new BasicNameValuePair("note", note));
 		nameValuePairs.add(new BasicNameValuePair("sender", senderID));
-		nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
 
 		for (int i = 0; i < receivers.length; i++) {
 			nameValuePairs.add(new BasicNameValuePair("receiver", receivers[i]));
@@ -125,6 +125,7 @@ public class Communicator {
 			String result = null;
 			try {
 				result = Utils.inputStreamToString(response.getEntity().getContent());
+				Log.d("TIANYI", "Send note result: " + result);
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

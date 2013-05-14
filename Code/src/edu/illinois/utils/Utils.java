@@ -15,6 +15,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 /**
  * This class contains useful static methods.
@@ -117,6 +119,53 @@ public class Utils {
 			}
 			sh >>= 1;
 		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Convert a {@link DatePicker} and a {@link TimePicker} to the right format of String.
+	 * 
+	 * @param dp the {@link DatePicker} object.
+	 * @param tp the {@link TimePicker} object.
+	 * @return the string.
+	 */
+	public static String dateTimePickerToString(DatePicker dp, TimePicker tp) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(dp.getYear());
+		sb.append("-");
+		
+		int month = dp.getMonth();
+		if (month < 10) {
+			sb.append("0");
+		}
+		sb.append(month);
+		sb.append("-");
+		
+		int day = dp.getDayOfMonth();
+		if (day < 10) {
+			sb.append("0");
+		}
+		sb.append(day);
+		
+		sb.append(" ");
+		
+		int hour = tp.getCurrentHour();
+		if (hour < 10) {
+			sb.append("0");
+		}
+		sb.append(hour);
+		sb.append(":");
+		
+		int minute = tp.getCurrentMinute();
+		if (minute < 10) {
+			sb.append("0");
+		}
+		sb.append(minute);
+		sb.append(":");
+		sb.append("00");
 		
 		return sb.toString();
 	}

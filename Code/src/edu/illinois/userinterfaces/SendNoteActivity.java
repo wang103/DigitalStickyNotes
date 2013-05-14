@@ -3,6 +3,7 @@ package edu.illinois.userinterfaces;
 import edu.illinois.communication.Communicator;
 import edu.illinois.digitalstickynotes.R;
 import edu.illinois.digitalstickynotes.TheApplication;
+import edu.illinois.utils.Utils;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,9 +79,9 @@ public class SendNoteActivity extends Activity {
 
 		content = contentEditText.getText().toString();
 
-		availableString = availableDatePicker.toString() + availableTimePicker.toString();
+		availableString = Utils.dateTimePickerToString(availableDatePicker, availableTimePicker);
 
-		expireString = expireDatePicker.toString() + expireTimePicker.toString();
+		expireString = Utils.dateTimePickerToString(expireDatePicker, expireTimePicker);
 
 		boolean cancel = false;
 		View focusView = null;
