@@ -58,15 +58,20 @@ if ($request_name === 'get_notes') {
     $result = array('success' => true, 'num_msg' => $num_msg, 'messages' => $messages);
 }
 elseif ($request_name === 'send_note') {
-    $available_time = DateTime::createFromFormat('Y-m-d H:i:s', $_POST['available_time']);
-    $expire_time = DateTime::createFromFormat('Y-m-d H:i:s', $_POST['expire_time']);
+    $available = strtotime($_POST['available_time']);
+    $available_time = date('Y-m-d H:i:s', $available);
+
+    $expire =  strtotime($_POST['expire_time']);
+    $expire_time = date('Y-m-d H:i:s', $expire);
+
     $location_id = $_POST['location_id'];
     $title = $_POST['title'];
     $note = $_POST['note'];
     $sender = $_POST['sender'];
+    $receiver = $_POST['receiver'];
 
     # Insert new note into the DB.
-    $qry = 'INSERT INTO messagse (available_time, expire_time, location_id, title, message, sender_id, receiver_id) VALUES ("' . $available_time . '", "' . $expire_time . '", "' . $location_id . '", "' . $title . '", "' . $note . '", "' . $sender . '")';
+    $qry = 'INSERT INTO messages (available_time, expire_time, location_id, title, message, sender_id, receiver_id) VALUES ("' . $available_time . '", "' . $expire_time . '", "' . $location_id . '", "' . $title . '", "' . $note . '", "' . $sender . '", "' . $receiver . '")';
     if (!mysql_query($qry, $con)) {
         die('Error: ' . mysql_error());
     }
