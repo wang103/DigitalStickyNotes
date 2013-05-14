@@ -260,6 +260,9 @@ public class LoginActivity extends Activity {
 		final Intent intent = new Intent();
 		intent.putExtra(INTENT_KEY_TOKEN, userInfo.getAccessToken());
 		setResult(RESULT_OK, intent);
+		
+		showProgress(false);
+		
 		finish();
 	}
 
@@ -296,7 +299,6 @@ public class LoginActivity extends Activity {
 		@Override
 		protected void onPostExecute(final String token) {
 			mAuthTask = null;
-			showProgress(false);
 
 			boolean success = ((token != null) && (token.length() > 0));
 			Log.d("TIANYI", "onAuthenticationResult(" + success + ")");
@@ -308,6 +310,8 @@ public class LoginActivity extends Activity {
 			} else {
 				mPasswordView.setError(getString(R.string.error_sign_in_failed));
 				mPasswordView.requestFocus();
+				
+				showProgress(false);
 			}
 		}
 

@@ -47,14 +47,14 @@ public class SendNoteActivity extends Activity {
 	private View mSendFormView;
 	private View mSendStatusView;
 	private TextView mSendStatusMessageView;
-	
+
 	private String[] receivers;
 	private int locationID;
 	private String title;
 	private String content;
 	private String availableString;
 	private String expireString;
-	
+
 	/**
 	 * Send a note to the central server.
 	 */
@@ -62,26 +62,26 @@ public class SendNoteActivity extends Activity {
 		if (mTask != null) {
 			return;
 		}
-		
+
 		// Reset errors.
 		sendToEditText.setError(null);
 		titleEditText.setError(null);
 		contentEditText.setError(null);
-		
+
 		// Get the fields.
 		String receiversString = sendToEditText.getText().toString();
 		receivers = receiversString.split(",");
-		
+
 		locationID = locationSpinner.getSelectedItemPosition();
-		
+
 		title = titleEditText.getText().toString();
-		
+
 		content = contentEditText.getText().toString();
-		
+
 		availableString = availableDatePicker.toString() + availableTimePicker.toString();
-		
+
 		expireString = expireDatePicker.toString() + expireTimePicker.toString();
-		
+
 		boolean cancel = false;
 		View focusView = null;
 
@@ -91,7 +91,7 @@ public class SendNoteActivity extends Activity {
 			focusView = sendToEditText;
 			cancel = true;
 		}
-		
+
 		if (TextUtils.isEmpty(title)) {
 			titleEditText.setError("Title cannot be empty");
 			focusView = titleEditText;
