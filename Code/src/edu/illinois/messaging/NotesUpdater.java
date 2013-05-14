@@ -9,7 +9,9 @@ import edu.illinois.database.NoteContentProvider;
 import edu.illinois.database.SQLiteHelperMessage;
 import edu.illinois.digitalstickynotes.MainActivity;
 import android.content.ContentValues;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 /**
  * Periodically check for user's notes in the nearby location.
@@ -54,6 +56,41 @@ public class NotesUpdater implements Runnable {
 	}
 
 	/**
+	 * Represents an asynchronous mark note task.
+	 */
+	public class MarkNoteTask extends AsyncTask<Void, Void, Integer> {
+
+		private long noteID;
+		
+		/**
+		 * Constructor.
+		 * 
+		 * @param noteID the note's ID.
+		 */
+		public MarkNoteTask(long noteID) {
+			super();
+			
+			this.noteID = noteID;
+		}
+		
+		@Override
+		protected Integer doInBackground(Void... params) {
+			// Attempt marking note.
+			return communicator.markNoteAsReceived(noteID);
+		}
+
+		@Override
+		protected void onPostExecute(final Integer ret) {
+
+			if (ret == 0) {
+				Log.d("TIANYI", "Marked note successfully.");
+			} else {
+				// Somehow didn't success. Just ignore it.
+			}
+		}
+	}
+	
+	/**
 	 * Update user's notes. Try to see if there's nearby location server.
 	 */
 	private void updateNotes() {
@@ -67,6 +104,8 @@ public class NotesUpdater implements Runnable {
 		if (notes != null) {
 			for (Note note : notes) {
 				insertNote(note);
+				MarkNoteTask mTask = new MarkNoteTask(note.getMessageID());
+				mTask.execute((Void) null);
 			}
 		}
 	}

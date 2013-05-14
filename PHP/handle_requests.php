@@ -39,7 +39,7 @@ if ($request_name === 'get_notes') {
     $row = mysql_fetch_assoc($qry_result);
     $loc_name = $row['location_name'];
 
-    $qry = "SELECT message_id,available_time,expire_time,title,message,sender_id FROM messages WHERE location_id='" . $location_id . "' AND receiver_id='" . $user_name . "'";
+    $qry = "SELECT message_id,available_time,expire_time,title,message,sender_id FROM messages WHERE delivered=0 AND location_id='" . $location_id . "' AND receiver_id='" . $user_name . "'";
     $qry_result = mysql_query($qry);
     $num_msg = mysql_num_rows($qry_result);
     $messages = array();
@@ -56,6 +56,14 @@ if ($request_name === 'get_notes') {
     }
 
     $result = array('success' => true, 'num_msg' => $num_msg, 'messages' => $messages);
+}
+elseif ($request_name === 'mark_note') {
+    $note_id = $_POST['note_id'];
+
+    $qry = "UPDATE messages SET delivered=1 WHERE message_id='" . $note_id . "'";
+    $qry_result = mysql_query($qry);
+
+    $result = array('success' => true);
 }
 elseif ($request_name === 'send_note') {
     $available = strtotime($_POST['available_time']);

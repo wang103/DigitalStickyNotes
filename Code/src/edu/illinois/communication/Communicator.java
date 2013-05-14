@@ -48,6 +48,104 @@ public class Communicator {
 	private ConnectionManager connectionManager;
 
 	/**
+	 * Mark the note using a local server.
+	 * 
+	 * @param noteID the note ID.
+	 * @param token user's access token.
+	 * @return 0 on success. -1 on fail.
+	 */
+	private int markNoteWithLocalServer(long noteID, String token) {
+		//TODO: implementation.
+		return -1;
+	}
+
+	/**
+	 * Mark the note via internet connection.
+	 * 
+	 * @param noteID the note ID.
+	 * @param token user's access token.
+	 * @return 0 on success. -1 on fail.
+	 */
+	private int markNoteWithGlobalServer(long noteID, String token) {
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+		nameValuePairs.add(new BasicNameValuePair("request_name", "mark_note"));
+		nameValuePairs.add(new BasicNameValuePair("oauth_token", token));
+		nameValuePairs.add(new BasicNameValuePair("note_id", "" + noteID));
+
+		HttpEntity entity = null;
+		try {
+			entity = new UrlEncodedFormEntity(nameValuePairs);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		final HttpPost post = new HttpPost(API_URL);
+		post.addHeader(entity.getContentType());
+		post.setEntity(entity);
+		HttpResponse response = null;
+
+		try {
+			response = Utils.getHttpClient().execute(post);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (response == null) {
+			return -1;
+		}
+
+		String result = null;
+		try {
+			result = Utils.inputStreamToString(response.getEntity().getContent());
+			Log.d("TIANYI", "Mark note result: " + result);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(result);
+			boolean ret = jsonObject.getBoolean("success");
+			if (!ret) {
+				return -1;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
+	/**
+	 * First try to mark the note via internet connection. If not available,
+	 * try mark the note using a local server.
+	 * 
+	 * @param noteID the note ID.
+	 * @return 0 on success. -1 on fail.
+	 */
+	public int markNoteAsReceived(long noteID) {
+
+		UserInformation userInfo = ((TheApplication) activity.getApplication()).getUserInfo();
+		String token = userInfo.getAccessToken();
+
+		if (Utils.isNetworkConnected(activity)) {
+			Log.d("TIANYI", "Using global server to mark note.");
+			return markNoteWithGlobalServer(noteID, token);
+		}
+		else if (this.connectionManager != null) {
+			Log.d("TIANYI", "Using local server to mark note.");
+			return markNoteWithLocalServer(noteID, token);
+		}
+
+		Log.d("TIANYI", "Can't mark note. No Network available.");		
+		return -1;
+	}
+
+	/**
 	 * Send the note via internet connection.
 	 * 
 	 * @param receivers array of receivers' id of this note.
@@ -63,7 +161,7 @@ public class Communicator {
 	private int sentNoteWithLocalServer(String[] receivers, String availableTime,
 			String expireTime, int locationID, String title, String note,
 			String senderID, String token) {
-
+		//TODO: implementation.
 
 		return -1;
 	}
@@ -97,7 +195,7 @@ public class Communicator {
 
 		for (int i = 0; i < receivers.length; i++) {
 			nameValuePairs.add(new BasicNameValuePair("receiver", receivers[i]));
-			
+
 			HttpEntity entity = null;
 			try {
 				entity = new UrlEncodedFormEntity(nameValuePairs);
