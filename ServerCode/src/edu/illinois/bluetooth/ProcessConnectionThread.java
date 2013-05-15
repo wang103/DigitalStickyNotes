@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import edu.illinois.digitalstickynotesserver.DigitalStickyNotesServer;
 import edu.illinois.utils.Utils;
 
 /**
@@ -72,10 +73,9 @@ public class ProcessConnectionThread implements Runnable {
 	 */
 	private void handleGetNotes(JSONObject jsonObj, OutputStream outputStream) {
 		
-		//TODO: fix the hard-coded local server credentials.
 		String token = (String) jsonObj.get("token");
-		String location_id = "1";
-		String location_pwd = "serverpass";
+		String location_id = DigitalStickyNotesServer.locationID;
+		String location_pwd = DigitalStickyNotesServer.locationPassword;
 		
 		List<NameValuePair> data = new ArrayList<NameValuePair>(4);
 		data.add(new BasicNameValuePair("request_name", "get_notes"));
