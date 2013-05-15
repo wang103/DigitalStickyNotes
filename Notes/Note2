@@ -1,4 +1,0 @@
-Wi-Fi Localization Using RSSI Fingerprinting
-
-It's accurate when just built, but the fingerprint can drift in a short amount
-of time due to changes in WIFI infrastructure.
