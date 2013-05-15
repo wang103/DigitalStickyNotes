@@ -72,7 +72,7 @@ public class ProcessConnectionThread implements Runnable {
 	 */
 	private void handleGetNotes(JSONObject jsonObj, OutputStream outputStream) {
 		
-		//TODO: fix the hard-coded credentials.
+		//TODO: fix the hard-coded local server credentials.
 		String token = (String) jsonObj.get("token");
 		String location_id = "1";
 		String location_pwd = "serverpass";

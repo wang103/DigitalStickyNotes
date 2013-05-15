@@ -27,7 +27,8 @@ public class Utils {
 	 * Send HTTP POST request to the central server.
 	 * 
 	 * @param data the data to be sent.
-	 * @param dataType 0 indicates authentication data, 1 indicates register data, 2 indicates API request data.
+	 * @param dataType 0 indicates authentication data, 1 indicates register data,
+	 * 				   2 indicates API request data, 3 indicates location data.
 	 * @return the response from the central server.
 	 */
 	public static String sendPostToGlobalServer(List<NameValuePair> data, int dataType) {
@@ -45,6 +46,10 @@ public class Utils {
 			break;
 		case 2:
 			urlString = DigitalStickyNotesServer.API_URL;
+			break;
+		case 3:
+			urlString = DigitalStickyNotesServer.LOC_URL;
+			break;
 		default:
 			break;
 		}
