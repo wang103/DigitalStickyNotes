@@ -17,5 +17,4 @@ if ($_POST['code'] === 'tianyiwang') {
 } else {
     echo '<p>Wrong code.</p>';
 }
-
 ?>

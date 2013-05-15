@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
 	private ConnectionManager connectionManager;
 	private NotesUpdater notesUpdater;
 	private UserInformation userInfo;
-	
+
 	// For application states.
 	private boolean isWifiP2pEnabled = false;
 	private boolean isBTEnabled = false;
@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
 	public static final String PREF_LAST_NAME = "edu.illinois.digitalstickynotes.lastname";
 
 	// UI references.
+	private TextView signedInTextView;
 	private Button myNotesButton;
 	private Button sendNoteButton;
 	private Button signInButton;
@@ -158,6 +159,7 @@ public class MainActivity extends Activity {
 	 * Call this method after access token is acquired.
 	 */
 	private void postSigningIn() {
+		this.signedInTextView.setText("You are signed in as: " + userInfo.getUser().getUserName());
 		this.myNotesButton.setEnabled(true);
 		this.sendNoteButton.setEnabled(true);
 		this.signInButton.setEnabled(false);
@@ -215,6 +217,7 @@ public class MainActivity extends Activity {
 		editor.remove(PREF_LAST_NAME);
 		editor.commit();
 		
+		signedInTextView.setText("");
 		myNotesButton.setEnabled(false);
 		sendNoteButton.setEnabled(false);
 		signInButton.setEnabled(true);
@@ -228,6 +231,8 @@ public class MainActivity extends Activity {
 
 		userInfo = new UserInformation();
 		((TheApplication)(this.getApplication())).setUserInfo(userInfo);
+		
+		signedInTextView = (TextView) findViewById(R.id.signed_in_prompt);
 		
 		myNotesButton = (Button) findViewById(R.id.my_notes_button);
 		myNotesButton.setOnClickListener(new View.OnClickListener() {
