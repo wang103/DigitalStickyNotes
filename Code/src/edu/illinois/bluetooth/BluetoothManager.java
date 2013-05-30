@@ -16,6 +16,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.util.Log;
 
 /**
@@ -39,24 +40,41 @@ public class BluetoothManager extends ConnectionManager {
 		this.devices.clear();
 		return mBluetoothAdapter.startDiscovery();
 	}
-
-	@Override
-	public boolean startDiscoveryAndWait() {
-		this.devices.clear();
-		boolean status = mBluetoothAdapter.startDiscovery();
-		
-		try {
-			Thread.sleep(DISCOVERY_LENGTH * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	
-		return status;
+	/**
+	 * Represents an asynchronous stop discovery task.
+	 */
+	public class StopDiscoveryTask extends AsyncTask<Void, Void, Boolean> {
+		
+		int seconds;
+		
+		/**
+		 * Constructor.
+		 * 
+		 * @param seconds after how many seconds before stopping discovery.
+		 */
+		public StopDiscoveryTask(int seconds) {
+			super();
+			
+			this.seconds = seconds;
+		}
+		
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			try {
+				Thread.sleep(seconds * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return mBluetoothAdapter.cancelDiscovery();
+		}
 	}
 	
 	@Override
-	public boolean stopDiscovery() {
-		return mBluetoothAdapter.cancelDiscovery();
+	public boolean stopDiscovery(int seconds) {
+		StopDiscoveryTask mTask = new StopDiscoveryTask(seconds);
+		mTask.execute((Void) null);
+		return true;
 	}
 	
 	@Override
@@ -123,8 +141,8 @@ public class BluetoothManager extends ConnectionManager {
 		}
 
 		if (startDiscovery) {
-			startDiscoveryAndWait();
-			stopDiscovery();
+			startDiscovery();
+			stopDiscovery(DISCOVERY_LENGTH);
 		}
 
 		return result;

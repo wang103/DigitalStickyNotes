@@ -56,6 +56,7 @@ public class DigitalStickyNotesServer {
 			e.printStackTrace();
 		}
 		
+		// Clear the console for security purpose.
 		try {
 			Runtime.getRuntime().exec("clear");
 		} catch (IOException e) {

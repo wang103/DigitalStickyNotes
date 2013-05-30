@@ -22,18 +22,12 @@ public abstract class ConnectionManager {
 	abstract public boolean startDiscovery();
 	
 	/**
-	 * Start to discover devices nearby, and wait for the discovery timeout.
-	 * 
-	 * @return true on success, false on error.
-	 */
-	abstract public boolean startDiscoveryAndWait();
-	
-	/**
 	 * Stop the discovery of devices.
 	 * 
+	 * @param seconds after how many seconds before stopping discovery.
 	 * @return true on success, false on error.
 	 */
-	abstract public boolean stopDiscovery();
+	abstract public boolean stopDiscovery(int seconds);
 	
 	/**
 	 * Check whether or not the connection is enabled.

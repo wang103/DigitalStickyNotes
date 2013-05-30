@@ -82,15 +82,9 @@ public class WifiDirectManager extends ConnectionManager {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public boolean startDiscoveryAndWait() {
-		// TODO Auto-generated method stub
-		return false;
-	};
 	
 	@Override
-	public boolean stopDiscovery() {
+	public boolean stopDiscovery(int seconds) {
 		// TODO Auto-generated method stub
 		return false;
 	}
